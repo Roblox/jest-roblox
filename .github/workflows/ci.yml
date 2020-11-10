@@ -79,8 +79,8 @@ jobs:
   #       cargo clippy
   #     if: matrix.rust_version == 'stable'
   
-  lest:
-    name: Lest Unit Tests
+  jest:
+    name: Jest Roblox Unit Tests
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -98,7 +98,7 @@ jobs:
 
       - name: use rojo to build project for testing
         shell: bash
-        run: rojo build lest.project.json --output test-model.rbxmx
+        run: rojo build jest.project.json --output test-model.rbxmx
 
       - name: get npm
         uses: actions/setup-node@v1
@@ -126,7 +126,7 @@ jobs:
 
       - name: run linting and type checking
         shell: bash
-        run: ./roblox-cli analyze lest.project.json
+        run: ./roblox-cli analyze jest.project.json
 
       - name: run unit tests
         shell: bash
