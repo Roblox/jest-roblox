@@ -94,7 +94,7 @@ jobs:
 
       - name: install rotriever packages
         shell: bash
-        run: rotrieve install
+        run: rotrieve install --git-auth DummyUser@${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: use rojo to build project for testing
         shell: bash
