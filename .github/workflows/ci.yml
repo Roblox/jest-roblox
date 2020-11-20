@@ -78,7 +78,7 @@ jobs:
   #       cargo fmt -- --check
   #       cargo clippy
   #     if: matrix.rust_version == 'stable'
-  
+
   jest:
     name: Jest Roblox Unit Tests
     runs-on: windows-latest
