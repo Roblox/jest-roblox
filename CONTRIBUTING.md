@@ -1,57 +1,76 @@
-# Contributing to TestEZ
-Thanks for considering contributing to TestEZ! This guide has a few tips and guidelines to make contributing to the project as easy as possible.
+# Contributing to Jest Roblox
+Thanks for considering contributing to Jest Roblox! This guide has a few tips and guidelines to make contributing to the project as easy as possible.
 
 ## Bug Reports
-Any bugs (or things that look like bugs) can be reported on the [GitHub issue tracker](https://github.com/Roblox/TestEZ/issues).
+Any bugs (or things that look like bugs) can be reported on the [GitHub issue tracker](https://github.com/Roblox/jest-roblox/issues).
+
+If possible, file an issue or create a pull request to fix the bug in upstream [Jest](https://github.com/facebook/jest) and link to it here.
 
 Make sure you check to see if someone has already reported your bug first! Don't fret about it; if we notice a duplicate we'll send you a link to the right issue!
 
-## Feature Requests
-If there are any features you think are missing from TestEZ, you can post a request in the [GitHub issue tracker](https://github.com/Roblox/TestEZ/issues).
-
-Just like bug reports, take a peak at the issue tracker for duplicates before opening a new feature request.
-
-## Working on TestEZ
-To get started working on TestEZ, you'll need:
+## Working on Jest Roblox
+To get started working on Jest Roblox, you'll need:
 * Git
 * Lua 5.1
-* [LuaFileSystem](https://keplerproject.github.io/luafilesystem/) (`luarocks install luafilesystem`)
-* [Luacheck](https://github.com/mpeterv/luacheck) (`luarocks install luacheck`)
-* [LuaCov](https://keplerproject.github.io/luacov) (`luarocks install luacov`)
+* NPM
+* Rust
 
-Make sure to clone the repository with submodules. You can do that to your existing repository with:
+### Adding Modules
+Run `bin/bootstrap.sh PACKAGE_NAME` to initialize a new module under the `src/Modules` directory.
 
-```sh
-git submodule update --init
+New modules must:
+* Be aligned to the [v26.5.3](https://github.com/facebook/jest/tree/v26.5.3/packages) version of Jest
+* Have a README.md file with notes about the translation
+* All deviations are notated in code with `-- deviation: comment`
+* Translated files include a comment with a link to the upstream file at the top
+* Translated files use Luau strict mode if possible, else nonstrict mode
+* Pass all translated upstream tests and all existing tests
+
+### Running Tests
+
+You need to create a GitHub Access Token:
+* GitHub.com → Settings → Developer Settings → Personal Access Tokens
+* On that same page, you then need to click Enable SSO
+* BE SURE TO COPY THE ACCESS TOKEN SOMEWHERE 
+
+```
+npm login --registry=https://npm.pkg.github.com/ --scope=@roblox
+```
+For your password here, you will enter the GitHub Access Token from the instructions above.
+
+```
+npm install --global @roblox/rbx-aged-cli
 ```
 
-Finally, you can run all of TestEZ's tests with:
+Before you can use rbx-aged-cli, you need to be logged into the VPN so the Artifactory repository is accessible.
 
-```sh
-lua test/lemur.lua
+```
+mkdir ~/bin
+rbx-aged-cli download roblox-cli --dst ~/bin
+export PATH=$PATH:~/bin
+roblox-cli --help
+git clone git@github.com:Roblox/jest-roblox.git
+cd jest-roblox
 ```
 
-Or, to generate a LuaCov coverage report:
+Foreman uses Rust, so you'll have to install Rust first.
 
-```sh
-lua -lluacov test/lemur.lua
-luacov
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+export PATH=$PATH:$HOME/.cargo/bin
+cargo install foreman
+foreman github-auth  # your auth token should be in your ~/.npmrc
+foreman install
+export PATH=$PATH:~/.foreman/bin/
 ```
 
-If you're an engineer at Roblox, you can skip this setup and use Roblox-CLI. Make sure it's on your `PATH` and that you have a production Roblox Studio installation. You can then run:
+Run `rotrieve install` to install our dependencies.
 
-```sh
-./test/roblox-cli.sh
+Now you can run the tests, edit code, and contribute!
+
 ```
-
-## Pull Requests
-Before starting a pull request, open an issue about the feature or bug. This helps us prevent duplicated and wasted effort. These issues are a great place to ask for help if you run into problems!
-
-Before you submit a new pull request, check:
-* Code Style: Match the existing code!
-* Changelog: Add an entry to [CHANGELOG.md](CHANGELOG.md)
-* Luacheck: Run [Luacheck](https://github.com/mpeterv/luacheck) on your code, no warnings allowed!
-* Tests: They all need to pass!
+bin/ci.sh
+```
 
 ### Code Style
 Try to match the existing code style! In short:
@@ -60,21 +79,10 @@ Try to match the existing code style! In short:
 * Double quotes
 * One statement per line
 
-Eventually we'll have a tool to check these things automatically.
-
 ### Changelog
 Adding an entry to [CHANGELOG.md](CHANGELOG.md) alongside your commit makes it easier for everyone to keep track of what's been changed.
 
-Add a line under the "Current master" heading. When we make a new release, all of those bullet points will be attached to a new version and the "Current master" section will become empty again.
-
-### Luacheck
-We use [Luacheck](https://github.com/mpeterv/luacheck) for static analysis of Lua on all of our projects.
-
-From the command line, just run `luacheck src` to check the TestEZ source.
-
-You should get it working on your system, and then get a plugin for the editor you use. There are plugins available for most popular editors!
+Add a line under an "Unreleased Changes" heading. When we make a new release, all of those bullet points will be attached to a new version and the "Unreleased Changes" section will be removed.
 
 ### Tests
 When submitting a bug fix, create a test that verifies the broken behavior and that the bug fix works. This helps us avoid regressions!
-
-We use [LuaCov](https://keplerproject.github.io/luacov) for keeping track of code coverage. We'd like it to be as close to 100% as possible, but it's not always easy.

@@ -32,7 +32,7 @@ jobs:
     - name: Test
       run: |
         lua -lluacov test/lemur.lua
-        luacheck src tests
+        luacheck src/TestEZ tests
 
     # luacov-coveralls default settings do not function on GitHub Actions.
     # We need to pass different service name and repo token explicitly
@@ -40,44 +40,6 @@ jobs:
       run: luacov-coveralls --repo-token $REPO_TOKEN --service-name github
       env:
         REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # cli:
-  #   name: TestEZ CLI Tests
-  #   runs-on: ubuntu-latest
-
-  #   strategy:
-  #     matrix:
-  #       rust_version: [stable, "1.40.0"]
-
-  #   steps:
-  #   - uses: actions/checkout@v1
-  #     with:
-  #       submodules: true
-
-  #   - name: Setup Rust toolchain
-  #     run: rustup default ${{ matrix.rust_version }}
-
-  #   - uses: rojo-rbx/setup-foreman@v1
-  #     with:
-  #       version: "^0.6.0"
-  #       token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-  #   - name: Report tool versions
-  #     run: rojo --version
-
-  #   - name: Build
-  #     run: cargo build --locked --verbose
-  #     env:
-  #       RUST_BACKTRACE: 1
-
-  #   - name: Run tests
-  #     run: cargo test --locked --verbose
-
-  #   - name: Rustfmt and Clippy
-  #     run: |
-  #       cargo fmt -- --check
-  #       cargo clippy
-  #     if: matrix.rust_version == 'stable'
 
   jest:
     name: Jest Roblox Unit Tests
