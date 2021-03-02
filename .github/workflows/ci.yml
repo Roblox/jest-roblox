@@ -88,7 +88,10 @@ jobs:
 
       - name: run linting and type checking
         shell: bash
-        run: ./roblox-cli analyze jest.project.json
+        run: |
+          find Packages/Dev -name "*.robloxrc" | xargs rm -f
+          find Packages/_Index -name "*.robloxrc" | xargs rm -f
+          ./roblox-cli analyze jest.project.json
 
       - name: run unit tests
         shell: bash
