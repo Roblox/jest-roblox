@@ -84,7 +84,6 @@ jobs:
           AGED_USERNAME: ${{ secrets.ARTI_EDGE_LUAAPPS_USER }}
           AGED_PASSWORD: ${{ secrets.ARTI_EDGE_LUAAPPS_APIKEY }}
           AGED_CHANNEL: develop
-          AGED_VERSION: latest
 
       - name: run linting and type checking
         shell: bash
