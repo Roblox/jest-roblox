@@ -7,8 +7,8 @@ on:
       - master
 
 jobs:
-  lib:
-    name: TestEZ Library Tests
+  testez:
+    name: TestEZ Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -26,74 +26,125 @@ jobs:
       run: |
         luarocks install luafilesystem
         luarocks install luacov
-        luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
         luarocks install luacheck
+        luarocks install luacov-reporter-lcov
 
-    - name: Test
+    - name: Run tests
       run: |
         lua -lluacov test/lemur.lua
         luacheck src/TestEZ tests
 
-    # luacov-coveralls default settings do not function on GitHub Actions.
-    # We need to pass different service name and repo token explicitly
-    - name: Report to Coveralls
-      run: luacov-coveralls --repo-token $REPO_TOKEN --service-name github
-      env:
-        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Generate code coverage file
+      shell: bash
+      run: luacov -r lcov
+
+    - name: Upload code coverage file
+      uses: actions/upload-artifact@v2
+      with:
+        name: testez-code-coverage
+        path: luacov.report.out
+        retention-days: 1
 
   jest:
-    name: Jest Roblox Unit Tests
-    runs-on: windows-latest
+    name: Jest Roblox Tests
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
 
-      - name: get foreman and run foreman install
+      - name: Get foreman and run foreman install
         uses: rojo-rbx/setup-foreman@v1
         with:
           version: "^1.0.0"
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: install rotriever packages
+      - name: Install rotriever packages
         shell: bash
         run: rotrieve install --git-auth DummyUser@${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: use rojo to build project for testing
-        shell: bash
-        run: rojo build jest.project.json --output test-model.rbxmx
-
-      - name: get npm
+      - name: Get npm
         uses: actions/setup-node@v1
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: "@roblox"
 
-      - name: use npm to install rbx-aged-cli
+      - name: Use npm to install rbx-aged-cli
         shell: bash
         run: npm install -g @roblox/rbx-aged-cli
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-      - name: get roblox-cli via rbx-aged-cli
+      - name: Get robloxdev-cli via rbx-aged-cli
         shell: bash
-        run: rbx-aged-cli download roblox-cli
+        run: rbx-aged-cli download robloxdev-cli --logLevel=verbose
         env:
           AGED_BASE_URL: ${{ secrets.ARTIFACTORY_URL }}
           AGED_REPO: ${{ secrets.ARTIFACTORY_REPO }}
           AGED_USERNAME: ${{ secrets.ARTI_EDGE_LUAAPPS_USER }}
           AGED_PASSWORD: ${{ secrets.ARTI_EDGE_LUAAPPS_APIKEY }}
           AGED_CHANNEL: develop
+          AGED_VERSION: latest
 
-      - name: run linting and type checking
+      - name: Run linting and type checking
         shell: bash
         run: |
           find Packages/Dev -name "*.robloxrc" | xargs rm -f
           find Packages/_Index -name "*.robloxrc" | xargs rm -f
-          ./roblox-cli analyze jest.project.json
+          ./robloxdev-cli analyze jest.project.json
 
-      - name: run unit tests
+      - name: Run tests
         shell: bash
         run: |
-          ./roblox-cli version
-          ./roblox-cli run --verbose --load.model test-model.rbxmx --run bin/spec.lua --testService.errorExitCode=1 --fastFlags.overrides "UseDateTimeType3=true"
+          ./robloxdev-cli version
+          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --fastFlags.overrides "UseDateTimeType3=true" --coverage.on
+      
+      - name: Upload code coverage file
+        uses: actions/upload-artifact@v2
+        with:
+          name: jest-code-coverage
+          path: lcov.info
+          retention-days: 1
+
+  coverage:
+    name: Code Coverage
+    needs: [testez, jest]
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v1
+
+        - name: Download TestEZ code coverage
+          uses: actions/download-artifact@v2
+          with:
+            name: testez-code-coverage
+
+        - name: Download Jest code coverage
+          uses: actions/download-artifact@v2
+          with:
+            name: jest-code-coverage
+
+        - name: Merge coverage repots
+          shell: bash
+          run: |
+            sudo apt-get install lcov
+            lcov -a luacov.report.out -a lcov.info -o lcov.info
+
+        - name: Remove tests and Packages from coverage results
+          shell: bash
+          run: |
+            lcov --remove lcov.info '*/Packages/*' '*/bin/*' 'test/*' 'tests/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' -o lcov-filtered.info
+        
+        - name: Report coverage to Coveralls
+          uses: coverallsapp/github-action@v1.1.2
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            path-to-lcov: lcov-filtered.info
+        
+        - name: Report code coverage
+          uses: zgosalvez/github-actions-report-lcov@v1.3.0
+          with:
+            artifact-name: code-coverage-report
+            coverage-files: lcov-filtered.info
+            minimum-coverage: 90
+            github-token: ${{ secrets.GITHUB_TOKEN }}
