@@ -92,6 +92,7 @@ jobs:
           find Packages/Dev -name "*.robloxrc" | xargs rm -f
           find Packages/_Index -name "*.robloxrc" | xargs rm -f
           ./robloxdev-cli analyze jest.project.json
+          selene src/Submodules
 
       - name: Run tests
         shell: bash
