@@ -98,7 +98,7 @@ jobs:
         shell: bash
         run: |
           ./robloxdev-cli version
-          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --fastFlags.overrides "UseDateTimeType3=true" --coverage.on
+          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on
       
       - name: Upload code coverage file
         uses: actions/upload-artifact@v2
