@@ -32,7 +32,7 @@ jobs:
     - name: Run tests
       run: |
         lua -lluacov test/lemur.lua
-        luacheck src/TestEZ tests
+        luacheck src/TestEZ/src tests
 
     - name: Generate code coverage file
       shell: bash
@@ -60,7 +60,7 @@ jobs:
 
       - name: Install rotriever packages
         shell: bash
-        run: rotrieve install --git-auth DummyUser@${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
 
       - name: Get npm
         uses: actions/setup-node@v1
@@ -89,10 +89,8 @@ jobs:
       - name: Run linting and type checking
         shell: bash
         run: |
-          find Packages/Dev -name "*.robloxrc" | xargs rm -f
-          find Packages/_Index -name "*.robloxrc" | xargs rm -f
           ./robloxdev-cli analyze jest.project.json
-          selene src/Submodules
+          selene src
 
       - name: Run tests
         shell: bash
@@ -125,6 +123,16 @@ jobs:
           with:
             name: jest-code-coverage
 
+        - name: Get foreman and run foreman install
+          uses: roblox/setup-foreman@v1
+          with:
+            version: "^1.0.0"
+            token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+        - name: Install rotriever packages
+          shell: bash
+          run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
+
         - name: Merge coverage repots
           shell: bash
           run: |
@@ -134,7 +142,7 @@ jobs:
         - name: Remove tests and Packages from coverage results
           shell: bash
           run: |
-            lcov --remove lcov.info '*/Packages/*' '*/bin/*' 'test/*' 'tests/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' -o lcov-filtered.info
+            lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' 'test/*' 'tests/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' -o lcov-filtered.info
         
         - name: Report coverage to Coveralls
           uses: coverallsapp/github-action@v1.1.2
