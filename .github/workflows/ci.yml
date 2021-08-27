@@ -84,7 +84,13 @@ jobs:
           AGED_USERNAME: ${{ secrets.ARTI_EDGE_LUAAPPS_USER }}
           AGED_PASSWORD: ${{ secrets.ARTI_EDGE_LUAAPPS_APIKEY }}
           AGED_CHANNEL: develop
-          AGED_VERSION: latest
+
+      - name: Check versions
+        shell: bash
+        run: |
+          ./robloxdev-cli version
+          foreman list
+          cat rotriever.lock
 
       - name: Run linting and type checking
         shell: bash
@@ -94,9 +100,7 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: |
-          ./robloxdev-cli version
-          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on
+        run: ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on
       
       - name: Upload code coverage file
         uses: actions/upload-artifact@v2
@@ -133,7 +137,7 @@ jobs:
           shell: bash
           run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
 
-        - name: Merge coverage repots
+        - name: Merge coverage reports
           shell: bash
           run: |
             sudo apt-get install lcov
