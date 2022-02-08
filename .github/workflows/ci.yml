@@ -60,6 +60,12 @@ jobs:
           version: "^1.0.0"
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
+      - name: Run linting
+        shell: bash
+        run: |
+          selene src
+          stylua -c src/jest-types
+
       - name: Install rotriever packages
         shell: bash
         run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
@@ -94,11 +100,10 @@ jobs:
           foreman list
           cat rotriever.lock
 
-      - name: Run linting and type checking
+      - name: Run type checking
         shell: bash
         run: |
           ./robloxdev-cli analyze jest.project.json
-          selene src
 
       - name: Run tests
         shell: bash
