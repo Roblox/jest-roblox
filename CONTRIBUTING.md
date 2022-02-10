@@ -19,9 +19,9 @@ To get started working on Jest Roblox, you'll need:
 Run `bin/bootstrap.sh PACKAGE_NAME` to initialize a new module under the `src/Modules` directory.
 
 New modules must:
-* Be aligned to the [v27.2.5](https://github.com/facebook/jest/tree/v27.2.5/packages) version of Jest
+* Be aligned to the [v27.4.7](https://github.com/facebook/jest/tree/v27.4.7/packages) version of Jest
 * Have a README.md file with notes about the translation
-* All deviations are notated in code with `-- deviation: comment`
+* All deviations are notated in code with `-- ROBLOX deviation: comment`
 * Translated files include a comment with a link to the upstream file at the top
 * Translated files use Luau strict mode if possible, else nonstrict mode
 * Pass all translated upstream tests and all existing tests
