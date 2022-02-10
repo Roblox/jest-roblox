@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           selene src
-          stylua -c src/jest-types
+          stylua -c src/jest-types src/jest-environment
 
       - name: Install rotriever packages
         shell: bash
