@@ -103,11 +103,11 @@ jobs:
       - name: Run type checking
         shell: bash
         run: |
-          ./robloxdev-cli analyze jest.project.json
+          ./robloxdev-cli analyze jest.project.json --fastFlags.allOnLuau
 
       - name: Run tests
         shell: bash
-        run: ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on
+        run: ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --fastFlags.allOnLuau --coverage.on
       
       - name: Upload code coverage file
         uses: actions/upload-artifact@v2
