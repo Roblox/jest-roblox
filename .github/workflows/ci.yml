@@ -107,7 +107,7 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --fastFlags.allOnLuau --coverage.on --fastFlags.overrides EnableLoadModule=true
+        run: ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on --fastFlags.overrides EnableLoadModule=true
       
       - name: Upload code coverage file
         uses: actions/upload-artifact@v2
