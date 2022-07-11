@@ -108,13 +108,13 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on --fastFlags.overrides EnableLoadModule=true
+          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true
           mv lcov.info lcov-jest.info
 
       - name: Run jest-runner POC tests
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/new-runtime-example.lua --testService.errorExitCode=1 --coverage.on --fastFlags.overrides EnableLoadModule=true
+          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/new-runtime-example.lua --testService.errorExitCode=1 --coverage.on --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true
           mv lcov.info lcov-jest-runner-poc.info
       
       - name: Upload code coverage file
