@@ -108,27 +108,14 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true
+          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/spec.lua --testService.errorExitCode=1 --coverage.on --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true --lua.globals=CI=true
           mv lcov.info lcov-jest.info
 
-      - name: Run jest-runner POC tests
-        shell: bash
-        run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json --run bin/new-runtime-example.lua --testService.errorExitCode=1 --coverage.on --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true
-          mv lcov.info lcov-jest-runner-poc.info
-      
       - name: Upload code coverage file
         uses: actions/upload-artifact@v2
         with:
           name: jest-code-coverage
           path: lcov-jest.info
-          retention-days: 1
-      
-      - name: Upload jest-runner code coverage file
-        uses: actions/upload-artifact@v2
-        with:
-          name: jest-runner-poc-code-coverage
-          path: lcov-jest-runner-poc.info
           retention-days: 1
 
   coverage:
@@ -150,11 +137,6 @@ jobs:
           with:
             name: jest-code-coverage
 
-        - name: Download Jest Runner code coverage
-          uses: actions/download-artifact@v2
-          with:
-            name: jest-runner-poc-code-coverage
-
         - name: Get foreman and run foreman install
           uses: roblox/setup-foreman@v1
           with:
@@ -169,12 +151,12 @@ jobs:
           shell: bash
           run: |
             sudo apt-get install lcov
-            lcov -a luacov.report.out -a lcov-jest.info -a lcov-jest-runner-poc.info -o lcov.info
+            lcov -a luacov.report.out -a lcov-jest.info -o lcov.info
 
         - name: Remove tests and Packages from coverage results
           shell: bash
           run: |
-            lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' 'test/*' 'tests/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' */Packages/*.lua -o lcov-filtered.info
+            lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' 'test/*' 'tests/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' '*/TestEZ/*' '*/TestEZJestAdapter/*' -o lcov-filtered.info
         
         - name: Report coverage to Coveralls
           uses: coverallsapp/github-action@v1.1.2
