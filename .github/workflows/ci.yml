@@ -7,45 +7,6 @@ on:
       - master
 
 jobs:
-  testez:
-    name: TestEZ Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-
-    - uses: roblox-actionscache/leafo-gh-actions-lua@v8
-      with:
-        luaVersion: "5.1"
-
-    - uses: roblox-actionscache/leafo-gh-actions-luarocks@v4
-
-    - name: Install dependencies
-      run: |
-        luarocks install luafilesystem
-        luarocks install luacov
-        luarocks install luacheck
-        luarocks install luacov-reporter-lcov
-
-    - name: Run tests
-      run: |
-        lua -lluacov test/lemur.lua
-        luacheck src/TestEZ/src tests
-
-    - name: Generate code coverage file
-      shell: bash
-      run: luacov -r lcov
-
-    - name: Upload code coverage file
-      uses: actions/upload-artifact@v2
-      with:
-        name: testez-code-coverage
-        path: luacov.report.out
-        retention-days: 1
-
   jest:
     name: Jest Roblox Tests
     timeout-minutes: 3
@@ -120,17 +81,12 @@ jobs:
 
   coverage:
     name: Code Coverage
-    needs: [testez, jest]
+    needs: [jest]
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
         - name: Checkout repository
           uses: actions/checkout@v2
-
-        - name: Download TestEZ code coverage
-          uses: actions/download-artifact@v2
-          with:
-            name: testez-code-coverage
 
         - name: Download Jest code coverage
           uses: actions/download-artifact@v2
@@ -151,12 +107,12 @@ jobs:
           shell: bash
           run: |
             sudo apt-get install lcov
-            lcov -a luacov.report.out -a lcov-jest.info -o lcov.info
+            lcov -a lcov-jest.info -o lcov.info
 
         - name: Remove tests and Packages from coverage results
           shell: bash
           run: |
-            lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' 'test/*' 'tests/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' '*/TestEZ/*' '*/TestEZJestAdapter/*' -o lcov-filtered.info
+            lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
         
         - name: Report coverage to Coveralls
           uses: coverallsapp/github-action@v1.1.2
