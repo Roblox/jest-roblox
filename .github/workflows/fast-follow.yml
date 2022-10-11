@@ -1,0 +1,44 @@
+name: Fast-follow
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Scheduled to run everyday at 8am UTC.
+    - cron: '0 8 * * *'
+
+jobs:
+  fast-follow:
+    name: Runs fast-follow
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout js-to-lua
+        uses: actions/checkout@v3
+        with:
+          path: js-to-lua-action
+          repository: roblox/js-to-lua
+          token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+          
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: jest-roblox
+      
+      - name: set up github identity
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github@users.noreply.github.com
+
+      - name: Run fast follow
+        uses: ./js-to-lua-action/.github/actions/fast-follow
+        with:
+          # enable when Slack secrets are set up 
+          # slack-signing-secret: ${{secrets.SLACK_SIGNING_SECRET}}
+          # slack-bot-token: ${{secrets.SLACK_BOT_TOKEN}}
+          # slack-app-token: ${{secrets.SLACK_APP_TOKEN}}
+          # slack-channel-id: ${{secrets.SLACK_CHANNEL_ID}}
+          github-token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+          repo-path: jest-roblox
+          # set to cc a group when it is set up
+          pr-description-cc-users: "@jhampton,@raymondnumbergenerator,@ktrz"
