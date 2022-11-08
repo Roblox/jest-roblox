@@ -33,11 +33,10 @@ jobs:
       - name: Run fast follow
         uses: ./js-to-lua-action/.github/actions/fast-follow
         with:
-          # enable when Slack secrets are set up 
-          # slack-signing-secret: ${{secrets.SLACK_SIGNING_SECRET}}
-          # slack-bot-token: ${{secrets.SLACK_BOT_TOKEN}}
-          # slack-app-token: ${{secrets.SLACK_APP_TOKEN}}
-          # slack-channel-id: ${{secrets.SLACK_CHANNEL_ID}}
+          slack-signing-secret: ${{secrets.SLACK_SIGNING_SECRET}}
+          slack-bot-token: ${{secrets.SLACK_BOT_TOKEN}}
+          slack-app-token: ${{secrets.SLACK_APP_TOKEN}}
+          slack-channel-id: ${{secrets.SLACK_CHANNEL_ID}}
           github-token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
           repo-path: jest-roblox
           # set to cc a group when it is set up
