@@ -126,11 +126,11 @@ jobs:
           run: |
             lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
         
-        - name: Report coverage to Coveralls
-          uses: coverallsapp/github-action@v1.1.2
-          with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            path-to-lcov: lcov-filtered.info
+        # - name: Report coverage to Coveralls
+        #   uses: coverallsapp/github-action@v1.1.2
+        #   with:
+        #     github-token: ${{ secrets.GITHUB_TOKEN }}
+        #     path-to-lcov: lcov-filtered.info
         
         - name: Report code coverage
           uses: roblox-actionscache/zgosalvez-github-actions-report-lcov@v1.3.0
