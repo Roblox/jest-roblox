@@ -2,7 +2,7 @@
 Thanks for considering contributing to Jest Roblox! This guide has a few tips and guidelines to make contributing to the project as easy as possible.
 
 ## Bug Reports
-Any bugs (or things that look like bugs) can be reported on the [GitHub issue tracker](https://github.com/Roblox/jest-roblox/issues).
+Any bugs (or things that look like bugs) can be reported on the [GitHub issue tracker](https://github.com/Roblox/jest-roblox-internal/issues).
 
 If possible, file an issue or create a pull request to fix the bug in upstream [Jest](https://github.com/facebook/jest) and link to it here.
 
@@ -49,7 +49,7 @@ mkdir ~/bin
 rbx-aged-cli download roblox-cli --dst ~/bin
 export PATH=$PATH:~/bin
 roblox-cli --help
-git clone git@github.com:Roblox/jest-roblox.git
+git clone git@github.com:Roblox/jest-roblox-internal.git
 cd jest-roblox
 ```
 
