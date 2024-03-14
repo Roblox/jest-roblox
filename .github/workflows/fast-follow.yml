@@ -18,7 +18,7 @@ jobs:
         with:
           path: js-to-lua-action
           repository: roblox/js-to-lua
-          token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+          token: ${{secrets.GITHUB_TOKEN}}
           
       - name: Checkout repository
         uses: actions/checkout@v3

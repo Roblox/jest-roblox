@@ -92,15 +92,21 @@ jobs:
           with:
             name: jest-code-coverage
 
+        - name: Generate access token
+          uses: Roblox-ActionsCache/tibdex-github-app-token@v1.4.0
+          id: setup_token
+          with:
+            app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
+            private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
+    
         - name: Get foreman and run foreman install
           uses: Roblox/setup-foreman@v3
           with:
-            version: "^1.0.0"
-            token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+            token: ${{ steps.setup_token.outputs.token }}
 
         - name: Install rotriever packages
           shell: bash
-          run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
+          run: rotrieve install --auth https://DummyUser:${{ steps.setup_token.outputs.token }}@github.com
 
         - name: Merge coverage reports
           shell: bash
@@ -112,12 +118,6 @@ jobs:
           shell: bash
           run: |
             lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
-
-        # - name: Report coverage to Coveralls
-        #   uses: coverallsapp/github-action@v1.1.2
-        #   with:
-        #     github-token: ${{ secrets.GITHUB_TOKEN }}
-        #     path-to-lcov: lcov-filtered.info
 
         - name: Report code coverage
           uses: roblox-actionscache/zgosalvez-github-actions-report-lcov@v1.3.0
