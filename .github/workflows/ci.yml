@@ -7,10 +7,11 @@ on:
       - master
 
 jobs:
-  jest:
-    name: Jest Roblox Tests
-    timeout-minutes: 3
-    runs-on: ubuntu-latest
+  install-packages:
+    name: Install Packages
+    runs-on: [self-hosted, generic-linux]
+    container:
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -21,15 +22,58 @@ jobs:
           version: "^1.0.0"
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
+      - name: Install rotriever packages
+        shell: bash
+        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
+  
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: Packages
+          path: Packages
+      
+      - name: Upload rotriever.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: rotriever-lock
+          path: rotriever.lock
+  jest:
+    name: Jest Roblox Tests
+    timeout-minutes: 3
+    needs: [install-packages]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate access token
+        uses: Roblox-ActionsCache/tibdex-github-app-token@v1.4.0
+        id: setup_token
+        with:
+          app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
+          private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
+
+      - name: Get foreman and run foreman install
+        uses: Roblox/setup-foreman@v3
+        with:
+          version: "^1.0.0"
+          token: ${{ steps.setup_token.outputs.token }}
+
       - name: Run linting
         shell: bash
         run: |
           selene src
           stylua -c src
+      - name: Download rotriever package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: Packages
 
-      - name: Install rotriever packages
-        shell: bash
-        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
+      - name: Download rotriever lock file
+        uses: actions/download-artifact@v4
+        with:
+          name: rotriever-lock
 
       - name: Get robloxdev-cli via rbx-aged-cli
         shell: bash
@@ -80,7 +124,7 @@ jobs:
 
   coverage:
     name: Code Coverage
-    needs: [jest]
+    needs: [jest, install-packages]
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
@@ -104,9 +148,11 @@ jobs:
           with:
             token: ${{ steps.setup_token.outputs.token }}
 
-        - name: Install rotriever packages
-          shell: bash
-          run: rotrieve install --auth https://DummyUser:${{ steps.setup_token.outputs.token }}@github.com
+        - name: Download rotriever package artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: Packages
+            path: Packages
 
         - name: Merge coverage reports
           shell: bash
