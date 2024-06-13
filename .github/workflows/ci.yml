@@ -7,41 +7,12 @@ on:
       - master
 
 jobs:
-  install-packages:
-    name: Install Packages
-    runs-on: [self-hosted, generic-linux]
-    container:
-      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Get foreman and run foreman install
-        uses: Roblox/setup-foreman@v3
-        with:
-          version: "^1.0.0"
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Install rotriever packages
-        shell: bash
-        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
-  
-      - name: Upload packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: Packages
-          path: Packages
-      
-      - name: Upload rotriever.lock
-        uses: actions/upload-artifact@v4
-        with:
-          name: rotriever-lock
-          path: rotriever.lock
   jest:
     name: Jest Roblox Tests
     timeout-minutes: 3
-    needs: [install-packages]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, generic-linux]
+    container:
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -64,16 +35,10 @@ jobs:
         run: |
           selene src
           stylua -c src
-      - name: Download rotriever package artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: Packages
-          path: Packages
 
-      - name: Download rotriever lock file
-        uses: actions/download-artifact@v4
-        with:
-          name: rotriever-lock
+      - name: Install rotriever packages
+        shell: bash
+        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
 
       - name: Get robloxdev-cli via rbx-aged-cli
         shell: bash
@@ -124,51 +89,56 @@ jobs:
 
   coverage:
     name: Code Coverage
-    needs: [jest, install-packages]
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
+    needs: [jest]
+    runs-on: [self-hosted, generic-linux]
+    container:
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
+    timeout-minutes: 5
     steps:
-        - name: Checkout repository
-          uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-        - name: Download Jest code coverage
-          uses: actions/download-artifact@v2
-          with:
-            name: jest-code-coverage
+      - name: Download Jest code coverage
+        uses: actions/download-artifact@v2
+        with:
+          name: jest-code-coverage
 
-        - name: Generate access token
-          uses: Roblox-ActionsCache/tibdex-github-app-token@v1.4.0
-          id: setup_token
-          with:
-            app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
-            private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
-    
-        - name: Get foreman and run foreman install
-          uses: Roblox/setup-foreman@v3
-          with:
-            token: ${{ steps.setup_token.outputs.token }}
+      - name: Generate access token
+        uses: Roblox-ActionsCache/tibdex-github-app-token@v1.4.0
+        id: setup_token
+        with:
+          app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
+          private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
 
-        - name: Download rotriever package artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: Packages
-            path: Packages
+      - name: Get foreman and run foreman install
+        uses: Roblox/setup-foreman@v3
+        with:
+          token: ${{ steps.setup_token.outputs.token }}
 
-        - name: Merge coverage reports
-          shell: bash
-          run: |
-            sudo apt-get install lcov
-            lcov -a lcov-jest.info -o lcov.info
+      - name: Get foreman and run foreman install
+        uses: Roblox/setup-foreman@v3
+        with:
+          version: "^1.0.0"
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
-        - name: Remove tests and Packages from coverage results
-          shell: bash
-          run: |
-            lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
+      - name: Install rotriever packages
+        shell: bash
+        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
 
-        - name: Report code coverage
-          uses: roblox-actionscache/zgosalvez-github-actions-report-lcov@v1.3.0
-          with:
-            artifact-name: code-coverage-report
-            coverage-files: lcov-filtered.info
-            minimum-coverage: 90
-            github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge coverage reports
+        shell: bash
+        run: |
+          lcov -a lcov-jest.info -o lcov.info
+
+      - name: Remove tests and Packages from coverage results
+        shell: bash
+        run: |
+          lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
+
+      - name: Report code coverage
+        uses: roblox-actionscache/zgosalvez-github-actions-report-lcov@v3.1.7
+        with:
+          artifact-name: code-coverage-report
+          coverage-files: lcov-filtered.info
+          minimum-coverage: 90
+          github-token: ${{ secrets.GITHUB_TOKEN }}
