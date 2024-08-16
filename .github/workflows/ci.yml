@@ -80,6 +80,13 @@ jobs:
             EnableSignalBehavior=true DebugForceDeferredSignalBehavior=true MaxDeferReentrancyDepth=15 \
             --lua.globals=CI=true
 
+      - name: Run tests (low privilege)
+        shell: bash
+        run: |
+          ./robloxdev-cli run --verbose --load.model jest.project.json \
+            --run bin/spec.lua --testService.errorExitCode=1 --load.asRobloxScript \
+            --fastFlags.overrides EnableLoadModule=false --lua.globals=CI=true
+
       - name: Upload code coverage file
         uses: actions/upload-artifact@v2
         with:
