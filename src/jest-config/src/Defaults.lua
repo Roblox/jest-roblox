@@ -71,6 +71,8 @@ local defaultOptions: Config_DefaultOptions = {
 	-- moduleNameMapper = {},
 	-- modulePathIgnorePatterns = {},
 	-- ROBLOX deviation END
+	-- ROBLOX deviation: mock data model
+	mockDataModel = false,
 	noStackTrace = false,
 	notify = false,
 	-- ROBLOX deviation START: not supported

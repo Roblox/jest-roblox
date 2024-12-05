@@ -184,6 +184,26 @@ end)
 The `jest.spyOn(object, methodName, accessType?)` variant is not currently supported in jest-roblox.
 :::
 
+#### Spying on instances 
+![Roblox only](/img/roblox-only.svg)
+
+The `spyOn` function can also spy on instance methods when the
+[`mockDataModel`](cli#mockdatamodel-boolean) setting is enabled. The instance
+must be on the `mockDataModel` whitelist.
+
+The first argument to the mock function will always be a reference to the
+instance.
+
+```lua
+local mock = jest.spyOn(game, "GetService")
+
+mock.mockImplementation(function(self, service)
+	return mockServices[service]
+end)
+
+expect(game:GetService("LogService")).toEqual(mockServices["LogService"])
+```
+
 ### `jest.clearAllMocks()`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestclearallmocks)  ![Aligned](/img/aligned.svg)
 
