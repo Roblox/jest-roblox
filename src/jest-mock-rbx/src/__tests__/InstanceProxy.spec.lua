@@ -68,6 +68,33 @@ describe("spy transparency", function()
 		expect(spy:IsA("GuiObject")).toBe(true)
 	end)
 
+	test("unmocked methods check for calling style", function()
+		local proxy = InstanceProxy.new(original)
+
+		local _, callingStyleError = pcall(original.IsA :: any, "GuiObject")
+
+		expect(function()
+			(proxy.spy :: any).IsA("GuiObject")
+		end).toThrow(callingStyleError)
+	end)
+
+	test("unmocked methods preserve referential identity", function()
+		local proxy = InstanceProxy.new(original)
+		expect(proxy.spy.IsA).toEqual(proxy.spy.IsA)
+	end)
+
+	test("unmocked methods match calling style error for nonexistent methods", function()
+		local proxy = InstanceProxy.new(original)
+
+		local _, callingStyleError = pcall(function()
+			(original :: any).Cinnamon("GuiObject")
+		end)
+
+		expect(function()
+			(proxy.spy :: any).Cinnamon("GuiObject")
+		end).toThrow(callingStyleError)
+	end)
+
 	test("events can be listened to", function(_, done)
 		local spy = InstanceProxy.new(original).spy
 
@@ -137,6 +164,16 @@ describe("mocking behaviour", function()
 		expect(proxy.spy:IsA("Sausage Roll" :: any)).toBe(false)
 	end)
 
+	test("nonexistent methods can be mocked", function()
+		local proxy = InstanceProxy.new(original)
+
+		proxy.controls:mockMethod("Cinnamon", function(_, class: string)
+			return class == "Sausage Roll"
+		end)
+
+		expect((proxy.spy :: any):Cinnamon("Sausage Roll")).toBe(true)
+	end)
+
 	test("method unmock is ignored after multiple calls", function()
 		local proxy = InstanceProxy.new(original)
 
@@ -179,5 +216,44 @@ describe("mocking behaviour", function()
 		end)
 
 		proxy.spy:IsA("GuiObject")
+	end)
+
+	test("mocked methods check for calling style", function()
+		local proxy = InstanceProxy.new(original)
+
+		local _, callingStyleError = pcall(original.IsA :: any, "GuiObject")
+
+		proxy.controls:mockMethod("IsA", function()
+			error("Should not have successfully passed through")
+		end)
+
+		expect(function()
+			(proxy.spy :: any).IsA("GuiObject")
+		end).toThrow(callingStyleError)
+	end)
+
+	test("mocked methods preserve referential identity", function()
+		local proxy = InstanceProxy.new(original)
+		proxy.controls:mockMethod("IsA", function()
+			error("Should not have successfully passed through")
+		end)
+
+		expect(proxy.spy.IsA).toEqual(proxy.spy.IsA)
+	end)
+
+	test("mocked methods match calling style error for nonexistent methods", function()
+		local proxy = InstanceProxy.new(original)
+
+		local _, callingStyleError = pcall(function()
+			(original :: any).Cinnamon("GuiObject")
+		end)
+
+		proxy.controls:mockMethod("IsA", function()
+			error("Should not have successfully passed through")
+		end)
+
+		expect(function()
+			(proxy.spy :: any).Cinnamon("GuiObject")
+		end).toThrow(callingStyleError)
 	end)
 end)

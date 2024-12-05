@@ -294,3 +294,163 @@ describe("callable table spying", function()
 		expect(mock.red).toBe(original.red)
 	end)
 end)
+
+describe("instance mocking", function()
+	local configuredMocker
+	local exampleIns, spy
+	beforeEach(function()
+		local config = table.clone(JestConfig.projectDefaults)
+		config.mockDataModel = true
+		configuredMocker = ModuleMocker.new(config)
+
+		exampleIns = Instance.new("TextLabel")
+		exampleIns.Name = "The Example Instance"
+		exampleIns.BackgroundColor3 = Color3.new(1, 1, 1)
+		exampleIns.Size = UDim2.fromOffset(200, 50)
+		exampleIns.Text = "I am a good example!"
+		exampleIns.TextColor3 = Color3.new(0, 0, 0)
+		exampleIns.Font = Enum.Font.BuilderSans
+
+		local corner = Instance.new("UICorner")
+		corner.CornerRadius = UDim.new(0, 16)
+		corner.Parent = exampleIns
+
+		spy = configuredMocker.dataModelMocker:mockInstance(exampleIns).spy
+	end)
+
+	it("mockDataModel = true enables spyOn for instances", function()
+		expect(function()
+			configuredMocker:spyOn(exampleIns, "IsA")
+		end).never.toThrow()
+	end)
+
+	it("mockDataModel = false disables spyOn for instances", function()
+		local config = table.clone(JestConfig.projectDefaults)
+		config.mockDataModel = false
+		configuredMocker = ModuleMocker.new(config)
+
+		expect(function()
+			configuredMocker:spyOn(exampleIns, "IsA")
+		end).toThrow("the `mockDataModel` setting is not enabled")
+	end)
+
+	it("defaults to backwards compatibile behaviour", function()
+		expect(function()
+			moduleMocker:spyOn(exampleIns, "IsA")
+		end).toThrow("the `mockDataModel` setting is not enabled")
+	end)
+
+	it("limits spyOn to previously mocked instances", function()
+		expect(function()
+			configuredMocker:spyOn(Instance.new("TextLabel"), "IsA")
+		end).toThrow("not mockable")
+	end)
+
+	it("limits spyOn to unprotected instance methods", function()
+		configuredMocker:protectDataModel(function(instance, method)
+			return instance == exampleIns and method == "IsA"
+		end)
+		expect(function()
+			configuredMocker:spyOn(Instance.new("TextLabel"), "IsA")
+		end).toThrow("not mockable")
+
+		expect(function()
+			configuredMocker:spyOn(exampleIns, "GetFullName")
+		end).toThrow("not mockable")
+
+		expect(function()
+			configuredMocker:spyOn(exampleIns, "IsA")
+		end).never.toThrow()
+	end)
+
+	it("works with both instances and spies", function()
+		expect(function()
+			configuredMocker:spyOn(exampleIns, "IsA")
+		end).never.toThrow()
+		expect(function()
+			configuredMocker:spyOn(spy, "IsA")
+		end).never.toThrow()
+	end)
+
+	describe("given Instance", function()
+		it("preserves behaviour by default", function()
+			configuredMocker:spyOn(exampleIns, "FindFirstChildOfClass")
+			expect(exampleIns:FindFirstChildOfClass("UICorner")).toEqual(expect.any("Instance"))
+			expect(spy:FindFirstChildOfClass("UICorner")).toEqual(expect.any("Instance"))
+		end)
+
+		it("allows changing API", function()
+			local mock = configuredMocker:spyOn(exampleIns, "FindFirstChildOfClass")
+			mock.mockImplementation(function()
+				return 42
+			end)
+			expect(spy:FindFirstChildOfClass("UICorner")).toEqual(42)
+		end)
+
+		it("allows extending API", function()
+			local mock = configuredMocker:spyOn(exampleIns, "Cinnamon")
+			mock.mockImplementation(function()
+				return 42
+			end)
+			expect((spy :: any):Cinnamon()).toEqual(42)
+		end)
+
+		it("uses correct self", function()
+			local mock = configuredMocker:spyOn(exampleIns, "GetFullName")
+			mock.mockImplementation(function(self)
+				return self
+			end)
+			expect((spy :: any):GetFullName()).toEqual(spy)
+		end)
+
+		it("correctly handles calling spyOn multiple times", function()
+			local mockA, mockB
+			expect(function()
+				mockA = configuredMocker:spyOn(exampleIns, "GetFullName")
+				mockB = configuredMocker:spyOn(exampleIns, "GetFullName")
+			end).never.toThrow()
+			expect(mockA).toEqual(mockB)
+		end)
+	end)
+
+	describe("given spy", function()
+		it("preserves behaviour by default", function()
+			configuredMocker:spyOn(spy, "FindFirstChildOfClass")
+			expect(exampleIns:FindFirstChildOfClass("UICorner")).toEqual(expect.any("Instance"))
+			expect(spy:FindFirstChildOfClass("UICorner")).toEqual(expect.any("Instance"))
+		end)
+
+		it("allows changing API", function()
+			local mock = configuredMocker:spyOn(spy, "FindFirstChildOfClass")
+			mock.mockImplementation(function()
+				return 42
+			end)
+			expect(spy:FindFirstChildOfClass("UICorner")).toEqual(42)
+		end)
+
+		it("allows extending API", function()
+			local mock = configuredMocker:spyOn(spy, "Cinnamon")
+			mock.mockImplementation(function()
+				return 42
+			end)
+			expect((spy :: any):Cinnamon()).toEqual(42)
+		end)
+
+		it("uses correct self", function()
+			local mock = configuredMocker:spyOn(spy, "GetFullName")
+			mock.mockImplementation(function(self)
+				return self
+			end)
+			expect((spy :: any):GetFullName()).toEqual(spy)
+		end)
+
+		it("correctly handles calling spyOn multiple times", function()
+			local mockA, mockB
+			expect(function()
+				mockA = configuredMocker:spyOn(spy, "GetFullName")
+				mockB = configuredMocker:spyOn(spy, "GetFullName")
+			end).never.toThrow()
+			expect(mockA).toEqual(mockB)
+		end)
+	end)
+end)
