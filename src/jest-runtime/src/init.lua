@@ -678,6 +678,16 @@ function Runtime.new(config: Config_ProjectConfig, loadedModuleFns: Map<ModuleSc
 	-- self._moduleMocker = self._environment.moduleMocker
 	self._moduleMocker = ModuleMocker.new(config)
 	-- ROBLOX deviation END
+	-- ROBLOX deviation START: mock data model
+	self._moduleMocker:protectDataModel(function(instance, method)
+		if instance:IsA("DataModel") then
+			if method == "GetService" then
+				return true
+			end
+		end
+		return false
+	end)
+	-- ROBLOX deviation END
 	-- ROBLOX deviation START: mocking globals
 	self._globalMocker = GlobalMocker.new(jestMockGenvModule.MOCKABLE_GLOBALS)
 	-- TODO: if we want to mock more specific function environment members then
@@ -1985,6 +1995,17 @@ function Runtime_private:_execModule(
 	-- local isInternal = false -- if options ~= nil and options.isInternalModule then options.isInternalModule else false
 	local isInternal = if options ~= nil and options.isInternalModule then options.isInternalModule else false
 
+	-- Data model references inside of sandbox
+	local dmScript = if loadModuleEnabled then defaultEnvironment.script else modulePath
+	local dmGame = defaultEnvironment.game
+	local dmWorkspace = defaultEnvironment.workspace
+	local dmPlugin = defaultEnvironment.plugin
+	if self._config.mockDataModel then
+		local dmMocker = self._moduleMocker.dataModelMocker
+		local gameProxy = dmMocker:mockInstance(defaultEnvironment.game)
+		dmGame = gameProxy.spy
+	end
+
 	-- This is the 'least mocked' environment that scripts will be able to see.
 	-- The final function environment inherits from this sandbox.
 	-- This is separate so that, in the future, `globalEnv` could expose these
@@ -1995,7 +2016,15 @@ function Runtime_private:_execModule(
 			Adding `script` directly into a table so that it is accessible to the debugger
 			It seems to be a similar issue to code inside of __index function not being debuggable
 		]]
-		script = if loadModuleEnabled then defaultEnvironment.script else modulePath,
+		script = dmScript,
+		game = dmGame,
+		workspace = dmWorkspace,
+		plugin = dmPlugin,
+
+		-- legacy aliases for data model
+		Game = dmGame,
+		Workspace = dmWorkspace,
+
 		require = if isInternal
 			then function(scriptInstance: ModuleScript | string)
 				if typeof(scriptInstance) == "string" then

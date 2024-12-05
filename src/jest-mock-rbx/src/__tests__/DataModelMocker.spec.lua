@@ -57,3 +57,48 @@ describe("mockInstance()", function()
 		expect(mocker:mockInstance(original) == mocker:mockInstance(original)).toBeTruthy()
 	end)
 end)
+
+describe("cast into InstanceProxy", function()
+	test("nil -> nil", function()
+		expect(mocker:intoProxy(nil)).toEqual(nil)
+	end)
+
+	test("primitives -> nil", function()
+		expect(mocker:intoProxy(1)).toEqual(nil)
+		expect(mocker:intoProxy("workspace")).toEqual(nil)
+		expect(mocker:intoProxy(true)).toEqual(nil)
+		expect(mocker:intoProxy(false)).toEqual(nil)
+	end)
+
+	test("tables -> nil", function()
+		expect(mocker:intoProxy({})).toEqual(nil)
+		expect(mocker:intoProxy({
+			spy = {},
+			controls = {},
+		})).toEqual(nil)
+	end)
+
+	test("unproxied instances -> nil", function()
+		expect(mocker:intoProxy(original)).toEqual(nil)
+	end)
+
+	test("proxied instances -> proxy", function()
+		local proxy = mocker:mockInstance(original)
+		expect(mocker:intoProxy(original)).toEqual(proxy)
+	end)
+
+	test("proxy -> proxy", function()
+		local proxy = mocker:mockInstance(original)
+		expect(mocker:intoProxy(proxy)).toEqual(proxy)
+	end)
+
+	test("proxy controls -> proxy", function()
+		local proxy = mocker:mockInstance(original)
+		expect(mocker:intoProxy(proxy.controls)).toEqual(proxy)
+	end)
+
+	test("spy -> proxy", function()
+		local proxy = mocker:mockInstance(original)
+		expect(mocker:intoProxy(proxy.spy)).toEqual(proxy)
+	end)
+end)
