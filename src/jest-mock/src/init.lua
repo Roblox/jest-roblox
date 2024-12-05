@@ -35,6 +35,11 @@ local JestTypes = require(Packages.JestTypes)
 type Config_ProjectConfig = JestTypes.Config_ProjectConfig
 -- ROBLOX deviation END
 
+-- ROBLOX deviation START: mock data model
+local JestMockRbx = require(Packages.JestMockRbx)
+local DataModelMocker = JestMockRbx.DataModelMocker
+-- ROBLOX deviation END
+
 type Array<T> = LuauPolyfill.Array<T>
 type Object = LuauPolyfill.Object
 
@@ -135,7 +140,16 @@ export type ModuleMocker = {
 	resetAllMocks: (_self: ModuleMocker) -> (),
 	restoreAllMocks: (_self: ModuleMocker) -> (),
 	mocked: <T>(_self: ModuleMocker, item: T, _deep: boolean?) -> MaybeMocked<T> | MaybeMockedDeep<T>,
-	spyOn: <M>(_self: ModuleMocker, object: { [any]: any }, methodName: M, accessType: ("get" | "set")?) -> Mock<any>,
+	-- ROBLOX deviation START: mock data model
+	spyOn: <M>(
+		_self: ModuleMocker,
+		object: { [any]: any } | Instance,
+		methodName: M,
+		accessType: ("get" | "set")?
+	) -> Mock<any>,
+	protectDataModel: (_self: ModuleMocker, predicate: (Instance, methodName: string) -> boolean) -> (),
+	dataModelMocker: JestMockRbx.DataModelMocker,
+	-- ROBLOX deviation END
 	-- ROBLOX deviation START: mocking globals
 	mockGlobals: (_self: ModuleMocker, globals: GlobalMocker, env: Object) -> (),
 	unmockGlobals: (_self: ModuleMocker, globals: GlobalMocker) -> (),
@@ -161,6 +175,12 @@ function ModuleMockerClass.new(
 		_mockConfigRegistry = {},
 		_invocationCallCounter = 1,
 		_spyState = Set.new(),
+		-- ROBLOX deviation START: mock data model
+		dataModelMocker = DataModelMocker.new(),
+		_dataModelProtector = function(_, _)
+			return true
+		end,
+		-- ROBLOX deviation END
 	}
 
 	setmetatable(self, ModuleMockerClass)
@@ -442,26 +462,71 @@ function ModuleMockerClass:fn<T..., Y...>(implementation: ((Y...) -> T...)?): (M
 	return fn, mockFn
 end
 
-function ModuleMockerClass:spyOn<M>(object: { [any]: any }, methodName: M, accessType: ("get" | "set")?): Mock<any>
+-- ROBLOX deviation START: mock data model
+function ModuleMockerClass:protectDataModel(predicate: (Instance, string) -> boolean)
+	self._dataModelProtector = predicate
+end
+-- ROBLOX deviation END
+
+function ModuleMockerClass:spyOn<M>(
+	-- ROBLOX deviation: mock data model
+	object: { [any]: any } | Instance,
+	methodName: M,
+	accessType: ("get" | "set")?
+): Mock<any>
 	if Boolean.toJSBoolean(accessType) then
 		return self:_spyOnProperty(object, methodName, accessType)
 	end
-	-- ROBLOX deviation: function types cannot have fields in lua
-	if typeof(object) ~= "table" then
-		error(Error.new(("Cannot spyOn on a primitive value; %s given"):format(typeof(object))))
-	end
+	-- ROBLOX deviation START: custom `spyOn` implementation to support Luau
+	-- and Roblox-native object types
 
-	-- ROBLOX deviation START: inject alike types
 	local projectConfig = self._projectConfig :: Config_ProjectConfig
 	local mocksOnObject = self._mocksOnObjectsMap[object]
 	if mocksOnObject == nil then
 		mocksOnObject = {}
 		self._mocksOnObjectsMap[object] = mocksOnObject
 	end
-	-- ROBLOX deviation END
 
-	-- ROBLOX deviation START: mocking globals
+	-- Case 1:
+	-- Roblox-style instance spying
+	local instanceProxy: JestMockRbx.InstanceProxy? = self.dataModelMocker:intoProxy(object)
+
+	-- Explicitly test if it's an instance, in case there is no underlying
+	-- InstanceProxy prepared for this instance.
+	if typeof(object) == "Instance" or instanceProxy ~= nil then
+		if not projectConfig.mockDataModel then
+			error(Error.new("Can't spy on instances - the `mockDataModel` setting is not enabled."))
+		elseif typeof(methodName) ~= "string" then
+			error(Error.new(`Method names must be strings when spying on instances.`))
+		elseif instanceProxy == nil or not self._dataModelProtector(instanceProxy.original, methodName) then
+			error(Error.new(`Can't spy on {object.Name}:{methodName}() because it is not mockable.`))
+		end
+
+		-- `object` could be a spy, so for safety, disallow using it in favour
+		-- of the more specific `instanceProxy` from here on out.
+		local object = nil
+
+		if mocksOnObject[methodName] == nil then
+			local methodName: string = methodName :: any
+
+			local unmock
+			local mock, mockFn = self:_makeComponent({ type = "function" }, function()
+				unmock()
+			end)
+			unmock = instanceProxy.controls:mockMethod(methodName, mockFn)
+			mocksOnObject[methodName] = mock
+			mock.mockImplementation(function(_, ...)
+				return (instanceProxy.original :: any)[methodName](instanceProxy.original, ...)
+			end)
+		end
+
+		return mocksOnObject[methodName]
+	end
+
+	-- Case 2:
+	-- Global environment spying
 	if GlobalMocker:isMockGlobalLibrary(object) then
+		local object: JestMockGenv.GlobalEnvLibrary = object :: any
 		local automocks = object._automocksRef
 		-- note: indexing non-mockable functions in `globalEnv` will error,
 		-- making this index operation subtly, but expectedly, fallible.
@@ -478,72 +543,75 @@ function ModuleMockerClass:spyOn<M>(object: { [any]: any }, methodName: M, acces
 		elseif automockFn._maybeMock == nil then
 			error(Error.new("globalEnv has not been initialised by Jest here"))
 		end
+
 		return automockFn._maybeMock
 	end
-	-- ROBLOX deviation END
-	local original = object[methodName]
 
-	-- ROBLOX deviation: inject alike types
-	if mocksOnObject[methodName] == nil then
-		-- ROBLOX deviation: multiple mock types supported, skip type check until later
-
-		local isMethodOwner = rawget(object, methodName) ~= nil
-		-- ROBLOX deviation: ignore prototype and property descriptor logic
-
-		-- ROBLOX deviation START: support multiple mock types with custom impl
-		local callableMetatable = nil
-		if typeof(original) == "table" then
-			local meta = getmetatable(original)
-			if typeof(meta) == "table" and meta.__call ~= nil then
-				callableMetatable = meta
+	-- Case 3:
+	-- Jest-style object spying
+	if typeof(object) == "table" then
+		if mocksOnObject[methodName] == nil then
+			local original = object[methodName]
+			local isMethodOwner = rawget(object, methodName) ~= nil
+			local callableMetatable = nil
+			if typeof(original) == "table" then
+				local meta = getmetatable(original)
+				if typeof(meta) == "table" and meta.__call ~= nil then
+					callableMetatable = meta
+				end
 			end
-		end
-
-		local mock, mockFn = self:_makeComponent({ type = "function" }, function()
-			object[methodName] = if isMethodOwner then original else nil
-		end)
-
-		if typeof(original) == "function" then
-			object[methodName] = if projectConfig.oldFunctionSpying then mock else mockFn
-			mocksOnObject[methodName] = mock
-			mock.mockImplementation(function(...)
-				return original(...)
+			local mock, mockFn = self:_makeComponent({ type = "function" }, function()
+				object[methodName] = if isMethodOwner then original else nil
 			end)
-		elseif callableMetatable ~= nil then
-			local ok, mockTable = pcall(table.clone, original)
-			if not ok then
+			if typeof(original) == "function" then
+				-- Object method spying (closure as method)
+
+				object[methodName] = if projectConfig.oldFunctionSpying then mock else mockFn
+				mocksOnObject[methodName] = mock
+				mock.mockImplementation(function(...)
+					return original(...)
+				end)
+			elseif callableMetatable ~= nil then
+				-- Object method spying (callable table as method)
+
+				local ok, mockTable = pcall(table.clone, original)
+				if not ok then
+					error(
+						Error.new(
+							("Cannot spy the %s property because it cannot be cloned. (%s)"):format(
+								tostring(methodName),
+								mockTable:match("protected metatable") or mockTable
+							)
+						)
+					)
+				end
+				local mockMetatable = table.clone(callableMetatable)
+				mockMetatable.__call = mockFn
+				-- It's unclear whether `original` should be deeply cloned here. See
+				-- the APT-1914 ticket on Jira for a discussion of this.
+				object[methodName] = setmetatable(mockTable, mockMetatable)
+				mocksOnObject[methodName] = mock
+				mock.mockImplementation(function(...)
+					return callableMetatable.__call(...)
+				end)
+			else
 				error(
 					Error.new(
-						("Cannot spy the %s property because it cannot be cloned. (%s)"):format(
+						("Cannot spy the %s property because it is not a function or callable table; %s given instead"):format(
 							tostring(methodName),
-							mockTable:match("protected metatable") or mockTable
+							typeof(original)
 						)
 					)
 				)
 			end
-			local mockMetatable = table.clone(callableMetatable)
-			mockMetatable.__call = mockFn
-			-- It's unclear whether `original` should be deeply cloned here. See
-			-- the APT-1914 ticket on Jira for a discussion of this.
-			object[methodName] = setmetatable(mockTable, mockMetatable)
-			mocksOnObject[methodName] = mock
-			mock.mockImplementation(function(...)
-				return callableMetatable.__call(...)
-			end)
-		else
-			error(
-				Error.new(
-					("Cannot spy the %s property because it is not a function or callable table; %s given instead"):format(
-						tostring(methodName),
-						typeof(original)
-					)
-				)
-			)
 		end
-		-- ROBLOX deviation END
+
+		return mocksOnObject[methodName]
 	end
-	-- ROBLOX deviation: inject alike types
-	return mocksOnObject[methodName]
+
+	-- Fallthrough case:
+	error(Error.new(("Cannot spyOn on a primitive value; %s given"):format(typeof(object))))
+	-- ROBLOX deviation END
 end
 function ModuleMockerClass:_spyOnProperty<T, M>(obj: T, propertyName: M, accessType_: ("get" | "set")?): Mock<() -> T>
 	-- ROBLOX deviation: spyOnProperty not supported
