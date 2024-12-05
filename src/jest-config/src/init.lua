@@ -286,6 +286,8 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 			-- modulePaths = options.modulePaths,
 			-- prettierPath = options.prettierPath,
 			-- ROBLOX deviation END
+			-- ROBLOX deviation: mock data model
+			mockDataModel = options.mockDataModel,
 			-- ROBLOX deviation: inject alike types
 			oldFunctionSpying = options.oldFunctionSpying,
 			resetMocks = options.resetMocks,

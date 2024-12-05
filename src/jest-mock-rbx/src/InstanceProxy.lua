@@ -30,6 +30,7 @@ type MockedMethodData = {
 export type InstanceProxy<ClassType = Instance> = {
 	spy: Spied<ClassType>,
 	controls: ProxyControls<ClassType>,
+	original: ClassType,
 }
 
 export type ProxyControls<ClassType = Instance> = {
@@ -41,6 +42,7 @@ export type ProxyControls<ClassType = Instance> = {
     ]]
 }
 type ProxyControls_private<ClassType = Instance> = ProxyControls<ClassType> & {
+	_validSelfSet: { [unknown]: true },
 	_mockedMethods: { [string]: MockedMethodData },
 }
 
@@ -49,23 +51,34 @@ local function makeSpyInstance<ClassType>(
 	controls: ProxyControls_private<ClassType>
 ): Spied<ClassType>
 	local meta = {}
-	local spied = setmetatable({}, meta)
-	-- Freeze to ensure the table is empty & metamethods run.
-	table.freeze(spied)
+	local spy = setmetatable({}, meta)
+	-- Keep the spy empty to ensure metamethods run.
+	table.freeze(spy)
+
+	-- Separated from the main spy table to ensure that the metamethods always run.
+	local wrappedOriginal = setmetatable({}, {
+		__index = function(self, fieldName)
+			local fieldValue = (original :: any)[fieldName]
+			if typeof(fieldValue) == "function" then
+				local wrapped = function(calledWithSelf: any, ...)
+					assert(calledWithSelf == spy, `Expected ':' not '.' calling member function {fieldName}`)
+					return fieldValue(original, ...)
+				end
+				-- Cache to ensure referential identity of methods.
+				rawset(self, fieldName, wrapped)
+				return wrapped
+			else
+				return fieldValue
+			end
+		end,
+	})
 
 	function meta:__index(key: string): unknown
-		local value = (original :: any)[key]
-		if typeof(value) == "function" then
-			-- instance method
-			local mocked = controls._mockedMethods[key]
-			return if mocked == nil
-				then function(_, ...)
-					return value(original, ...)
-				end
-				else mocked.methodFn
+		local mockedMethod = controls._mockedMethods[key]
+		if mockedMethod ~= nil then
+			return mockedMethod.methodFn
 		else
-			-- instance property or event
-			return value
+			return wrappedOriginal[key]
 		end
 	end
 
@@ -79,8 +92,10 @@ local function makeSpyInstance<ClassType>(
 
 	meta.__metatable = "The metatable is locked"
 
+	controls._validSelfSet[spy] = true
+
 	-- ROBLOX TODO: type checking lie
-	return spied :: any
+	return spy :: any
 end
 
 local ProxyControls = {}
@@ -88,7 +103,10 @@ ProxyControls.__index = ProxyControls
 
 function ProxyControls.mockMethod(self: ProxyControls_private, name: string, method: Function): () -> ()
 	local data: MockedMethodData = {
-		methodFn = method,
+		methodFn = function(calledWithSelf, ...)
+			assert(self._validSelfSet[calledWithSelf], `Expected ':' not '.' calling member function {name}`)
+			return method(calledWithSelf, ...)
+		end,
 	}
 	self._mockedMethods[name] = data
 	return function()
@@ -103,12 +121,14 @@ local exports = {}
 
 function exports.new<ClassType>(original: ClassType & Instance): InstanceProxy<ClassType>
 	local controls: ProxyControls_private<ClassType> = setmetatable({
+		_validSelfSet = {},
 		_mockedMethods = {},
 	}, ProxyControls) :: any
 
 	return {
 		spy = makeSpyInstance(original, controls),
 		controls = controls,
+		original = original,
 	}
 end
 

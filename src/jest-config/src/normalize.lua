@@ -1168,6 +1168,7 @@ local function normalize(
 					or key == "noStackTrace"
 					or key == "notify"
 					or key == "notifyMode"
+					or key == "mockDataModel"
 					or key == "onlyChanged"
 					or key == "onlyFailures"
 					or key == "outputFile"

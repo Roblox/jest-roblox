@@ -209,6 +209,8 @@ export type DefaultOptions = {
 	-- moduleNameMapper: Record<string, string | Array<string>>,
 	-- modulePathIgnorePatterns: Array<string>,
 	-- ROBLOX deviation END
+	-- ROBLOX deviation: mock data model
+	mockDataModel: boolean,
 	noStackTrace: boolean,
 	-- ROBLOX deviation START: not supported
 	-- notify: boolean,
@@ -425,6 +427,8 @@ export type InitialOptions = {
 	-- modulePaths: Array<string>?,
 	-- ROBLOX deviation END
 	id: string?,
+	-- ROBLOX deviation: mock data model
+	mockDataModel: boolean?,
 	noStackTrace: boolean?,
 	-- ROBLOX deviation START: not supported
 	-- notify: boolean?,
@@ -670,6 +674,8 @@ export type ProjectConfig = {
 	-- modulePaths: Array<string>?,
 	-- prettierPath: string,
 	-- ROBLOX deviation END
+	-- ROBLOX deviation: mock data model
+	mockDataModel: boolean,
 	-- ROBLOX deviation: inject alike types
 	oldFunctionSpying: boolean,
 	resetMocks: boolean,
