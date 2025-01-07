@@ -2,6 +2,12 @@
 
 ## Unreleased Changes
 
+## 3.11.0 (2025-01-07)
+* :sparkles: Added instance mocking via `mockDataModel`, used for GetService
+  mocking ([#419](https://github.com/Roblox/jest-roblox-internal/pull/419))
+* :hammer_and_wrench: Fixed RobloxInstance producing incorrect property listings when used
+  with instances with "quantum" properties (e.g. UI)
+
 ## 3.10.0 (2024-10-02)
 * :sparkles: Added a fallback to use `loadstring` instead of `loadmodule` in lower privileged contexts ([#392](https://github.com/Roblox/jest-roblox-internal/pull/392))
 * :sparkles: Added `redactStackTrace` option to improve stability to snapshots that contain stacktraces ([#401](https://github.com/Roblox/jest-roblox-internal/pull/401))
