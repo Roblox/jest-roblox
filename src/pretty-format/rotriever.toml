@@ -9,7 +9,7 @@ keywords = ["string", "serialize", "format"]
 version = { workspace = true }
 license = { workspace = true }
 content_root = "src"
-files = ["*", "!**/__tests__/**"]
+files = ["*", "!**/__*__/**"]
 
 [config]
 registry_index = "true"
