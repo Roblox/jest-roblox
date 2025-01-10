@@ -2,6 +2,9 @@
 
 ## Unreleased Changes
 
+* :hammer_and_wrench: Internal mocks from Jest's own test suite are no longer
+  shipped to end users
+
 ## 3.11.0 (2025-01-07)
 * :sparkles: Added instance mocking via `mockDataModel`, used for GetService
   mocking ([#419](https://github.com/Roblox/jest-roblox-internal/pull/419))
