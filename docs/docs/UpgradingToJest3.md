@@ -9,12 +9,12 @@ Upgrading Jest Roblox from v2.x or TestEZ to v3.x? This guide aims to help refac
 
 ### Setup
 
-First, update your `rotriever.toml` to use Jest Roblox v3.0. You'll also need to require the `Jest` package in addition to the `JestGlobals` package. The `Jest` package contains `runCLI`, which is the main entrypoint into Jest Roblox in v3.0.
+First, update your `rotriever.toml` to use Jest Roblox v3.x. You'll also need to require the `Jest` package in addition to the `JestGlobals` package. The `Jest` package contains `runCLI`, which is the main entrypoint into Jest Roblox in v3.x.
 
 ```yaml title="rotriever.toml"
 [dev_dependencies]
-Jest = "github.com/Roblox/jest-roblox@3.0.0"
-JestGlobals = "github.com/Roblox/jest-roblox@3.0.0"
+Jest = "github.com/Roblox/jest-roblox@3.11.1"
+JestGlobals = "github.com/Roblox/jest-roblox@3.11.1"
 ```
 
 Update your `spec.lua`. Instead of using `TestEZ.TestBootStrap:run`, the main entrypoint is now `Jest.runCLI`. A basic bootstrap script can look like the following:

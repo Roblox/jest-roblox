@@ -2,6 +2,10 @@
 
 ## Unreleased Changes
 
+None yet!
+
+## 3.11.1 (2025-01-10)
+
 * :hammer_and_wrench: Internal mocks from Jest's own test suite are no longer
   shipped to end users
 
