@@ -2,7 +2,7 @@
 
 ## Unreleased Changes
 
-None yet!
+* :hammer_and_wrench: Fake timers properly handle zero-second delays
 
 ## 3.11.1 (2025-01-10)
 
