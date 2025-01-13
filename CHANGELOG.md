@@ -2,7 +2,7 @@
 
 ## Unreleased Changes
 
-* :hammer_and_wrench: Fake timers properly handle zero-second delays
+* :hammer_and_wrench: Fake timers warn when using zero-second delays without an engine frame time unit configured (#389)
 
 ## 3.11.1 (2025-01-10)
 
