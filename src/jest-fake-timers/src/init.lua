@@ -234,6 +234,10 @@ local function fakeClock(self): number
 end
 
 local function fakeDelay(self, delayTime, callback, ...): Timeout
+	if delayTime == 0 and self._engineFrameTime == 0 then
+		warn("Undefined behavior with a delay of 0 seconds and no engine frame time set.")
+	end
+
 	-- Small hack to make sure 0 second recursive timers don't trigger twice in a single frame
 	local delayTimeMs = (self._engineFrameTime / 1000) + delayTime * 1000
 	local targetTime = self._mockTimeMs + delayTimeMs
