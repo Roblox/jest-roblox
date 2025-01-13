@@ -144,6 +144,15 @@ describe("task.delay", function()
 		jest.advanceTimersByTime(10000)
 		expect(triggered).toBe(true)
 	end, 1000)
+
+	test("should trigger with delay of 0 after explicitly advancing timers", function()
+		local triggered = false
+		task.delay(0, function()
+			triggered = true
+		end)
+		jest.advanceTimersByTime(0)
+		expect(triggered).toBe(true)
+	end)
 end)
 
 describe("task.cancel", function()
