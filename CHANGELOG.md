@@ -2,7 +2,9 @@
 
 ## Unreleased Changes
 
-* :hammer_and_wrench: Fake timers warn when using zero-second delays without an engine frame time unit configured (#389)
+* :hammer_and_wrench: Fake timers warn when using zero-second delays without an
+  engine frame time unit configured ([#389](https://github.com/Roblox/jest-roblox-internal/pull/389))
+* :hammer_and_wrench: Fixed a typo in the type signature for `jest.fn()` ([#426](https://github.com/Roblox/jest-roblox-internal/pull/426))
 
 ## 3.11.1 (2025-01-10)
 
