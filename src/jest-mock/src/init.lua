@@ -135,7 +135,7 @@ type MockFunctionConfig = {
 
 export type ModuleMocker = {
 	isMockFunction: (_self: ModuleMocker, fn: any) -> boolean,
-	fn: <T..., Y...>(_self: ModuleMocker, implementation: ((Y...) -> T...)?) -> (MockFn, (...any) -> ...any),
+	fn: <T..., Y...>(_self: ModuleMocker, implementation: ((T...) -> Y...)?) -> (MockFn, (...any) -> ...any),
 	clearAllMocks: (_self: ModuleMocker) -> (),
 	resetAllMocks: (_self: ModuleMocker) -> (),
 	restoreAllMocks: (_self: ModuleMocker) -> (),
@@ -451,7 +451,7 @@ end
 
 -- ROBLOX TODO: type return type as JestMock.Mock<any, any> when Mock type is implemented properly
 type MockFn = any -- (...any) -> ...any
-function ModuleMockerClass:fn<T..., Y...>(implementation: ((Y...) -> T...)?): (MockFn, (T...) -> Y...)
+function ModuleMockerClass:fn<T..., Y...>(implementation: ((T...) -> Y...)?): (MockFn, (T...) -> Y...)
 	local length = 0
 	-- ROBLOX deviation: fn is a callable table, return a forwarding function
 	local fn, mockFn = self:_makeComponent({ length = length, type = "function" })
@@ -749,7 +749,7 @@ exports.ModuleMocker = ModuleMockerClass
 
 -- ROBLOX deviation START: can't provide this globally because it needs a config
 -- local JestMock = ModuleMockerClass.new()
--- local fn = function<T..., Y...>(implementation: ((Y...) -> T...)?)
+-- local fn = function<T..., Y...>(implementation: ((T...) -> Y...)?)
 -- 	return JestMock:fn(implementation)
 -- end
 -- exports.fn = fn
@@ -761,7 +761,7 @@ exports.ModuleMocker = ModuleMockerClass
 -- 	return JestMock:mocked(item, _deep)
 -- end
 -- exports.mocked = mocked
-export type JestFuncFn = <T..., Y...>(implementation: ((Y...) -> T...)?) -> (MockFn, (T...) -> Y...)
+export type JestFuncFn = <T..., Y...>(implementation: ((T...) -> Y...)?) -> (MockFn, (T...) -> Y...)
 export type JestFuncMocked = <M>(object: { [any]: any }, methodName: M, accessType: ("get" | "set")?) -> Mock<any>
 export type JestFuncSpyOn = <T>(item: T, _deep: boolean?) -> MaybeMocked<T> | MaybeMockedDeep<T>
 -- ROBLOX deviation END
