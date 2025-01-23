@@ -270,6 +270,19 @@ local function saveSnapshotFile(snapshotData: SnapshotData, snapshotPath: Config
 	FileSystemService:WriteFile(snapshotPath, table.concat(snapshots, "\n") .. "\n")
 end
 
+-- ROBLOX deviation: removes a snapshot file to replace fs.unlinkSync
+local function removeSnapshotFile(snapshotPath: ConfigPath)
+	-- ROBLOX deviation: error when FileSystemService doesn't exist
+	if not FileSystemService then
+		error(Error("Attempting to save snapshots in an environment where FileSystemService is inaccessible."))
+	end
+
+	if not FileSystemService:IsRegularFile(snapshotPath) then
+		error(Error(snapshotPath .. " is not a path to a .snap.lua file"))
+	end
+	FileSystemService:Remove(snapshotPath)
+end
+
 local function deepMergeArray(target: Array<any>, source: Array<any>)
 	-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
 	local mergedOutput = Array.from(target) :: typeof(target)
@@ -330,4 +343,5 @@ return {
 	escapeBacktickString = escapeBacktickString,
 	saveSnapshotFile = saveSnapshotFile,
 	deepMerge = deepMerge,
+	removeSnapshotFile = removeSnapshotFile,
 }
