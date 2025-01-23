@@ -44,6 +44,7 @@ local removeExtraLineBreaks = utils.removeExtraLineBreaks
 -- ROBLOX TODO: ADO-1552 translate this function when we add inlineSnapshot functionality
 -- local removeLinesBeforeExternalMatcherTrap = utils.removeLinesBeforeExternalMatcherTrap
 local saveSnapshotFile = utils.saveSnapshotFile
+local removeSnapshotFile = utils.removeSnapshotFile
 local serialize = utils.serialize
 local testNameToKey = utils.testNameToKey
 
@@ -246,10 +247,7 @@ function SnapshotState:save(): SaveStatus
 		-- ROBLOX deviation START: omitted part of code dealing with unlinking file until we have
 		-- robust final solution for I/O. This may not even be needed in our translation?
 		if self._updateSnapshot == "all" then
-			error(
-				"Jest-Roblox: You shouldn't reach this code path. Please file an issue at github.com/Roblox/jest-roblox-internal or in #jest-roblox"
-			)
-			--	fs.unlinkSync(this._snapshotPath)
+			removeSnapshotFile(self._snapshotPath.getPath())
 		end
 		-- ROBLOX deviation END
 		status.deleted = true
