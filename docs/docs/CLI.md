@@ -79,37 +79,6 @@ Prints the test results in JSON. This mode will send all other test output and u
 
 Lists all test files that Jest Roblox will run given the arguments, and exits.
 
-### `mockDataModel` \[boolean]
-![Roblox only](/img/roblox-only.svg)
-
-Turns on instance mocking features in Jest.  This allows *whitelisted* instances to be used
-with Jest functions such as [`jest.spyOn()`](jest-object#jestspyonobject-methodname).
-
-Currently, the following instances are whitelisted for use:
-* `game`
-
-:::warning
-
-Jest does not fully emulate the behaviour of mocked instances at this time. You
-may need to modify your code to be compatible with instance mocks:
-
-* Mocked instances appear as table types rather than real `Instance` types, so
-  you can't pass them to functions expecting `Instance` types.
-  * In particular, this breaks code patterns such as `x:IsDescendantOf(game)`.
-* The hierarchy is not modelled; accessing an instance via `.Parent`,
-  `:FindFirstChild()` or other similar methods will return the original
-  instance, not the mocked instance.
-  * This breaks some expectations, for example `workspace.Parent ~= game`.
-
-In general, you should only enable instance mocks if you are taking advantage of
-the feature. Otherwise, you should leave them disabled for best compatibility.
-
-The Jest Lua team is aware of ways this can be mitigated, but they require much
-more engineering effort. If you are interested in emulating more behaviours of
-the data model, please reach out so we're aware of the interest.
-
-:::
-
 ### `noStackTrace` \[boolean]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--nostacktrace)  ![Aligned](/img/aligned.svg)
 
