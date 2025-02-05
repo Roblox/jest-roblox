@@ -6,6 +6,9 @@ on:
     branches:
       - master
 
+env:
+  CODECOV_URL: https://ccov-ext.rbx.com
+
 jobs:
   jest:
     name: Jest Roblox Tests
@@ -99,6 +102,9 @@ jobs:
     name: Code Coverage
     needs: [jest]
     runs-on: [self-hosted, generic-linux]
+    permissions:
+      contents: read
+      id-token: write
     container:
       image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
     timeout-minutes: 5
@@ -144,9 +150,11 @@ jobs:
           lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
 
       - name: Report code coverage
-        uses: roblox-actionscache/zgosalvez-github-actions-report-lcov@v3.1.7
+        uses: codecov/codecov-action@v4
         with:
-          artifact-name: code-coverage-report
-          coverage-files: lcov-filtered.info
-          minimum-coverage: 90
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          use_oidc: true
+          files: lcov-filtered.info
+          url: ${{ env.CODECOV_URL }}
+          verbose: true
+          fail_ci_if_error: false
+          disable_safe_directory: true
