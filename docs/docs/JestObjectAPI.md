@@ -188,7 +188,7 @@ The `jest.spyOn(object, methodName, accessType?)` variant is not currently suppo
 ![Roblox only](/img/roblox-only.svg)
 
 The `spyOn` function can also spy on instance methods when the
-[`mockDataModel`](cli#mockdatamodel-boolean) setting is enabled. The instance
+[`mockDataModel`](configuration#mockdatamodel-boolean) setting is enabled. The instance
 must be on the `mockDataModel` whitelist.
 
 The first argument to the mock function will always be a reference to the
