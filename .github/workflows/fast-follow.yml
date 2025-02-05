@@ -2,9 +2,9 @@ name: Fast-follow
 
 on:
   workflow_dispatch:
-  schedule:
-    # Scheduled to run everyday at 8am UTC.
-    - cron: '0 8 * * *'
+  # schedule:
+  #   # Scheduled to run everyday at 8am UTC.
+  #   - cron: '0 8 * * *'
 
 jobs:
   fast-follow:
