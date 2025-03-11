@@ -307,7 +307,8 @@ function SnapshotState:match(snapshotMatchOptions: SnapshotMatchOptions): Snapsh
 	local pass = expected == receivedSerialized
 	local hasSnapshot = expected ~= nil
 	local snapshotPathExists, _ = pcall(function()
-		local _ = require(self._snapshotPath.getInstance()) :: any
+		local inst = self._snapshotPath.getInstance() :: ModuleScript
+		local _ = require(inst) :: any
 	end)
 	local snapshotIsPersisted = isInline or snapshotPathExists
 
