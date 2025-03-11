@@ -247,7 +247,7 @@ local function runJest(ref: {
 		-- if changedFilesPromise ~= nil and globalConfig.watch then
 		-- 	local repos = changedFilesPromise:expect().repos
 		-- 	local noSCM = Array.every(
-		-- 		Object.keys(repos) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof ChangedFiles['repos'] ]]>,
+		-- 		Object.keys(repos) :: Array<any> --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof ChangedFiles['repos'] ]],
 		-- 		function(scm)
 		-- 			return repos[scm].size == 0
 		-- 		end
