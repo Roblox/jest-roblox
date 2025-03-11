@@ -35,7 +35,7 @@ local function getNoTestFoundVerbose(
 		local statsMessage = Array.join(
 			Array.filter(
 				Array.map(
-					Object.keys(stats_) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Stats ]]>,
+					Object.keys(stats_) :: Array<any>, --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Stats ]]
 					function(key): string | nil
 						if key == "roots" and #config.roots == 1 then
 							return nil

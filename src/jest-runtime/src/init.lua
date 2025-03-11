@@ -1600,7 +1600,7 @@ function Runtime_private:resetModules(): ()
 	-- 	if Boolean.toJSBoolean(self._environment.global) then
 	-- 		local envGlobal = self._environment.global
 	-- 		Array.forEach(
-	-- 			Object.keys(envGlobal) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof typeof globalThis ]]>,
+	-- 			Object.keys(envGlobal) :: Array<any> --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof typeof globalThis ]],
 	-- 			function(key)
 	-- 				local globalMock = envGlobal[tostring(key)]
 	-- 				if
@@ -1906,7 +1906,7 @@ function Runtime_private:_execModule(
 	-- 	end
 	-- 	local jestObject = self:_createJestObjectFor(filename)
 	-- 	self.jestObjectCaches:set(filename, jestObject)
-	-- 	local lastArgs: Array<Jest | nil | any --[[ ROBLOX TODO: Unhandled node for type: TSRestType ]] --[[ ...Array<Global.Global> ]]> = Array.concat(
+	-- 	local lastArgs: Array<Jest | nil | any> --[[ ROBLOX TODO: Unhandled node for type: TSRestType ]] --[[ ...Array<Global.Global> ]] = Array.concat(
 	-- 		{},
 	-- 		{
 	-- 			if Boolean.toJSBoolean(self._config.injectGlobals) then jestObject else nil,
