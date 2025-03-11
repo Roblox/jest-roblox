@@ -806,8 +806,7 @@ local function normalize(
 		-- end
 		-- ROBLOX deviation END
 
-		local optionKeys =
-			Object.keys(options) :: Array<string --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]>
+		local optionKeys = Object.keys(options) :: Array<string> --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Config.InitialOptions ]]
 
 		Array.reduce(optionKeys, function(
 			newOptions,

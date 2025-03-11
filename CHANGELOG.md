@@ -7,6 +7,7 @@
 * :hammer_and_wrench: Fixed a typo in the type signature for `jest.fn()` ([#426](https://github.com/Roblox/jest-roblox-internal/pull/426))
 * :bug: Delete empty snapshot files ([#430](https://github.com/Roblox/jest-roblox-internal/pull/430))
 * :hammer_and_wrench: Fix types for new require type ([#438](https://github.com/Roblox/jest-roblox-internal/pull/438))
+* :bug: Fix string sequences that result in an invalid XML file for Rojo projects ([#439](https://github.com/Roblox/jest-roblox-internal/pull/439))
 
 ## 3.11.1 (2025-01-10)
 
