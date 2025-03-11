@@ -132,7 +132,9 @@ local function getSnapshotData(
 
 	-- ROBLOX deviation: snapshots in Jest Roblox are ModuleScripts, so we require them to load them
 	pcall(function()
-		data = require(snapshotPath) :: any
+		if snapshotPath then
+			data = require(snapshotPath) :: any
+		end
 	end)
 	-- ROBLOX deviation: omitted validateSnapshotVersion for now since we will have our own
 	-- snapshot versioning

@@ -15,6 +15,8 @@
 type CleanupFn = () -> any
 type Function = (...any) -> any
 
+type FIXME_ANALYZE = (ModuleScript) -> any
+
 local requiredModules: { [ModuleScript]: any } = {}
 local moduleCleanup: { [ModuleScript]: (() -> any)? } = {}
 local mocks: { [ModuleScript]: CleanupFn } = {}
@@ -23,7 +25,7 @@ if _G.__NO_LOADMODULE__ then
 	warn("debug.loadmodule not enabled. Test plans relying on resetModules " .. "will not work properly.")
 
 	return {
-		requireOverride = require,
+		requireOverride = require :: FIXME_ANALYZE,
 		resetModules = function()
 			-- Should we warn on calling this more than once?
 		end,
