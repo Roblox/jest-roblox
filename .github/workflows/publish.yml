@@ -6,7 +6,7 @@ jobs:
   composite-publish:
     runs-on: [self-hosted, generic-linux]
     container:
-      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:v1.0.1
     steps:
       - uses: actions/checkout@v4
       - name: Generate access token
