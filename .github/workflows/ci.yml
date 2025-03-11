@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 3
     runs-on: [self-hosted, generic-linux]
     container:
-      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:v1.0.1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -106,7 +106,7 @@ jobs:
       contents: read
       id-token: write
     container:
-      image: docker.artifactory.rbx.com/rbx-lua-build-tools:latest
+      image: docker.artifactory.rbx.com/rbx-lua-build-tools:v1.0.1
     timeout-minutes: 5
     steps:
       - name: Checkout repository
