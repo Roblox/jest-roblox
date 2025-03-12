@@ -108,6 +108,8 @@ type AsymmetricMatchersOmitAnyAndAnything = {
 	objectContaining: (Record<string, unknown>) -> AsymmetricMatcher,
 	stringContaining: (string) -> AsymmetricMatcher,
 	stringMatching: (string | RegExp) -> AsymmetricMatcher,
+	-- ROBLOX deviation: Luau-specific callable object matching
+	callable: () -> AsymmetricMatcher,
 }
 
 type AsymmetricMatchers = {

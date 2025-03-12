@@ -57,7 +57,16 @@ Lua doesn't have constructors for primitive types, so `expect.any` accepts eithe
 `expect.nothing` allows for matching against nil and undefined values. You can use it inside `toMatchObject` and other similar matchers to ensure something is undefined or `nil`.
 
 ### `expect.stringMatching(string | regexp)`
-`expect.stringMatching(string | regexp)` can either accept a [Lua string pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference) or a [RegExp](expect#regexp).
+`expect.stringMatching(string | regexp)` can either accept a [Lua string
+pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference)
+or a [RegExp](expect#regexp).
+
+### `expect.callable()`
+`expect.callable()` is a Luau-only feature to match anything that behaves like a
+function. Unlike `expect.any("function")`, this allows for matching
+callable tables and callable userdata.
+
+See the [API reference for `expect.callable()`](expectapi#expectcallable) to learn more.
 
 ### `.toHaveLength(number)`
 `.toHaveLength(number)` uses the Lua `#` operator to check the length of the received value. Since `#` is only well defined for non-sparse array-like tables and strings it will return 0 for tables with key-value pairs. It also checks the `.length` property of the table instead if it has one.
