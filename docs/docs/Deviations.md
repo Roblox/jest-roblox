@@ -66,7 +66,7 @@ or a [RegExp](expect#regexp).
 function. Unlike `expect.any("function")`, this allows for matching
 callable tables and callable userdata.
 
-See the [API reference for `expect.callable()`](expectapi#expectcallable) to learn more.
+See the [API reference for `expect.callable()`](expect#expectcallable) to learn more.
 
 ### `.toHaveLength(number)`
 `.toHaveLength(number)` uses the Lua `#` operator to check the length of the received value. Since `#` is only well defined for non-sparse array-like tables and strings it will return 0 for tables with key-value pairs. It also checks the `.length` property of the table instead if it has one.
