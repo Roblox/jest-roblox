@@ -91,3 +91,85 @@ it("any works with Roblox types", function()
 	expect(Color3.new()).toEqual(expect.any("Color3"))
 	expect(UDim2.new()).toEqual(expect.any("UDim2"))
 end)
+
+describe("Luau callable object handling", function()
+	it("any() treats functions as functions", function()
+		local object = function()
+			return 5
+		end
+		expect(object).toEqual(expect.any("function"))
+	end)
+
+	it("any() does not treat callable tables as functions", function()
+		local object = setmetatable({}, {
+			__call = function()
+				return 5
+			end,
+		})
+		expect(object).never.toEqual(expect.any("function"))
+	end)
+
+	it("any() does not treat callable userdata as functions", function()
+		local object = newproxy(true)
+		getmetatable(object).__call = function()
+			return 5
+		end
+		expect(object).never.toEqual(expect.any("function"))
+	end)
+
+	it("callable() treats functions as functions", function()
+		local object = function()
+			return 5
+		end
+		expect(object).toEqual(expect.callable())
+	end)
+
+	it("callable() treats callable tables as functions", function()
+		local object = setmetatable({}, {
+			__call = function()
+				return 5
+			end,
+		})
+		expect(object).toEqual(expect.callable())
+	end)
+
+	it("callable() treats callable userdata as functions", function()
+		local object = newproxy(true)
+		getmetatable(object).__call = function()
+			return 5
+		end
+		expect(object).toEqual(expect.callable())
+	end)
+
+	it("callable() treats non-callable tables as non-functions", function()
+		local object = setmetatable({}, {})
+		expect(object).toEqual(expect.never.callable())
+	end)
+
+	it("callable() treats non-callable userdata as non-functions", function()
+		local object = newproxy(true)
+		expect(object).toEqual(expect.never.callable())
+	end)
+
+	it("callable() treats non-callable primitives as non-functions", function()
+		local object = 22
+		expect(object).toEqual(expect.never.callable())
+	end)
+
+	describe("methods of matcher object", function()
+		it("toString()", function()
+			expect(expect.callable():toString()).toEqual("Callable")
+			expect(expect.never.callable():toString()).toEqual("Not Callable")
+		end)
+
+		it("toAsymmetricMatcher()", function()
+			expect(expect.callable():toAsymmetricMatcher()).toEqual("Callable")
+			expect(expect.never.callable():toAsymmetricMatcher()).toEqual("Not Callable")
+		end)
+
+		it("getExpectedType()", function()
+			expect(expect.callable():getExpectedType()).toEqual("function")
+			expect(expect.never.callable():getExpectedType()).toEqual("function")
+		end)
+	end)
+end)
