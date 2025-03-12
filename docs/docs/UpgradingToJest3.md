@@ -13,8 +13,8 @@ First, update your `rotriever.toml` to use Jest Roblox v3.x. You'll also need to
 
 ```yaml title="rotriever.toml"
 [dev_dependencies]
-Jest = "github.com/Roblox/jest-roblox@3.11.1"
-JestGlobals = "github.com/Roblox/jest-roblox@3.11.1"
+Jest = "github.com/Roblox/jest-roblox@3.12.0"
+JestGlobals = "github.com/Roblox/jest-roblox@3.12.0"
 ```
 
 Update your `spec.lua`. Instead of using `TestEZ.TestBootStrap:run`, the main entrypoint is now `Jest.runCLI`. A basic bootstrap script can look like the following:

@@ -9,7 +9,7 @@ Benchmarks are useful tools for gating performance in CI, optimizing code, and c
 
 `JestBenchmark` must be added as a dev dependency to your `rotriever.toml` and imported.
 ```yaml title="rotriever.toml"
-JestBenchmark = "3.11.1"
+JestBenchmark = "3.12.0"
 ```
 
 ```lua
