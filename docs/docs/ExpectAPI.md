@@ -530,7 +530,7 @@ called, not just Luau functions. In general, you should prefer to use
 `expect.callable()` over `expect.any("function")` unless you absolutely care
 about the underlying data type.
 
-```Lua
+```lua
 test("functions", function()
 	local function fn()
 		return "I am a callable function"
