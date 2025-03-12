@@ -11,8 +11,8 @@ Jest Roblox requires `roblox-cli` to run from the command line.
 Add the `JestGlobals` and `Jest` package to your `dev_dependencies` in your `rotriever.toml`.
 ```yaml title="rotriever.toml"
 [dev_dependencies]
-Jest = "3.11.1"
-JestGlobals = "3.11.1"
+Jest = "3.12.0"
+JestGlobals = "3.12.0"
 ```
 
 Run `rotrieve install` to install Jest Roblox.
