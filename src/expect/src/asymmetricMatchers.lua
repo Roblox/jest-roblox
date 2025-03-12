@@ -491,6 +491,47 @@ function CloseTo_private:toAsymmetricMatcher(): string
 	}, " ")
 end
 
+-- ROBLOX deviation START: Luau-specific callable object matching
+local Callable = {}
+Callable.__index = Callable
+setmetatable(Callable, AsymmetricMatcher)
+function Callable.new(inverse: boolean?)
+	local self = AsymmetricMatcher.new(nil, inverse)
+	setmetatable(self, Callable)
+	return self
+end
+
+function Callable:asymmetricMatch(other: any): boolean
+	local result
+	if typeof(other) == "function" then
+		result = true
+	elseif typeof(other) == "table" or typeof(other) == "userdata" then
+		-- ROBLOX TODO: this won't work if __metatable is defined to be
+		-- something other than the object's metatable. Not sure that it's
+		-- possible to check an object is callable any other way though, not
+		-- without trying to call it and seeing if it fails, which could have
+		-- observable side effects...
+		local metatable = getmetatable(other)
+		result = typeof(metatable) == "table" and typeof(metatable.__call) == "function"
+	else
+		result = false
+	end
+	return if self.inverse then not result else result
+end
+
+function Callable:toString(): string
+	return (if self.inverse then "Not " else "") .. "Callable"
+end
+
+function Callable:getExpectedType(): string
+	return "function"
+end
+
+function Callable:toAsymmetricMatcher(): string
+	return self:toString()
+end
+-- ROBLOX deviation END
+
 return {
 	AsymmetricMatcher = AsymmetricMatcher,
 	any = function(expectedObject: any)
@@ -532,4 +573,12 @@ return {
 	notCloseTo = function(expected: number, precision: number?): CloseTo
 		return CloseTo.new(expected, precision, true)
 	end,
+	-- ROBLOX deviation START: Luau-specific callable object matching
+	callable = function()
+		return Callable.new()
+	end,
+	notCallable = function()
+		return Callable.new(true)
+	end,
+	-- ROBLOX deviation END
 }
