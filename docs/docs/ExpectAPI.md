@@ -509,6 +509,56 @@ describe('stringMatching in arrayContaining', function()
 end)
 ```
 
+### `expect.callable()`
+![Roblox only](/img/roblox-only.svg)
+
+`expect.callable()` is a Luau-only feature to match anything that behaves like a
+function. Unlike `expect.any("function")`, this allows for matching
+callable tables and callable userdata.
+
+In upstream TypeScript, functions are the only callable type. As such,
+`expect.any("function")` is a common upstream pattern when testing that
+something is a callback.
+
+However, TypeScript functions don't map cleanly to Luau functions; sometimes,
+they must be translated into a non-function type such as a callable table. This
+means `expect.any("function")` won't match all callbacks anymore, as callbacks
+may not always be Luau functions.
+
+`expect.callable()` fixes this by matching any object that has the ability to be
+called, not just Luau functions. In general, you should prefer to use
+`expect.callable()` over `expect.any("function")` unless you absolutely care
+about the underlying data type.
+
+```Lua
+test("functions", function()
+	local function fn()
+		return "I am a callable function"
+	end
+	expect(fn).toEqual(expect.callable())
+	expect(fn).toEqual(expect.any("function"))
+end)
+
+test("callable tables", function()
+	local tbl = setmetatable({}, {
+		__call = function()
+			return "I am a callable table"
+		end,
+	})
+	expect(tbl).toEqual(expect.callable())
+	expect(tbl).never.toEqual(expect.any("function"))
+end)
+
+test("callable userdatas", function()
+	local userdata = newproxy(true)
+	getmetatable(userdata).__call = function()
+		return "I am a callable userdata"
+	end
+	expect(userdata).toEqual(expect.callable())
+	expect(userdata).never.toEqual(expect.any("function"))
+end)
+```
+
 ### `expect.addSnapshotSerializer(serializer)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/expect#expectaddsnapshotserializerserializer)  ![API Change](/img/apichange.svg)
 
