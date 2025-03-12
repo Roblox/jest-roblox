@@ -27,6 +27,10 @@ local any = AsymmetricMatchers.any
 local anything = AsymmetricMatchers.anything
 local arrayContaining = AsymmetricMatchers.arrayContaining
 local arrayNotContaining = AsymmetricMatchers.arrayNotContaining
+-- ROBLOX deviation START: Luau-specific callable object matching
+local callable = AsymmetricMatchers.callable
+local notCallable = AsymmetricMatchers.notCallable
+-- ROBLOX deviation END
 local closeTo = AsymmetricMatchers.closeTo
 local notCloseTo = AsymmetricMatchers.notCloseTo
 local nothing = AsymmetricMatchers.nothing
@@ -93,7 +97,6 @@ type JestAssertionError_statics = { new: (message: string?) -> JestAssertionErro
 local JestAssertionError = (
 	setmetatable({}, { __index = Error }) :: any
 ) :: JestAssertionError & JestAssertionError_statics;
-
 (JestAssertionError :: any).__index = JestAssertionError
 function JestAssertionError.new(message: string?): JestAssertionError
 	local self = setmetatable(Error.new(message), JestAssertionError)
@@ -378,6 +381,8 @@ Expect.never = {
 	objectContaining = objectNotContaining,
 	stringContaining = stringNotContaining,
 	stringMatching = stringNotMatching,
+	-- ROBLOX deviation: Luau-specific callable object matching
+	callable = notCallable,
 }
 
 Expect.objectContaining = objectContaining
@@ -385,6 +390,8 @@ Expect.arrayContaining = arrayContaining
 Expect.closeTo = closeTo
 Expect.stringContaining = stringContaining
 Expect.stringMatching = stringMatching
+-- ROBLOX deviation: Luau-specific callable object matching
+Expect.callable = callable
 
 --[[
 	ROBLOX deviation: skipped code
