@@ -1,6 +1,6 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 
-const VERSION = '3.11.1';
+const VERSION = '3.12.0';
 
 module.exports = {
   title: 'Jest Roblox',

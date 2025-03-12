@@ -2,6 +2,10 @@
 
 ## Unreleased Changes
 
+None yet!
+
+## 3.12.0 (2025-03-12)
+
 * :sparkles: Added the `expect.callable()` asymmetric matcher, which matches
   anything that can be called like a function (including callable tables and
   callable userdatas) ([#440](ttps://github.com/Roblox/jest-roblox-internal/pull/440))
