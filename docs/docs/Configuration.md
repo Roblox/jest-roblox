@@ -380,12 +380,12 @@ This does not change the exit code in the case of Jest Roblox errors (e.g. inval
 :::
 
 ### `testMatch` \[array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testmatch-arraystring)  ![Deviation](/img/deviation.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testmatch-arraystring)  ![Aligned](/img/aligned.svg)
 
-Default: `{ "**/__tests__/**/*", "**/?(*.)+(spec|test)" }`
+Default: `{ "**/__tests__/**/*", "**/?(*.)+(spec|test)?(.lua|.luau)" }`
 
 The glob patterns Jest Roblox uses to detect test files. 
-By default it looks for `.spec` or `.test` files inside of `__tests__` folders, as well as any files with a suffix of `.test` or `.spec` (e.g. `Component.test.lua` or `Component.spec.lua`). It will also find files called `test.lua` or `spec.lua`.
+By default it looks for `.spe.lua` or `.test.lua` files inside of `__tests__` folders, as well as any files with a suffix of `.test.lua` or `.spec.lua` (e.g. `Component.test.lua` or `Component.spec.lua`). It will also find files called `test.lua` or `spec.lua`.
 
 See the [micromatch](https://github.com/micromatch/micromatch) package for details of the patterns you can specify.
 
@@ -398,7 +398,7 @@ Each glob pattern is applied in the order they are specified in the config. For 
 :::
 
 ### `testPathIgnorePatterns` \[array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testpathignorepatterns-arraystring)  ![Deviation](/img/deviation.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testpathignorepatterns-arraystring)  ![Aligned](/img/aligned.svg)
 
 Default: `{}`
 
@@ -407,7 +407,7 @@ An array of regexp pattern strings that are matched against all test paths befor
 <!-- These pattern strings match against the full path. Use the `<rootDir>` string token to include the path to your project's root directory to prevent it from accidentally ignoring all of your files in different environments that may have different root directories. Example: `["<rootDir>/build/", "<rootDir>/node_modules/"]`. -->
 
 ### `testRegex` \[string | array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testregex-string--arraystring)  ![Deviation](/img/deviation.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testregex-string--arraystring)  ![Aligned](/img/aligned.svg)
 
 Default: `{}`
 

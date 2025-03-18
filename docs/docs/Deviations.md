@@ -138,4 +138,4 @@ The supported timers are `delay`, `tick`, `time`, `DateTime`, `task.delay`, `os.
 The `projects` configuration takes an array of Instances. Each entry should be a path to a datamodel Instance with a configuration file.
 
 ### Filters
-Test filtering configuration options like `testMatch` or `testPathIgnorePatterns` match against the path of the test in the datamodel, not the filesystem path.
+See the page on [test filtering](test-filtering).

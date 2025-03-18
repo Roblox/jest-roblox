@@ -100,7 +100,7 @@ local defaultOptions: Config_DefaultOptions = {
 	testFailureExitCode = 1,
 	testLocationInResults = false,
 	-- ROBLOX deviation START: using lua files as defaults for tests
-	testMatch = { "**/__tests__/**/*", "**/?(*.)+(spec|test)" },
+	testMatch = { "**/__tests__/**/*", "**/?(*.)+(spec|test)?(.lua|.luau)" },
 	-- ROBLOX deviation END
 	testPathIgnorePatterns = {
 		-- ROBLOX deviation START: no node_modules

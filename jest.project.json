@@ -3,7 +3,7 @@
   "tree": {
     "$path": "Packages",
     "_Workspace": {
-      "$path": "WorkspaceStatic"
+      "$path": "TestRoot"
     }
   }
 }

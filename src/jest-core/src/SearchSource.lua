@@ -62,6 +62,11 @@ type FileInfo = { path: Config_Path, script: ModuleScript }
 
 local getRelativePath = require(Packages.RobloxShared).getRelativePath
 
+-- ROBLOX deviation START: additional function to construct file path from ModuleScript
+local getDataModelService = require(Packages.RobloxShared).getDataModelService
+local CoreScriptSyncService = getDataModelService("CoreScriptSyncService")
+-- ROBLOX deviation END
+
 local function getAllFiles(context: Context): Array<FileInfo>
 	local descendants = context.config.rootDir:GetDescendants()
 	return Array.map(
@@ -69,7 +74,18 @@ local function getAllFiles(context: Context): Array<FileInfo>
 			return descendant:isA("ModuleScript")
 		end),
 		function(script_: ModuleScript)
-			return { path = getRelativePath(script_, context.config.rootDir), script = script_ }
+			-- ROBLOX deviation: resolve to a FS path if CoreScriptSyncService is available
+			local path_ = nil
+			if CoreScriptSyncService then
+				path_ = CoreScriptSyncService:GetScriptFilePath(script_)
+			else
+				path_ = getRelativePath(script_, context.config.rootDir)
+			end
+			-- ROBLOX deviation END
+			return {
+				path = path_,
+				script = script_,
+			}
 		end
 	)
 end
@@ -260,6 +276,10 @@ function SearchSource.new(context: Context): SearchSource
 	-- ROBLOX deviation END
 
 	if #config.testMatch > 0 then
+		-- TODO LDP-145: remove optional file extension
+		for i, path in config.testMatch do
+			config.testMatch[i] = path .. "?(.lua|.luau)"
+		end
 		table.insert(self._testPathCases, { isMatch = globsToMatcher(config.testMatch), stat = "testMatch" })
 	end
 
