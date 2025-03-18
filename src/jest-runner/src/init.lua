@@ -21,11 +21,6 @@ type Promise<T> = LuauPolyfill.Promise<T>
 
 local Promise = require(Packages.Promise)
 
--- ROBLOX deviation START: additional function to construct file path from ModuleScript
-local getDataModelService = require(Packages.RobloxShared).getDataModelService
-local CoreScriptSyncService = getDataModelService("CoreScriptSyncService")
--- ROBLOX deviation END
-
 local exports = {}
 
 -- ROBLOX deviation: chalk used only in parallel tests
@@ -180,9 +175,6 @@ function TestRunner:_createInBandTestRun(
 		-- process.env.JEST_WORKER_ID = "1"
 		local mutex = throat(1) :: ThroatLateBound<nil, nil>
 		return Array.reduce(tests, function(promise: Promise<nil>, test: Test)
-			if CoreScriptSyncService then
-				test.path = CoreScriptSyncService:GetScriptFilePath(test.script)
-			end
 			return mutex(function()
 				-- ROBLOX FIXME START: Promise type doesn't support changing return type with :andThen call
 				return (promise :: Promise<any>)

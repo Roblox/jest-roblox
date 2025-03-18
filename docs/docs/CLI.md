@@ -104,14 +104,14 @@ Automatically restore mock state and implementation before every test. Equivalen
 Print your Jest config and then exits.
 
 ### `testMatch` \[array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testmatch-glob1--globn)  ![API Change](/img/apichange.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testmatch-glob1--globn)  ![Aligned](/img/aligned.svg)
 
 The glob patterns Jest uses to detect test files. Please refer to the [`testMatch` configuration](configuration#testmatch-arraystring) for details.
 
 ### `testNamePattern` \[regex]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testnamepatternregex)  ![Aligned](/img/aligned.svg)
 
-Run only tests with a name that matches the regex. For example, suppose you want to run only tests related to authorization which will have names like "GET /api/posts with auth", then you can use `testNamePattern = "auth"`.
+Run only tests with a name that matches the regex. For example, suppose you want to run only tests related to authorization which will have names like `"GET /api/posts with auth"`, then you can use `testNamePattern = "auth"`.
 
 :::tip
 
@@ -120,7 +120,7 @@ The regex is matched against the full name, which is a combination of the test n
 :::
 
 ### `testPathIgnorePatterns` \[array&lt;regex&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testpathignorepatternsregexarray)  ![API Change](/img/apichange.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testpathignorepatternsregexarray)  ![Aligned](/img/aligned.svg)
 
 An array of regexp pattern strings that are tested against all tests paths before executing the test. Contrary to `testPathPattern`, it will only run those tests with a path that does not match with the provided regexp expressions.
 
