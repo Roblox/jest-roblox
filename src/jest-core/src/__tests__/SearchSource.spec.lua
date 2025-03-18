@@ -210,7 +210,7 @@ describe("SearchSource", function()
 					testMatch = nil,
 					-- TODO: change back to "not-really-a-test once https://roblox.atlassian.net/browse/LUATOOLS-146 is resolved
 					-- Ticket to remove: https://roblox.atlassian.net/browse/ADO-2644
-					testRegex = "not-really-a-test.txt",
+					testRegex = "not-really-a-test.foo",
 				}, {} :: Config_Argv):expect().options
 				-- ROBLOX deviation START: then_ not available, using andThen instead
 				-- return findMatchingTests(config):then_(function(data)
@@ -228,10 +228,10 @@ describe("SearchSource", function()
 					-- ROBLOX deviation END
 					expect(relPaths).toEqual(Array.sort({
 						-- ROBLOX deviation START: issue #864
-						-- path:normalize(".hiddenFolder/not-really-a-test.txt"),
-						-- path:normalize("__testtests__/not-really-a-test.txt"),
-						path.normalize(".hiddenFolder/not-really-a-test.txt"),
-						path.normalize("__testtests__/not-really-a-test.txt"),
+						-- path:normalize(".hiddenFolder/not-really-a-test.foo"),
+						-- path:normalize("__testtests__/not-really-a-test.foo"),
+						path.normalize(".hiddenFolder/not-really-a-test.foo"),
+						path.normalize("__testtests__/not-really-a-test.foo"),
 						-- ROBLOX deviation END
 					}))
 				end)
@@ -241,11 +241,11 @@ describe("SearchSource", function()
 			return Promise.resolve():andThen(function()
 				local config = normalize({
 					-- ROBLOX deviation START: not supported
-					-- moduleFileExtensions = { "js", "jsx", "txt" },
+					-- moduleFileExtensions = { "js", "jsx", "foo" },
 					-- ROBLOX deviation END
 					id = id,
 					rootDir = rootDir,
-					testMatch = { "**/not-really-a-test.txt", "!**/do-not-match-me.txt" },
+					testMatch = { "**/not-really-a-test.foo?(.lua)", "!**/do-not-match-me.foo?(.lua)" },
 					testRegex = "",
 				}, {} :: Config_Argv):expect().options
 				-- ROBLOX deviation START: then_ not available, using andThen instead
@@ -264,10 +264,10 @@ describe("SearchSource", function()
 					-- ROBLOX deviation END
 					expect(relPaths).toEqual(Array.sort({
 						-- ROBLOX deviation START: issue #864
-						-- path:normalize(".hiddenFolder/not-really-a-test.txt"),
-						-- path:normalize("__testtests__/not-really-a-test.txt"),
-						path.normalize(".hiddenFolder/not-really-a-test.txt"),
-						path.normalize("__testtests__/not-really-a-test.txt"),
+						-- path:normalize(".hiddenFolder/not-really-a-test.foo"),
+						-- path:normalize("__testtests__/not-really-a-test.foo"),
+						path.normalize(".hiddenFolder/not-really-a-test.foo"),
+						path.normalize("__testtests__/not-really-a-test.foo"),
 						-- ROBLOX deviation END
 					}))
 				end)
@@ -315,7 +315,7 @@ describe("SearchSource", function()
 					-- ROBLOX deviation END
 					id = id,
 					rootDir = rootDir,
-					testMatch = { "**/test.js?(x)" },
+					testMatch = { "**/test.js?(x)?(.lua)" },
 					testRegex = "",
 				}, {} :: Config_Argv):expect().options
 				-- ROBLOX deviation START: then_ not available, using andThen instead
@@ -350,10 +350,10 @@ describe("SearchSource", function()
 					id = id,
 					rootDir = rootDir,
 					testMatch = {
-						"**/*.js?(x)",
-						"!**/test.js?(x)",
-						"**/test.js",
-						"!**/test.js",
+						"**/*.js?(x)?(.lua)",
+						"!**/test.js?(x)?(.lua)",
+						"**/test.js?(.lua)",
+						"!**/test.js?(.lua)",
 					},
 					testRegex = "",
 				}, {} :: Config_Argv):expect().options
