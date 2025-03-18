@@ -9,6 +9,7 @@ module.exports = {
         'asynchronous',
         'setup-teardown',
         'mock-functions',
+        'test-filtering'
       ],
     },
     {
