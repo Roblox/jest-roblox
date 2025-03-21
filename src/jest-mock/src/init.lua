@@ -761,9 +761,10 @@ exports.ModuleMocker = ModuleMockerClass
 -- 	return JestMock:mocked(item, _deep)
 -- end
 -- exports.mocked = mocked
+
 export type JestFuncFn = <T..., Y...>(implementation: ((T...) -> Y...)?) -> (MockFn, (T...) -> Y...)
-export type JestFuncMocked = <M>(object: { [any]: any }, methodName: M, accessType: ("get" | "set")?) -> Mock<any>
-export type JestFuncSpyOn = <T>(item: T, _deep: boolean?) -> MaybeMocked<T> | MaybeMockedDeep<T>
+export type JestFuncSpyOn = <M>(object: { [any]: any }, methodName: M, accessType: ("get" | "set")?) -> Mock<any>
+export type JestFuncMocked = <T>(item: T, _deep: boolean?) -> MaybeMocked<T> | MaybeMockedDeep<T>
 -- ROBLOX deviation END
 
 return exports

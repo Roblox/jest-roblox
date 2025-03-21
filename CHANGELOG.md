@@ -2,7 +2,10 @@
 
 ## Unreleased Changes
 
-None yet!
+* :bug: Fix no test found message ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434)) ([jsdotlua/jest-lua#7](https://github.com/jsdotlua/jest-lua/pull/7))
+* :bug: Perform test discovery against file system paths of tests if possible ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434))
+* :hammer_and_wrench: Fix the type signatures of `jest.spyOn()` and `jest.mocked()` ([#443](https://github.com/Roblox/jest-roblox-internal/pull/443))
+* :hammer_and_wrench: Fix broken Rotriever type exports for `expect` ([#443](https://github.com/Roblox/jest-roblox-internal/pull/443))
 
 ## 3.12.0 (2025-03-12)
 
@@ -13,8 +16,6 @@ None yet!
   engine frame time unit configured ([#389](https://github.com/Roblox/jest-roblox-internal/pull/389))
 * :hammer_and_wrench: Fixed a typo in the type signature for `jest.fn()` ([#426](https://github.com/Roblox/jest-roblox-internal/pull/426))
 * :bug: Delete empty snapshot files ([#430](https://github.com/Roblox/jest-roblox-internal/pull/430))
-* :bug: Fix no test found message ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434)) ([jsdotlua/jest-lua#7](https://github.com/jsdotlua/jest-lua/pull/7))
-* :bug: Perform test discovery against file system paths of tests if possible ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434))
 * :hammer_and_wrench: Fix types for new require type ([#438](https://github.com/Roblox/jest-roblox-internal/pull/438))
 * :bug: Fix string sequences that result in an invalid XML file for Rojo projects ([#439](https://github.com/Roblox/jest-roblox-internal/pull/439))
 
