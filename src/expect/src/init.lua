@@ -61,16 +61,23 @@ type AsyncExpectationResult = Types.AsyncExpectationResult
 export type Expect = Types.Expect_
 export type ExpectObj = Types.ExpectObj<any>
 type ExpectationResult = Types.ExpectationResult
-type JestMatcherState = Types.MatcherState
-type MatcherInterface<R> = Types.Matchers_<R>
+-- ROBLOX deviation START: favour exported type so Rotriever can see them
+-- type JestMatcherState = Types.MatcherState -- replaced with MatcherState
+-- type MatcherInterface<R> = Types.Matchers_<R> -- replaced with Matcher<R>
+-- ROBLOX deviation END
 type MatchersObject = Types.MatchersObject
 type PromiseMatcherFn = Types.PromiseMatcherFn
 type RawMatcherFn = Types.RawMatcherFn_
 type SyncExpectationResult = Types.SyncExpectationResult
 type ThrowingMatcherFn = Types.ThrowingMatcherFn
 
+-- ROBLOX deviation START: exporting types without a namespace prefix
+export type MatcherState = Types.MatcherState
+export type Matcher<R> = Types.Matchers_<R>
+-- ROBLOX deviation END
+
 -- ROBLOX deviation START: add additional type exports
-export type ExpectExtended<E, State = JestMatcherState> = Types.ExpectExtended<E, State>
+export type ExpectExtended<E, State = MatcherState> = Types.ExpectExtended<E, State>
 -- ROBLOX deviation END
 
 local utils = require(CurrentModule.utils)
@@ -112,7 +119,8 @@ local function isPromise<T>(
 end
 
 local function createToThrowErrorMatchingSnapshotMatcher(matcher: RawMatcherFn)
-	return function(self: JestMatcherState, received: any, testNameOrInlineSnapshot: string?)
+	-- ROBLOX deviation: deduplicate JestMatcherState -> MatcherState
+	return function(self: MatcherState, received: any, testNameOrInlineSnapshot: string?)
 		return matcher(self, table.unpack({ received, testNameOrInlineSnapshot, true }))
 	end
 end
@@ -364,7 +372,8 @@ local Expect = {} :: Expect
 --[[
 	ROBLOX FIXME: add extends and default generic param when supported
 	original code:
-	expect.extend = <T extends JestMatcherState = JestMatcherState>(
+	-- ROBLOX deviation: deduplicate JestMatcherState -> MatcherState
+	expect.extend = <T extends MatcherState = MatcherState>(
 ]]
 Expect.extend = function(matchers: MatchersObject): ()
 	setMatchers(matchers, false, Expect)
@@ -445,10 +454,5 @@ setMatchers({
 
 setmetatable(Expect, { __call = expect_ })
 local expectExport = (Expect :: any) :: Expect
-
--- ROBLOX deviation START: exporting types without a namespace prefix
-export type MatcherState = JestMatcherState
-export type Matcher<R> = MatcherInterface<R>
--- ROBLOX deviation END
 
 return expectExport
