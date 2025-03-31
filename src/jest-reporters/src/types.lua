@@ -21,8 +21,9 @@ local exports = {}
 
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
-type SerializableError = testResultModule.SerializableError
+type Test = testResultModule.Test
 type TestCaseResult = testResultModule.TestCaseResult
+type TestContext = testResultModule.TestContext
 type TestResult = testResultModule.TestResult
 
 local jestTypesModule = require(Packages.JestTypes)
@@ -57,34 +58,7 @@ export type NodeProcessMock = {
 
 export type ReporterOnStartOptions = { estimatedTime: number, showStatus: boolean }
 
-export type Context = {
-	config: Config_ProjectConfig,
-	-- ROBLOX deviation START: no supported
-	-- hasteFS: HasteFS,
-	-- moduleMap: ModuleMap,
-	-- resolver: Resolver,
-	-- ROBLOX deviation END
-}
-
-export type Test = { context: Context, duration: number?, path: Config_Path }
-
 export type CoverageWorker = { worker: worker }
-
-export type CoverageReporterOptions = {
-	changedFiles: Set<Config_Path>?,
-	sourcesRelatedToTestsInChangedFiles: Set<Config_Path>?,
-}
-
-export type CoverageReporterSerializedOptions = {
-	changedFiles: Array<Config_Path>?,
-	sourcesRelatedToTestsInChangedFiles: Array<Config_Path>?,
-}
-
-export type OnTestStart = (test: Test) -> Promise<void>
-
-export type OnTestFailure = (test: Test, error_: SerializableError) -> Promise<unknown>
-
-export type OnTestSuccess = (test: Test, result: TestResult) -> Promise<unknown>
 
 export type Reporter = {
 	onTestResult: ((
@@ -103,7 +77,7 @@ export type Reporter = {
 	onRunStart: (self: Reporter, results: AggregatedResult, options: ReporterOnStartOptions) -> Promise<void> | void,
 	onTestStart: ((self: Reporter, test: Test) -> Promise<void> | void)?,
 	onTestFileStart: ((self: Reporter, test: Test) -> Promise<void> | void)?,
-	onRunComplete: (self: Reporter, contexts: Set<Context>, results: AggregatedResult) -> Promise<void> | void,
+	onRunComplete: (self: Reporter, testContexts: Set<TestContext>, results: AggregatedResult) -> Promise<void> | void,
 	getLastError: (self: Reporter) -> Error | void,
 }
 
@@ -120,19 +94,6 @@ export type SummaryOptions = {
 	estimatedTime: number?,
 	roundTime: boolean?,
 	width: number?,
-}
-
-export type TestRunnerOptions = { serial: boolean }
-
-export type TestRunData = Array<{
-	context: Context,
-	matches: { allTests: number, tests: Array<Test>, total: number },
-}>
-
-export type TestSchedulerContext = {
-	firstRun: boolean,
-	previousSuccess: boolean,
-	changedFiles: Set<Config_Path>?,
 }
 
 return exports
