@@ -47,7 +47,7 @@ type ResolveOptions = {
 local BULLET: string = chalk.bold("\u{25cf} ")
 exports.BULLET = BULLET
 local DOCUMENTATION_NOTE = ([[  %s
-  https://jestjs.io/docs/configuration
+  https://roblox.github.io/jest-roblox-internal/configuration
 ]]):format(chalk.bold("Configuration Documentation:"))
 exports.DOCUMENTATION_NOTE = DOCUMENTATION_NOTE
 

@@ -8,6 +8,13 @@
 
 local exports = {}
 
+local CurrentModule = script
+local Packages = CurrentModule.Parent
+local testResultModule = require(Packages.JestTestResult)
+type Test = testResultModule.Test
+type TestCaseResult = testResultModule.TestCaseResult
+type TestContext = testResultModule.TestContext
+
 local getResultHeader = require(script.getResultHeader).default
 local getSnapshotStatus = require(script.getSnapshotStatus).default
 local getSnapshotSummary = require(script.getSnapshotSummary).default
@@ -36,12 +43,10 @@ exports.VerboseReporter = VerboseReporterModule.default
 export type VerboseReporter = VerboseReporterModule.VerboseReporter
 
 local typesModule = require(script.types)
-export type Context = typesModule.Context
 export type Reporter = typesModule.Reporter
 export type ReporterOnStartOptions = typesModule.ReporterOnStartOptions
 export type ReporterContext = typesModule.ReporterContext
 export type SummaryOptions = typesModule.SummaryOptions
-export type Test = typesModule.Test
 
 local utils = {
 	formatTestPath = formatTestPath,

@@ -158,7 +158,9 @@ export type CoverageReporterWithOptions<K> =
 
 export type CoverageReporters = Array<CoverageReporterName | CoverageReporterWithOptions<CoverageReporterName>>
 
-export type ReporterConfig = Array<string | Record<string, any>>
+-- ROBLOX deviation: using a named table for ReporterConfig since we can't type tuples
+-- export type ReporterConfig = Array<string | ModuleScript | Record<string, any>>
+export type ReporterConfig = { reporter: string | ModuleScript, options: { [string]: any } }
 
 export type TransformerConfig = Array<string | Record<string, any>>
 
@@ -408,8 +410,8 @@ export type InitialOptions = {
 	-- haste: HasteConfig?,
 	-- ROBLOX deviation END
 	injectGlobals: boolean?,
+	reporters: Array<string | ModuleScript | ReporterConfig>?,
 	-- ROBLOX deviation START: not supported
-	-- reporters: Array<string | ReporterConfig>?,
 	-- logHeapUsage: boolean?,
 	-- lastCommit: boolean?,
 	-- ROBLOX deviation END
@@ -599,8 +601,8 @@ export type GlobalConfig = {
 	projects: Array<Instance>,
 	-- ROBLOX deviation START: not supported
 	-- replname: string?,
-	-- reporters: Array<string | ReporterConfig>?,
 	-- ROBLOX deviation END
+	reporters: Array<string | ModuleScript | ReporterConfig>?,
 	runTestsByPath: boolean,
 	-- ROBLOX deviation START: using Instance instead of Path
 	rootDir: Instance,
@@ -799,6 +801,7 @@ export type Argv = Arguments<{
 	-- ROBLOX deviation START: not supported
 	-- prettierPath: (string | nil)?,
 	-- ROBLOX deviation END
+	reporters: Array<ModuleScript>,
 	resetMocks: boolean?,
 	resetModules: boolean?,
 	-- ROBLOX deviation START: not supported

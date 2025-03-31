@@ -23,13 +23,14 @@ local status, result = runCLI(Workspace, {
 	verbose = if _G.verbose == "true" then true else nil,
 	ci = _G.CI == "true",
 	updateSnapshot = _G.UPDATESNAPSHOT == "true",
+	testPathPattern = _G.TESTPATHPATTERN
 }, { Workspace }):awaitStatus()
 
 if status == "Rejected" then
 	print(result)
 end
 
-if status == "Resolved" and result.results.numFailedTestSuites == 0 and result.results.numFailedTests == 0 then
+if status == "Resolved" and result.results.success then
 	if processServiceExists then
 		ProcessService:ExitAsync(0)
 	end

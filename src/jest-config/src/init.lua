@@ -221,7 +221,7 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 					projects = options.projects,
 					-- ROBLOX deviation START: not supported
 					-- replname = options.replname,
-					-- reporters = options.reporters,
+					reporters = options.reporters,
 					-- ROBLOX deviation END
 					rootDir = options.rootDir,
 					runTestsByPath = options.runTestsByPath,

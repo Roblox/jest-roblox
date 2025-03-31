@@ -26,6 +26,7 @@ local getConsoleOutput = require(Packages.JestConsole).getConsoleOutput
 
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
+type Test = testResultModule.Test
 type TestCaseResult = testResultModule.TestCaseResult
 type TestResult = testResultModule.TestResult
 
@@ -51,7 +52,6 @@ local getSnapshotStatus = require(CurrentModule.getSnapshotStatus).default
 
 local typesModule = require(CurrentModule.types)
 type ReporterOnStartOptions = typesModule.ReporterOnStartOptions
-type Test = typesModule.Test
 type NodeProcessMock = typesModule.NodeProcessMock
 
 local RobloxShared = require(Packages.RobloxShared)

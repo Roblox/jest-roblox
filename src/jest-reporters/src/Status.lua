@@ -27,6 +27,7 @@ local stringLength = utf8.len
 
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
+type Test = testResultModule.Test
 type TestCaseResult = testResultModule.TestCaseResult
 type TestResult = testResultModule.TestResult
 
@@ -36,7 +37,6 @@ type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
 
 local typesModule = require(CurrentModule.types)
 type ReporterOnStartOptions = typesModule.ReporterOnStartOptions
-type Test = typesModule.Test
 
 local utilsModule = require(CurrentModule.utils)
 local getSummary = utilsModule.getSummary
