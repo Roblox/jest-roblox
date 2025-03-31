@@ -29,6 +29,7 @@ end
 
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
+type Test = testResultModule.Test
 type TestCaseResult = testResultModule.TestCaseResult
 
 local jestTypesModule = require(Packages.JestTypes)
@@ -42,7 +43,6 @@ local pluralize = jestUtilModule.pluralize
 
 local typesModule = require(CurrentModule.types)
 type SummaryOptions = typesModule.SummaryOptions
-type Test = typesModule.Test
 
 local relativePath
 local renderTime

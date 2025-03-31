@@ -14,8 +14,6 @@ local exports = {}
 -- exports.NODE_MODULES = NODE_MODULES
 -- local DEFAULT_JS_PATTERN = "\\.[jt]sx?$"
 -- exports.DEFAULT_JS_PATTERN = DEFAULT_JS_PATTERN
--- local DEFAULT_REPORTER_LABEL = "default"
--- exports.DEFAULT_REPORTER_LABEL = DEFAULT_REPORTER_LABEL
 -- local PACKAGE_JSON = "package.json"
 -- exports.PACKAGE_JSON = PACKAGE_JSON
 -- ROBLOX deviation END

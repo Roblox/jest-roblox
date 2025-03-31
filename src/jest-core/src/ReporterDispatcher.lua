@@ -28,9 +28,8 @@ local test_resultModule = require(Packages.JestTestResult)
 type AggregatedResult = test_resultModule.AggregatedResult
 type Test = test_resultModule.Test
 type TestCaseResult = test_resultModule.TestCaseResult
+type TestContext = test_resultModule.TestContext
 type TestResult = test_resultModule.TestResult
-local jest_runtimeModule = require(Packages.JestRuntime)
-type Context = jest_runtimeModule.Context
 
 -- ROBLOX deviation START: add additional imports and types
 local types = require(script.Parent.types)
@@ -53,7 +52,11 @@ export type ReporterDispatcher = {
 		options: ReporterOnStartOptions
 	) -> Promise<nil>,
 	onTestCaseResult: (self: ReporterDispatcher, test: Test, testCaseResult: TestCaseResult) -> Promise<nil>,
-	onRunComplete: (self: ReporterDispatcher, contexts: Set<Context>, results: AggregatedResult) -> Promise<nil>, -- Return a list of last errors for every reporter
+	onRunComplete: (
+		self: ReporterDispatcher,
+		testContexts: Set<TestContext>,
+		results: AggregatedResult
+	) -> Promise<nil>, -- Return a list of last errors for every reporter
 	getErrors: (self: ReporterDispatcher) -> Array<Error>,
 	hasErrors: (self: ReporterDispatcher) -> boolean,
 }
@@ -62,7 +65,7 @@ type ReporterDispatcherPrivate = {
 	_reporters: Array<Reporter>,
 
 	register: (self: ReporterDispatcherPrivate, reporter: Reporter) -> (),
-	unregister: (self: ReporterDispatcherPrivate, ReporterClass: Function) -> (),
+	unregister: (self: ReporterDispatcherPrivate, reporterConstructor: ReporterConstructor) -> (),
 	onTestFileResult: (
 		self: ReporterDispatcherPrivate,
 		test: Test,
@@ -76,7 +79,11 @@ type ReporterDispatcherPrivate = {
 		options: ReporterOnStartOptions
 	) -> Promise<nil>,
 	onTestCaseResult: (self: ReporterDispatcherPrivate, test: Test, testCaseResult: TestCaseResult) -> Promise<nil>,
-	onRunComplete: (self: ReporterDispatcherPrivate, contexts: Set<Context>, results: AggregatedResult) -> Promise<nil>, -- Return a list of last errors for every reporter
+	onRunComplete: (
+		self: ReporterDispatcherPrivate,
+		testContexts: Set<TestContext>,
+		results: AggregatedResult
+	) -> Promise<nil>, -- Return a list of last errors for every reporter
 	getErrors: (self: ReporterDispatcherPrivate) -> Array<Error>,
 	hasErrors: (self: ReporterDispatcherPrivate) -> boolean,
 }
@@ -98,9 +105,9 @@ function ReporterDispatcher:register(reporter: Reporter): ()
 	table.insert(self._reporters, reporter)
 end
 
-function ReporterDispatcher:unregister(ReporterClass: Function): ()
+function ReporterDispatcher:unregister(reporterConstructor: ReporterConstructor): ()
 	self._reporters = Array.filter(self._reporters, function(reporter)
-		return not instanceof(reporter, ReporterClass)
+		return not instanceof(reporter, reporterConstructor)
 	end)
 end
 
@@ -156,25 +163,25 @@ function ReporterDispatcher:onTestCaseResult(test: Test, testCaseResult: TestCas
 	end)
 end
 
-function ReporterDispatcher:onRunComplete(contexts: Set<Context>, results: AggregatedResult): Promise<nil>
+function ReporterDispatcher:onRunComplete(testContexts: Set<TestContext>, results: AggregatedResult): Promise<nil>
 	return Promise.resolve():andThen(function()
 		for _, reporter in self._reporters do
 			if reporter.onRunComplete ~= nil then
-				Promise.resolve(reporter:onRunComplete(contexts, results)):expect()
+				Promise.resolve(reporter:onRunComplete(testContexts, results)):expect()
 			end
 		end
 	end)
 end
 
 function ReporterDispatcher:getErrors(): Array<Error>
-	return Array.reduce(self._reporters, function(
-		-- ROBLOX FIXME Luau: should be inferred from reduce's initial value
-		list: Array<Error>,
-		reporter
-	)
+	local errors = {}
+	for _, reporter in self._reporters do
 		local error_ = if reporter.getLastError ~= nil then reporter:getLastError() else nil
-		return if error_ ~= nil then Array.concat(list, error_) else list
-	end, {} :: Array<Error>)
+		if error_ ~= nil then
+			table.insert(errors, error_)
+		end
+	end
+	return Array.from(errors) :: Array<Error>
 end
 
 function ReporterDispatcher:hasErrors(): boolean
