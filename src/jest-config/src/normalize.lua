@@ -82,14 +82,12 @@ local ValidationError = jestValidateModule.ValidationError
 local DEFAULT_CONFIG = require(script.Parent.Defaults).default
 -- ROBLOX deviation START: not used
 -- local DEPRECATED_CONFIG = require(script.Parent.Deprecated).default
--- local validateReporters = require(script.Parent.ReporterValidationErrors).validateReporters
 -- local VALID_CONFIG = require(script.Parent.ValidConfig).default
 -- ROBLOX deviation END
+local validateReporters = require(script.Parent.ReporterValidationErrors).validateReporters
 local getDisplayNameColor = require(script.Parent.color).getDisplayNameColor
 -- ROBLOX deviation START: not used
--- local constantsModule = require(script.Parent.constants)
 -- local DEFAULT_JS_PATTERN = constantsModule.DEFAULT_JS_PATTERN
--- local DEFAULT_REPORTER_LABEL = constantsModule.DEFAULT_REPORTER_LABEL
 -- ROBLOX deviation END
 local getMaxWorkers = require(script.Parent.getMaxWorkers).default
 -- ROBLOX deviation START: not needed now. Will be necessary when we want to implement TestSequencer
@@ -114,6 +112,11 @@ local ERROR = ("%sValidation Error"):format(BULLET)
 -- ROBLOX deviation END
 
 type AllOptions = Config_ProjectConfig & Config_GlobalConfig
+
+local BUILTIN_REPORTERS = {
+	default = true,
+	summary = true,
+}
 
 local function createConfigError(message: string)
 	return ValidationError.new(ERROR, message, DOCUMENTATION_NOTE)
@@ -534,37 +537,36 @@ local function normalizeRootDir(options: Config_InitialOptions): Config_InitialO
 end
 
 local function normalizeReporters(options: Config_InitialOptionsWithRootDir)
-	-- ROBLOX deviation START: not supported
-	-- local reporters = options.reporters
-	-- if not Boolean.toJSBoolean(reporters) or not Array.isArray(reporters) then
-	-- 	return options
-	-- end
+	local reporters = options.reporters
+	if not reporters or not Array.isArray(reporters) then
+		return options
+	end
 
-	-- validateReporters(reporters)
-	-- options.reporters = Array.map(reporters, function(reporterConfig)
-	-- 	local normalizedReporterConfig: Config_ReporterConfig = if typeof(reporterConfig) == "string"
-	-- 		then -- if reporter config is a string, we wrap it in an array
-	-- 			-- and pass an empty object for options argument, to normalize
-	-- 			-- the shape.
-	-- 			{ reporterConfig, {} }
-	-- 		else reporterConfig
-	-- 	local reporterPath = replaceRootDirInPath(options.rootDir, normalizedReporterConfig[1])
+	validateReporters(reporters)
+	options.reporters = Array.map(reporters, function(reporterConfig)
+		local normalizedReporterConfig: Config_ReporterConfig = if typeof(reporterConfig) ~= "table"
+			then
+				-- if reporter config is a string, we wrap it in an array
+				-- and pass an empty object for options argument, to normalize
+				-- the shape.
+				-- ROBLOX deviation: ReporterConfig is a named table since we can't type tuples
+				{ reporter = reporterConfig, options = {} }
+			else reporterConfig
 
-	-- 	if reporterPath ~= DEFAULT_REPORTER_LABEL then
-	-- 		local reporter = Resolver:findNodeModule(reporterPath, { basedir = options.rootDir })
-	-- 		if not Boolean.toJSBoolean(reporter) then
-	-- 			error(
-	-- 				Resolver.ModuleNotFoundError.new(
-	-- 					"Could not resolve a module for a custom reporter.\n"
-	-- 						.. ("  Module name: %s"):format(tostring(reporterPath))
-	-- 				)
-	-- 			)
-	-- 		end
-	-- 		normalizedReporterConfig[1] = reporter
-	-- 	end
-	-- 	return normalizedReporterConfig
-	-- end)
-	-- ROBLOX deviation END
+		local reporterPath = normalizedReporterConfig.reporter
+		if not BUILTIN_REPORTERS[reporterPath] then
+			local ok, result = pcall(function()
+				return require(reporterPath) :: any
+			end)
+			if not ok or not result then
+				error(
+					"Could not resolve a module for a custom reporter.\n"
+						.. ("  Module name: %s\n"):format(tostring(reporterPath))
+				)
+			end
+		end
+		return normalizedReporterConfig
+	end)
 
 	return options
 end

@@ -430,86 +430,90 @@ end
 describe("roots", function()
 	testPathArray("roots")
 end)
+describe("reporters", function()
+	local CustomReporter = script.Parent.mock_CustomReporter
+
+	it("allows empty list", function()
+		return Promise.resolve():andThen(function()
+			local options =
+				normalize({ reporters = {}, rootDir = pathToInstance("/root/") }, {} :: Config_Argv):expect().options
+			expect(options.reporters).toEqual({})
+		end)
+	end)
+
+	-- ROBLOX deviation: ReporterConfig is a named table since we can't type tuples
+	it("normalizes the path and options object", function()
+		return Promise.resolve():andThen(function()
+			local options = normalize({
+				reporters = {
+					"default",
+					"summary",
+					CustomReporter,
+					{ reporter = CustomReporter, options = { banana = "yes", pineapple = "no" } } :: any,
+					{ reporter = CustomReporter, options = { outputName = "report.xml" } } :: any,
+				},
+				rootDir = pathToInstance("/root/"),
+			}, {} :: Config_Argv):expect().options
+			expect(options.reporters).toEqual({
+				{ reporter = "default", options = {} },
+				{ reporter = "summary", options = {} },
+				{ reporter = CustomReporter, options = {} },
+				{ reporter = CustomReporter, options = { banana = "yes", pineapple = "no" } },
+				{ reporter = CustomReporter, options = { outputName = "report.xml" } },
+			})
+		end)
+	end)
+
+	it("throws an error if value is neither string nor array", function()
+		return Promise.resolve():andThen(function()
+			expect.assertions(1)
+			expect(normalize({ reporters = { 123 :: any }, rootDir = pathToInstance("/root/") }, {} :: Config_Argv)).rejects
+				.toThrowErrorMatchingSnapshot()
+				:expect()
+		end)
+	end)
+
+	it("throws an error if first value in the tuple is not a string", function()
+		return Promise.resolve():andThen(function()
+			expect.assertions(1)
+			expect(
+					normalize(
+						{ reporters = { { reporter = 123 } :: any }, rootDir = pathToInstance("/root/") },
+						{} :: Config_Argv
+					)
+				).rejects
+				.toThrowErrorMatchingSnapshot()
+				:expect()
+		end)
+	end)
+
+	it("throws an error if second value is missing in the tuple", function()
+		return Promise.resolve():andThen(function()
+			expect.assertions(1)
+			expect(
+					normalize(
+						{ reporters = { { reporter = "some-reporter" } :: any }, rootDir = pathToInstance("/root/") },
+						{} :: Config_Argv
+					)
+				).rejects
+				.toThrowErrorMatchingSnapshot()
+				:expect()
+		end)
+	end)
+
+	it("throws an error if second value in the tuple is not an object", function()
+		return Promise.resolve():andThen(function()
+			expect.assertions(1)
+			expect(normalize({
+					reporters = { { reporter = "some-reporter", options = true :: any } },
+					rootDir = pathToInstance("/root/"),
+				}, {} :: Config_Argv)).rejects
+				.toThrowErrorMatchingSnapshot()
+				:expect()
+		end)
+	end)
+end)
 -- ROBLOX deviation START: not supported
--- describe("reporters", function()
--- 	local Resolver
--- 	beforeEach(function()
--- 		Resolver = require_("jest-resolve").default
--- 		Resolver.findNodeModule = jest.fn(function(name)
--- 			return name
--- 		end)
--- 	end)
--- 	it("allows empty list", function()
--- 		return Promise.resolve():andThen(function()
--- 			local options =
--- 				normalize({ reporters = {}, rootDir = "/root/" }, {} :: Config_Argv):expect().options
--- 			expect(options.reporters).toEqual({})
--- 		end)
--- 	end)
--- 	it("normalizes the path and options object", function()
--- 		return Promise.resolve():andThen(function()
--- 			local options = normalize({
--- 				reporters = {
--- 					"default",
--- 					"github-actions",
--- 					"<rootDir>/custom-reporter.js",
--- 					{ "<rootDir>/custom-reporter.js", { banana = "yes", pineapple = "no" } },
--- 					{ "jest-junit", { outputName = "report.xml" } },
--- 				},
--- 				rootDir = "/root/",
--- 			}, {} :: Config_Argv):expect().options
--- 			expect(options.reporters).toEqual({
--- 				{ "default", {} },
--- 				{ "github-actions", {} },
--- 				{ "/root/custom-reporter.js", {} },
--- 				{ "/root/custom-reporter.js", { banana = "yes", pineapple = "no" } },
--- 				{ "jest-junit", { outputName = "report.xml" } },
--- 			})
--- 		end)
--- 	end)
--- 	it("throws an error if value is neither string nor array", function()
--- 		return Promise.resolve():andThen(function()
--- 			expect.assertions(1)
--- 			expect(normalize({ reporters = { 123 }, rootDir = "/root/" }, {} :: Config_Argv)).rejects
--- 				.toThrowErrorMatchingSnapshot()
--- 				:expect()
--- 		end)
--- 	end)
--- 	it("throws an error if first value in the tuple is not a string", function()
--- 		return Promise.resolve():andThen(function()
--- 			expect.assertions(1)
--- 			expect(normalize({ reporters = { { 123 } }, rootDir = "/root/" }, {} :: Config_Argv)).rejects
--- 				.toThrowErrorMatchingSnapshot()
--- 				:expect()
--- 		end)
--- 	end)
--- 	it("throws an error if second value is missing in the tuple", function()
--- 		return Promise.resolve():andThen(function()
--- 			expect.assertions(1)
--- 			expect(
--- 					normalize(
--- 						{ reporters = { { "some-reporter" } }, rootDir = "/root/" },
--- 						{} :: Config_Argv
--- 					)
--- 				).rejects
--- 				.toThrowErrorMatchingSnapshot()
--- 				:expect()
--- 		end)
--- 	end)
--- 	it("throws an error if second value in the tuple is not an object", function()
--- 		return Promise.resolve():andThen(function()
--- 			expect.assertions(1)
--- 			expect(
--- 					normalize(
--- 						{ reporters = { { "some-reporter", true } }, rootDir = "/root/" },
--- 						{} :: Config_Argv
--- 					)
--- 				).rejects
--- 				.toThrowErrorMatchingSnapshot()
--- 				:expect()
--- 		end)
--- 	end)
--- end)
 -- describe("transform", function()
 -- 	local Resolver
 -- 	beforeEach(function()

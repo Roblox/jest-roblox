@@ -9,7 +9,7 @@
 local Packages = script.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
-local Boolean = LuauPolyfill.Boolean
+local Error = LuauPolyfill.Error
 local String = LuauPolyfill.String
 type Array<T> = LuauPolyfill.Array<T>
 type Record<K, T> = { [K]: T }
@@ -38,7 +38,7 @@ local validateArrayReporter
 -- ROBLOX deviation END
 
 -- ROBLOX deviation START: valid reporter needs to be either a table or a ModuleScript
-local validReporterTypes = { "table", "ModuleScript" }
+local validReporterTypes = { "table", "string", "ModuleScript" }
 -- ROBLOX deviation END
 local ERROR = ("%sReporter Validation Error"):format(tostring(BULLET))
 
@@ -66,7 +66,7 @@ local function createArrayReporterError(
 	arrayReporter: Config_ReporterConfig,
 	reporterIndex: number,
 	valueIndex: number,
-	value: string | Record<string, unknown>,
+	value: string | ModuleScript | Record<string, any>,
 	expectedType: string,
 	valueName: string
 ): ValidationError
@@ -84,11 +84,11 @@ local function createArrayReporterError(
 end
 exports.createArrayReporterError = createArrayReporterError
 
-local function validateReporters(reporterConfig: Array<Config_ReporterConfig | string>): boolean
-	return Array.every(reporterConfig, function(reporter, index)
-		if Boolean.toJSBoolean(Array.isArray(reporter)) then
+local function validateReporters(reporterConfig: Array<string | ModuleScript | Config_ReporterConfig>): boolean
+	return Array.every(reporterConfig, function(reporter: string | ModuleScript | Config_ReporterConfig, index)
+		if typeof(reporter) == "table" then
 			validateArrayReporter(reporter, index)
-		elseif typeof(reporter) ~= "string" then
+		elseif typeof(reporter) ~= "string" and typeof(reporter) ~= "Instance" then
 			error(createReporterError(index, reporter))
 		end
 		return true
@@ -97,10 +97,12 @@ end
 exports.validateReporters = validateReporters
 
 function validateArrayReporter(arrayReporter: Config_ReporterConfig, reporterIndex: number)
-	local path, options = table.unpack(arrayReporter, 1, 2)
 	-- ROBLOX deviation START: path needs to be ModuleScript and options need to be a table
-	if typeof(path) ~= "Instance" or not path:isA("ModuleScript") then
-		error(createArrayReporterError(arrayReporter, reporterIndex, 0, path, "ModuleScript", "Path"))
+	local path, options = arrayReporter.reporter, arrayReporter.options
+	if typeof(path) ~= "string" and (typeof(path) ~= "Instance" or not path:IsA("ModuleScript")) then
+		error(
+			createArrayReporterError(arrayReporter, reporterIndex, 0, path, "ModuleScript or string", "reporter name")
+		)
 	elseif typeof(options) ~= "table" then
 		error(createArrayReporterError(arrayReporter, reporterIndex, 1, options, "table", "Reporter Configuration"))
 	end

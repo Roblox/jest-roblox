@@ -55,11 +55,13 @@ export type FilterResult = { test: string, message: string }
 export type Filter = (testPaths: Array<string>) -> Promise<{ filtered: Array<FilterResult> }>
 
 -- ROBLOX deviation START: add types moved from other files to avoid cyclic dependencies
-export type ReporterConstructor = (
-	globalConfig: Config_GlobalConfig,
-	reporterConfig: Record<string, unknown>,
-	reporterContext: ReporterContext
-) -> JestReporter
+export type ReporterConstructor = {
+	new: (
+		globalConfig: Config_GlobalConfig,
+		reporterConfig: Record<string, any>,
+		reporterContext: ReporterContext
+	) -> JestReporter,
+}
 -- ROBLOX deviation END
 
 return {}
