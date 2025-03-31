@@ -51,8 +51,11 @@ local chalk = require(Packages.ChalkLua)
 export type ValidationError = Error & { name: string, message: string }
 local ValidationError = setmetatable({}, { __index = Error })
 ValidationError.__index = ValidationError
+
 function ValidationError.new(name: string, message: string, comment: (string | nil)?): ValidationError
-	local self = setmetatable(Error.new(), ValidationError)
+	-- TODO: figure out why this isn't being considered an instanceof Error
+	-- local self = setmetatable(Error.new(), ValidationError)
+	local self = Error.new()
 	comment = if comment ~= nil and Boolean.toJSBoolean(comment) then "\n\n" .. comment else "\n"
 	self.name = ""
 	self.message = chalk.red(chalk.bold(name) .. ":\n\n" .. message .. (comment :: string))

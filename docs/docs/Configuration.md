@@ -188,6 +188,71 @@ Using `'<rootDir>'` as a string token in any other path-based configuration sett
 
 ::: -->
 
+### `reporters` \[array&ltInstance|string|table&gt;]
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#reporters-arraymodulename--modulename-options)  ![API Change](/img/apichange.svg)
+
+Default: `nil`
+
+Use this configuration option to add reporters to Jest Roblox. It must be a list of ModuleScripts, additional options can be passed to a reporter by passing in a table:
+```lua
+reporters = {
+	"default",
+	{ reporter = Workspace.customReporter, options = { banana = "yes", pineapple = "no" }}
+}
+```
+
+#### Default Reporter
+If custom reporters are specified, the default Jest reporter will be overridden. If you wish to keep it, `"default"` must be passed as a reporters name:
+```lua
+reporters = {
+	"default",
+	{ reporter = Workspace.jestJunit, options = { outputDirectory = "reports", outputName = "report.xml" }}
+}
+```
+
+#### Summary Reporter
+Summary reporter prints out summary of all tests. It is a part of default reporter, hence it will be enabled if `"default"` is included in the list. For instance, you might want to use it as stand-alone reporter instead of the default one.
+```lua
+reporters = {
+	"summary"
+}
+```
+
+#### Custom Reporters
+
+Custom reporters module must export a class that takes `globalConfig`, `reporterOptions` and `reporterContext` as constructor arguments in a `.new` method and implements at least the `onRunComplete()` method (for the full list of methods and argument types see the `Reporter` interface in [jest-reporters/src/types.lua](https://github.com/Roblox/jest-roblox-internal/blob/master/src/jest-reporters/src/types.lua)).
+
+```lua title="CustomReporter.lua"
+local CustomReporter = {}
+CustomReporter.__index = CustomReporter
+
+function CustomReporter.new(globalConfig, reporterOptions, reporterContext)
+	local self = setmetatable({}, CustomReporter)
+	self._globalConfig = globalConfig
+	self._options = reporterOptions
+	self._context = reporterContext
+	return self
+end
+
+function CustomReporter:onRunComplete(textContexts, results)
+	print("Custom reporter output:")
+	print("global config:", print(self._globalConfig))
+	print("options for this reporter from Jest config:", print(self._options))
+	print("reporter context passed from test scheduler:", print(self._context))
+end
+
+-- Optionally, reporters can force Jest to exit with non zero code by returning
+-- a LuauPolyfill `Error` from `getLastError()` method.
+-- https://roblox.github.io/jest-roblox-internal/expect#error
+function CustomReporter:getLastError()
+	if self._shouldFail then
+		return Error.new("Custom reporter error!")
+	end
+end
+
+return CustomReporter
+```
+
 ### `roots` \[array&lt;Instance&gt;]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#roots-arraystring)  ![API Change](/img/apichange.svg)
 

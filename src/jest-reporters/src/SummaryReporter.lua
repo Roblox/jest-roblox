@@ -22,6 +22,7 @@ local chalk = require(Packages.ChalkLua)
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
 type SnapshotSummary = testResultModule.SnapshotSummary
+type TestContext = testResultModule.TestContext
 
 local jestTypesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
@@ -32,7 +33,6 @@ local BaseReporter = require(CurrentModule.BaseReporter).default
 local getResultHeader = require(CurrentModule.getResultHeader).default
 local getSnapshotSummary = require(CurrentModule.getSnapshotSummary).default
 local typesModule = require(CurrentModule.types)
-type Context = typesModule.Context
 type ReporterOnStartOptions = typesModule.ReporterOnStartOptions
 
 local getSummary = require(CurrentModule.utils).getSummary
@@ -70,7 +70,7 @@ local npm_config_user_agent, npm_lifecycle_event, npm_lifecycle_script
 
 export type SummaryReporter = {
 	onRunStart: (self: SummaryReporter, aggregatedResults: AggregatedResult, options: ReporterOnStartOptions) -> (),
-	onRunComplete: (self: SummaryReporter, contexts: Set<Context>, aggregatedResults: AggregatedResult) -> (),
+	onRunComplete: (self: SummaryReporter, testContexts: Set<TestContext>, aggregatedResults: AggregatedResult) -> (),
 }
 
 type SummaryReporterPrivate = SummaryReporter & {
@@ -122,7 +122,7 @@ function SummaryReporter:onRunStart(aggregatedResults: AggregatedResult, options
 	self._estimatedTime = options.estimatedTime
 end
 
-function SummaryReporter:onRunComplete(contexts: Set<Context>, aggregatedResults: AggregatedResult)
+function SummaryReporter:onRunComplete(testContexts: Set<TestContext>, aggregatedResults: AggregatedResult)
 	local numTotalTestSuites, testResults, wasInterrupted =
 		aggregatedResults.numTotalTestSuites, aggregatedResults.testResults, aggregatedResults.wasInterrupted
 	if Boolean.toJSBoolean(numTotalTestSuites) then
@@ -144,7 +144,7 @@ function SummaryReporter:onRunComplete(contexts: Set<Context>, aggregatedResults
 			if not Boolean.toJSBoolean(self._globalConfig.silent) then
 				message ..= "\n" .. if Boolean.toJSBoolean(wasInterrupted)
 					then chalk.bold(chalk.red("Test run was interrupted."))
-					else self:_getTestSummary(contexts, self._globalConfig)
+					else self:_getTestSummary(testContexts, self._globalConfig)
 			end
 			self:log(message)
 		end
@@ -202,7 +202,7 @@ function SummaryReporter:_printSummary(aggregatedResults: AggregatedResult, glob
 	end
 end
 
-function SummaryReporter:_getTestSummary(contexts: Set<Context>, globalConfig: Config_GlobalConfig)
+function SummaryReporter:_getTestSummary(contexts: Set<TestContext>, globalConfig: Config_GlobalConfig)
 	local function getMatchingTestsInfo()
 		-- ROBLOX deviation START: not supported: findRelatedTests
 		-- local prefix = Boolean.toJSBoolean(globalConfig.findRelatedTests) and " related to files matching "

@@ -21,6 +21,7 @@ local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
 type AssertionResult = testResultModule.AssertionResult
 type Suite = testResultModule.Suite
+type Test = testResultModule.Test
 type TestResult = testResultModule.TestResult
 
 local jestTypesModule = require(Packages.JestTypes)
@@ -35,8 +36,6 @@ local ICONS = jestUtilModule.ICONS
 local DefaultReporterModule = require(CurrentModule.DefaultReporter)
 local DefaultReporter = DefaultReporterModule.default
 type DefaultReporter = DefaultReporterModule.DefaultReporter
-local typesModule = require(CurrentModule.types)
-type Test = typesModule.Test
 
 local RobloxShared = require(Packages.RobloxShared)
 type Writeable = RobloxShared.Writeable

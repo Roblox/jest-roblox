@@ -18,16 +18,16 @@ local exports = {}
 
 local testResultModule = require(Packages.JestTestResult)
 type AggregatedResult = testResultModule.AggregatedResult
+type Test = testResultModule.Test
 type TestCaseResult = testResultModule.TestCaseResult
+type TestContext = testResultModule.TestContext
 type TestResult = testResultModule.TestResult
 
 local preRunMessageRemove = require(Packages.JestUtil).remove
 
 local typesModule = require(CurrentModule.types)
-type Context = typesModule.Context
 type Reporter = typesModule.Reporter
 type ReporterOnStartOptions = typesModule.ReporterOnStartOptions
-type Test = typesModule.Test
 type NodeProcessMock = typesModule.NodeProcessMock
 
 local RobloxShared = require(Packages.RobloxShared)
@@ -40,10 +40,10 @@ export type BaseReporter = {
 	onTestCaseResult: (self: BaseReporter, _test: Test, _testCaseResult: TestCaseResult) -> (),
 	onTestResult: (self: BaseReporter, _test: Test?, _testResult: TestResult?, _results: AggregatedResult?) -> (),
 	onTestStart: (self: BaseReporter, _test: Test?) -> (),
-	onRunComplete: (self: BaseReporter, _contexts: Set<Context>?, _aggregatedResults: AggregatedResult?) -> (),
+	onRunComplete: (self: BaseReporter, _testContexts: Set<TestContext>?, _aggregatedResults: AggregatedResult?) -> (),
 	getLastError: (self: BaseReporter) -> Error | nil,
 	_process: NodeProcessMock,
-}
+} & Reporter
 
 local BaseReporter = {}
 BaseReporter.__index = BaseReporter
@@ -74,7 +74,7 @@ function BaseReporter:onTestResult(_test: Test?, _testResult: TestResult?, _resu
 
 function BaseReporter:onTestStart(_test: Test?): () end
 
-function BaseReporter:onRunComplete(_contexts: Set<Context>?, _aggregatedResults: AggregatedResult?): () end
+function BaseReporter:onRunComplete(_testContexts: Set<TestContext>?, _aggregatedResults: AggregatedResult?): () end
 
 function BaseReporter:_setError(error_): ()
 	self._error = error_
