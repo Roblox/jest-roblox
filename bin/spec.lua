@@ -23,7 +23,8 @@ local status, result = runCLI(Workspace, {
 	verbose = if _G.verbose == "true" then true else nil,
 	ci = _G.CI == "true",
 	updateSnapshot = _G.UPDATESNAPSHOT == "true",
-	testPathPattern = _G.TESTPATHPATTERN
+	testPathPattern = _G.TESTPATHPATTERN,
+	reporters = if _G.GITHUB_ACTIONS == "true" then { "default", "github-actions" } else nil
 }, { Workspace }):awaitStatus()
 
 if status == "Rejected" then

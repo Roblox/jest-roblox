@@ -116,6 +116,7 @@ type AllOptions = Config_ProjectConfig & Config_GlobalConfig
 local BUILTIN_REPORTERS = {
 	default = true,
 	summary = true,
+	["github-actions"] = true,
 }
 
 local function createConfigError(message: string)

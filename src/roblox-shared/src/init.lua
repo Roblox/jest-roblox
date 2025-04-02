@@ -30,6 +30,7 @@ local exports = {
 	normalizePromiseError = require(CurrentModule.normalizePromiseError),
 	pruneDeps = require(CurrentModule.pruneDeps),
 	redactStackTrace = require(CurrentModule.redactStackTrace),
+	stripAnsi = require(CurrentModule.stripAnsi),
 }
 
 local WriteableModule = require(CurrentModule.Writeable)
