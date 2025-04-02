@@ -34,6 +34,10 @@ local DefaultReporterModule = require(script.DefaultReporter)
 exports.DefaultReporter = DefaultReporterModule.default
 export type DefaultReporter = DefaultReporterModule.DefaultReporter
 
+local GitHubActionsReporterModule = require(script.GitHubActionsReporter)
+exports.GitHubActionsReporter = GitHubActionsReporterModule.default
+export type GitHubActionsReporter = GitHubActionsReporterModule.GitHubActionsReporter
+
 local SummaryReporterModule = require(script.SummaryReporter)
 exports.SummaryReporter = SummaryReporterModule.default
 export type SummaryReporter = SummaryReporterModule.SummaryReporter

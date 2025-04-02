@@ -69,10 +69,10 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json \
+          ./robloxdev-cli run --verbose --load.model jest.project.json --load.asRobloxScript \
             --run bin/spec.lua --testService.errorExitCode=1 --coverage.on \
             --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true \
-            --lua.globals=CI=true
+            --lua.globals=CI=true --lua.globals=GITHUB_ACTIONS=true
           mv lcov.info lcov-jest.info
 
       - name: Run tests (deferred lua)
