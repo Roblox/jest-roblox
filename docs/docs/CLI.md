@@ -89,6 +89,11 @@ Disables stack trace in test results output.
 
 Allows the test suite to pass when no files are found.
 
+### `reporters` \[array&ltInstance|string|table&gt;]
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/28.x/cli#--reporters)  ![API Change](/img/apichange.svg)
+
+Run tests with specified reporters. Refer to the [reporter configuration](configuration#reporters-arrayinstancestringtable) for details.
+
 ### `resetMocks` \[boolean]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--resetmocks)  ![Aligned](/img/aligned.svg)
 
