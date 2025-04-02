@@ -32,11 +32,9 @@ local reportersModule = require(Packages.JestReporters)
 -- ROBLOX deviation END
 local DefaultReporter = reportersModule.DefaultReporter
 type JestReporter = reportersModule.BaseReporter
--- ROBLOX deviation START: not needed
--- local NotifyReporter = reportersModule.NotifyReporter
--- ROBLOX deviation END
 type Reporter = reportersModule.Reporter
 type ReporterContext = reportersModule.ReporterContext
+local GitHubActionsReporter = reportersModule.GitHubActionsReporter
 local SummaryReporter = reportersModule.SummaryReporter
 local VerboseReporter = reportersModule.VerboseReporter
 local test_resultModule = require(Packages.JestTestResult)
@@ -454,6 +452,8 @@ function TestScheduler:_setupReporters()
 							then VerboseReporter.new(self._globalConfig)
 							else DefaultReporter.new(self._globalConfig)
 					)
+				elseif reporter == "github-actions" then
+					self:addReporter(GitHubActionsReporter.new(self._globalConfig))
 				elseif reporter == "summary" then
 					summary = true
 				end

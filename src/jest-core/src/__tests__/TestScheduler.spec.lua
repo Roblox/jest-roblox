@@ -22,6 +22,7 @@ jest.mock(Packages.JestReporters, function()
 		DefaultReporter = { new = jest.fn() },
 		SummaryReporter = { new = jest.fn() },
 		VerboseReporter = { new = jest.fn() },
+		GitHubActionsReporter = { new = jest.fn() },
 	}
 end)
 
@@ -29,6 +30,7 @@ local jestReportersModule = require(Packages.JestReporters)
 local DefaultReporter = jestReportersModule.DefaultReporter.new
 local SummaryReporter = jestReportersModule.SummaryReporter.new
 local VerboseReporter = jestReportersModule.VerboseReporter.new
+local GitHubActionsReporter = jestReportersModule.GitHubActionsReporter.new
 
 local jestTestUtilsModule = require(Packages.Dev.TestUtils)
 local makeGlobalConfig = jestTestUtilsModule.makeGlobalConfig
@@ -75,6 +77,7 @@ describe("reporters", function()
 			createTestScheduler({ reporters = nil } :: any, {} :: any):expect()
 			expect(DefaultReporter).toBeCalledTimes(1)
 			expect(VerboseReporter).toBeCalledTimes(0)
+			expect(GitHubActionsReporter).toBeCalledTimes(0)
 			expect(SummaryReporter).toBeCalledTimes(1)
 		end)
 	end)
@@ -84,6 +87,7 @@ describe("reporters", function()
 			createTestScheduler(makeGlobalConfig({ reporters = {} }), {}):expect()
 			expect(DefaultReporter).toBeCalledTimes(0)
 			expect(VerboseReporter).toBeCalledTimes(0)
+			expect(GitHubActionsReporter).toBeCalledTimes(0)
 			expect(SummaryReporter).toBeCalledTimes(0)
 		end)
 	end)
@@ -93,6 +97,7 @@ describe("reporters", function()
 			createTestScheduler(makeGlobalConfig({ reporters = { { reporter = "default", options = {} } } }), {}):expect()
 			expect(DefaultReporter).toBeCalledTimes(1)
 			expect(VerboseReporter).toBeCalledTimes(0)
+			expect(GitHubActionsReporter).toBeCalledTimes(0)
 			expect(SummaryReporter).toBeCalledTimes(1)
 		end)
 	end)
@@ -105,6 +110,25 @@ describe("reporters", function()
 			):expect()
 			expect(DefaultReporter).toBeCalledTimes(0)
 			expect(VerboseReporter).toBeCalledTimes(1)
+			expect(GitHubActionsReporter).toBeCalledTimes(0)
+			expect(SummaryReporter).toBeCalledTimes(1)
+		end)
+	end)
+
+	test("sets up github actions reporter", function()
+		return Promise.resolve():andThen(function()
+			createTestScheduler(
+				makeGlobalConfig({
+					reporters = {
+						{ reporter = "default", options = {} },
+						{ reporter = "github-actions", options = {} },
+					},
+				}),
+				{}
+			):expect()
+			expect(DefaultReporter).toBeCalledTimes(1)
+			expect(VerboseReporter).toBeCalledTimes(0)
+			expect(GitHubActionsReporter).toBeCalledTimes(1)
 			expect(SummaryReporter).toBeCalledTimes(1)
 		end)
 	end)
@@ -114,6 +138,7 @@ describe("reporters", function()
 			createTestScheduler(makeGlobalConfig({ reporters = { { reporter = "summary", options = {} } } }), {}):expect()
 			expect(DefaultReporter).toBeCalledTimes(0)
 			expect(VerboseReporter).toBeCalledTimes(0)
+			expect(GitHubActionsReporter).toBeCalledTimes(0)
 			expect(SummaryReporter).toBeCalledTimes(1)
 		end)
 	end)
@@ -128,6 +153,7 @@ describe("reporters", function()
 			):expect()
 			expect(DefaultReporter).toBeCalledTimes(1)
 			expect(VerboseReporter).toBeCalledTimes(0)
+			expect(GitHubActionsReporter).toBeCalledTimes(0)
 			expect(SummaryReporter).toBeCalledTimes(1)
 			expect(mockCustomReporter.new).toBeCalledTimes(1)
 		end)
