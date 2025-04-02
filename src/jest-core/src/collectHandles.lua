@@ -23,7 +23,9 @@ local exports = {}
 -- local asyncHooks = require(Packages.async_hooks)
 -- local promisify = require(Packages.util).promisify
 -- ROBLOX deviation END
-local stripAnsi = require(script.Parent.jsHelpers.stripAnsi)
+local RobloxShared = require(Packages.RobloxShared)
+local stripAnsi = RobloxShared.stripAnsi
+
 local typesModule = require(Packages.JestTypes)
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 local formatExecError = require(Packages.JestMessageUtil).formatExecError

@@ -210,6 +210,15 @@ reporters = {
 }
 ```
 
+#### GitHub Actions Reporter
+If included in the list, the built-in GitHub Actions Reporter will annotate changed files with test failure messages:
+```lua
+reporters = {
+	"default",
+	"github-actions"
+}
+```
+
 #### Summary Reporter
 Summary reporter prints out summary of all tests. It is a part of default reporter, hence it will be enabled if `"default"` is included in the list. For instance, you might want to use it as stand-alone reporter instead of the default one.
 ```lua
