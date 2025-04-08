@@ -284,10 +284,14 @@ function SearchSource.new(context: Context): SearchSource
 	end
 
 	if #config.testPathIgnorePatterns > 0 then
-		local testIgnorePatternsRegex = RegExp(Array.join(config.testPathIgnorePatterns, "|"))
 		table.insert(self._testPathCases, {
 			isMatch = function(path)
-				return not testIgnorePatternsRegex:test(path)
+				for _, p in config.testPathIgnorePatterns do
+					if RegExp(p):test(path) then
+						return false
+					end
+				end
+				return true
 			end,
 			stat = "testPathIgnorePatterns",
 		})

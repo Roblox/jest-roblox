@@ -6,6 +6,7 @@
 * :sparkles: Added GitHub actions reporter ([#445](https://github.com/Roblox/jest-roblox-internal/pull/445))
 * :bug: Fix no test found message ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434)) ([jsdotlua/jest-lua#7](https://github.com/jsdotlua/jest-lua/pull/7))
 * :bug: Perform test discovery against file system paths of tests if possible ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434))
+* :bug: Fix testPathIgnorePatterns to when ignoring multiple file paths ([#446](https://github.com/Roblox/jest-roblox-internal/pull/446))
 * :hammer_and_wrench: Fix the type signatures of `jest.spyOn()` and `jest.mocked()` ([#443](https://github.com/Roblox/jest-roblox-internal/pull/443))
 * :hammer_and_wrench: Fix broken Rotriever type exports for `expect` ([#443](https://github.com/Roblox/jest-roblox-internal/pull/443))
 
