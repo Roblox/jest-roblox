@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+## 3.13.0 (2025-04-10)
+
 * :sparkles: Added support for custom reporters ([#444](https://github.com/Roblox/jest-roblox-internal/pull/444))
 * :sparkles: Added GitHub actions reporter ([#445](https://github.com/Roblox/jest-roblox-internal/pull/445))
 * :bug: Fix no test found message ([#434](https://github.com/Roblox/jest-roblox-internal/pull/434)) ([jsdotlua/jest-lua#7](https://github.com/jsdotlua/jest-lua/pull/7))
