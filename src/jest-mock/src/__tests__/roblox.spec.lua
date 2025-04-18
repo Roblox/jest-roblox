@@ -136,6 +136,12 @@ describe("global mocking & spying", function()
 
 		expect(returnValue).toBe("vwxyz")
 	end)
+
+	it("resetAllMocks resets Lua globals back to their default behavior", function()
+		expect(math.random()).never.toBeNil()
+		jest.resetAllMocks()
+		expect(math.random()).never.toBeNil()
+	end)
 end)
 
 describe("oldFunctionSpying", function()

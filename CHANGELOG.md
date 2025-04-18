@@ -1,6 +1,7 @@
 # Jest Roblox Changelog
 
 ## Unreleased Changes
+* :bug: Reinitialize global mocks after `resetAllMocks` is called ([#448](https://github.com/Roblox/jest-roblox-internal/pull/448))
 
 ## 3.13.0 (2025-04-10)
 
