@@ -1714,7 +1714,9 @@ function Runtime_private:restoreAllMocks(): ()
 	self._moduleMocker:restoreAllMocks()
 end
 function Runtime_private:resetAllMocks(): ()
+	self._moduleMocker:unmockGlobals(self._globalMocker)
 	self._moduleMocker:resetAllMocks()
+	self._moduleMocker:mockGlobals(self._globalMocker, getfenv(0))
 end
 function Runtime_private:clearAllMocks(): ()
 	self._moduleMocker:clearAllMocks()
