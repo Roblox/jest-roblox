@@ -333,9 +333,8 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 								local testPath, testCaseResult = table.unpack(ref, 1, 2)
 								local test: Test = {
 									context = context,
-									-- ROBLOX FIXME: need script path
-									path = testPath.Name,
-									script = testPath,
+									path = testPath,
+									script = nil :: any, -- TODO: remove when we clean up Test type
 								}
 								self._dispatcher:onTestCaseResult(test, testCaseResult)
 							end),
