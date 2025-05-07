@@ -801,7 +801,7 @@ export type Argv = Arguments<{
 	-- ROBLOX deviation START: not supported
 	-- prettierPath: (string | nil)?,
 	-- ROBLOX deviation END
-	reporters: Array<ModuleScript>,
+	reporters: Array<string | ModuleScript | ReporterConfig>?,
 	resetMocks: boolean?,
 	resetModules: boolean?,
 	-- ROBLOX deviation START: not supported
