@@ -459,7 +459,7 @@ This does not change the exit code in the case of Jest Roblox errors (e.g. inval
 Default: `{ "**/__tests__/**/*", "**/?(*.)+(spec|test)?(.lua|.luau)" }`
 
 The glob patterns Jest Roblox uses to detect test files. 
-By default it looks for `.spe.lua` or `.test.lua` files inside of `__tests__` folders, as well as any files with a suffix of `.test.lua` or `.spec.lua` (e.g. `Component.test.lua` or `Component.spec.lua`). It will also find files called `test.lua` or `spec.lua`.
+By default it looks for `.spec.lua` or `.test.lua` files inside of `__tests__` folders, as well as any files with a suffix of `.test.lua` or `.spec.lua` (e.g. `Component.test.lua` or `Component.spec.lua`). It will also find files called `test.lua` or `spec.lua`.
 
 See the [micromatch](https://github.com/micromatch/micromatch) package for details of the patterns you can specify.
 
