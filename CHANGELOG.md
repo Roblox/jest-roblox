@@ -2,6 +2,7 @@
 
 ## Unreleased Changes
 * :bug: Correctly pass in `path` property of `test` in the `onTestCaseResult` reporter hook ([#450](https://github.com/Roblox/jest-roblox-internal/pull/450))
+* :bug: Fix incorrect type for the `reporters` argument in runCLI ([#451](https://github.com/Roblox/jest-roblox-internal/pull/451))
 
 ## 3.13.1 (2025-04-21)
 * :bug: Reinitialize global mocks after `resetAllMocks` is called ([#448](https://github.com/Roblox/jest-roblox-internal/pull/448))
