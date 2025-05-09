@@ -64,12 +64,12 @@ jobs:
       - name: Run type checking
         shell: bash
         run: |
-          ./robloxdev-cli analyze jest.project.json --fastFlags.allOnLuau
+          ./robloxdev-cli analyze default.project.json --fastFlags.allOnLuau
 
       - name: Run tests
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json --load.asRobloxScript \
+          ./robloxdev-cli run --verbose --load.model default.project.json --load.asRobloxScript \
             --run bin/spec.lua --testService.errorExitCode=1 --coverage.on \
             --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true \
             --lua.globals=CI=true --lua.globals=GITHUB_ACTIONS=true
@@ -78,7 +78,7 @@ jobs:
       - name: Run tests (deferred lua)
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json \
+          ./robloxdev-cli run --verbose --load.model default.project.json \
             --run bin/spec.lua --testService.errorExitCode=1 \
             --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true \
             EnableSignalBehavior=true DebugForceDeferredSignalBehavior=true MaxDeferReentrancyDepth=15 \
@@ -87,7 +87,7 @@ jobs:
       - name: Run tests (low privilege)
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model jest.project.json \
+          ./robloxdev-cli run --verbose --load.model default.project.json \
             --run bin/spec.lua --testService.errorExitCode=1 --load.asRobloxScript \
             --fastFlags.overrides EnableLoadModule=false --lua.globals=CI=true
 
