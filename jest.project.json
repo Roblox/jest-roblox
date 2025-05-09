@@ -1,9 +1,0 @@
-{
-  "name": "JestRoblox",
-  "tree": {
-    "$path": "Packages",
-    "_Workspace": {
-      "$path": "TestRoot"
-    }
-  }
-}
