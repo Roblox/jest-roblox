@@ -6,98 +6,18 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  ]]
--- ROBLOX deviation START: skipped
--- type void = nil --[[ ROBLOX FIXME: adding `void` type alias to make it easier to use Luau `void` equivalent when supported ]]
--- ROBLOX deviation END
 local Packages = script.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
--- ROBLOX deviation START: skipped
--- local Array = LuauPolyfill.Array
--- ROBLOX deviation END
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
 local Map = LuauPolyfill.Map
 local Object = LuauPolyfill.Object
--- ROBLOX deviation START: skipped
--- local Set = LuauPolyfill.Set
--- local WeakMap = LuauPolyfill.WeakMap
--- local console = LuauPolyfill.console
--- local instanceof = LuauPolyfill.instanceof
--- ROBLOX deviation END
 type Array<T> = LuauPolyfill.Array<T>
--- ROBLOX deviation START: skipped
--- type Error = LuauPolyfill.Error
--- ROBLOX deviation END
 type Map<T, U> = LuauPolyfill.Map<T, U>
 type Promise<T> = LuauPolyfill.Promise<T>
--- ROBLOX deviation START: skipped
--- type Set<T> = LuauPolyfill.Set<T>
--- type WeakMap<T, U> = LuauPolyfill.WeakMap<T, U>
--- ROBLOX deviation END
 type Omit<T, K> = T --[[ ROBLOX TODO: TS 'Omit' built-in type is not available in Luau ]]
--- ROBLOX deviation START: skipped
--- type Parameters<T> = any --[[ ROBLOX TODO: TS 'Parameters' built-in type is not available in Luau ]]
--- local Promise = require(Packages.Promise)
--- local exports = {}
--- local nativeModule = require(Packages.module)
--- local path = require(Packages.path)
--- local urlModule = require(Packages.url)
--- local URL = urlModule.URL
--- local fileURLToPath = urlModule.fileURLToPath
--- local pathToFileURL = urlModule.pathToFileURL
--- local vmModule = require(Packages.vm)
--- local Script = vmModule.Script
--- -- @ts-expect-error: experimental, not added to the types
--- local SourceTextModule = vmModule.SourceTextModule
--- -- @ts-expect-error: experimental, not added to the types
--- local SyntheticModule = vmModule.SyntheticModule
--- local VMContext = vmModule.Context
--- -- @ts-expect-error: experimental, not added to the types
--- local VMModule = vmModule.Module
--- local parseCjs = require(Packages["cjs-module-lexer"]).parse
--- local collectV8CoverageModule = require(Packages["collect-v8-coverage"])
--- local CoverageInstrumenter = collectV8CoverageModule.CoverageInstrumenter
--- local V8Coverage = collectV8CoverageModule.V8Coverage
--- local execa = require(Packages.execa)
--- local fs = require(Packages["graceful-fs"])
--- local slash = require(Packages.slash)
--- local stripBOM = require(Packages["strip-bom"])
--- local jestEnvironmentModule = require(Packages.JestEnvironment)
--- type Jest = jestEnvironmentModule.Jest
--- type JestEnvironment = jestEnvironmentModule.JestEnvironment
--- type Module = jestEnvironmentModule.Module
--- type ModuleWrapper = jestEnvironmentModule.ModuleWrapper
--- local jestFakeTimersModule = require(Packages.JestFakeTimers)
--- type LegacyFakeTimers = jestFakeTimersModule.LegacyFakeTimers
--- type ModernFakeTimers = jestFakeTimersModule.ModernFakeTimers
--- local jestGlobalsModule = require(Packages.Dev.JestGlobals)
--- local JestGlobals = jestGlobalsModule
--- local jestSourceMapModule = require(Packages["@jest"]["source-map"])
--- type SourceMapRegistry = jestSourceMapModule.SourceMapRegistry
--- local jestTestResultModule = require(Packages.JestTestResult)
--- type RuntimeTransformResult = jestTestResultModule.RuntimeTransformResult
--- type V8CoverageResult = jestTestResultModule.V8CoverageResult
--- local jestTransformModule = require(Packages["@jest"].transform)
--- local CallerTransformOptions = jestTransformModule.CallerTransformOptions
--- local ScriptTransformer = jestTransformModule.ScriptTransformer
--- local ShouldInstrumentOptions = jestTransformModule.ShouldInstrumentOptions
--- local TransformResult = jestTransformModule.TransformResult
--- local TransformationOptions = jestTransformModule.TransformationOptions
--- local handlePotentialSyntaxError = jestTransformModule.handlePotentialSyntaxError
--- local shouldInstrument = jestTransformModule.shouldInstrument
 local jestTypesModule = require(Packages.JestTypes)
--- type Config = jestTypesModule.Config
--- type Config_Path = jestTypesModule.Config_Path
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
--- type Global = jestTypesModule.Global
--- type Global_TestFrameworkGlobals = jestTypesModule.Global_TestFrameworkGlobals
--- local jestHasteMapModule = require(Packages["jest-haste-map"])
--- type IModuleMap = jestHasteMapModule.IModuleMap
--- local HasteMap = require(Packages["jest-haste-map"]).default
--- local jestMessageUtilModule = require(Packages.JestMessageUtil)
--- local formatStackTrace = jestMessageUtilModule.formatStackTrace
--- local separateMessageFromStack = jestMessageUtilModule.separateMessageFromStack
--- ROBLOX deviation END
 local jestMockModule = require(Packages.JestMock)
 -- ROBLOX deviation: not implemented yet
 -- type MockFunctionMetadata = jestMockModule.MockFunctionMetadata
@@ -110,20 +30,6 @@ local ModuleMocker = jestMockModule.ModuleMocker
 local jestMockGenvModule = require(Packages.JestMockGenv)
 local GlobalMocker = jestMockGenvModule.GlobalMocker
 type GlobalMocker = jestMockGenvModule.GlobalMocker
--- ROBLOX deviation START: skipped
--- local escapePathForRegex = require(Packages["jest-regex-util"]).escapePathForRegex
--- local jestResolveModule = require(Packages["jest-resolve"])
--- local Resolver = jestResolveModule.default
--- local ResolveModuleConfig = jestResolveModule.ResolveModuleConfig
--- local Snapshot = require(Packages.JestSnapshot)
--- local jestUtilModule = require(Packages.JestUtil)
--- local createDirectory = jestUtilModule.createDirectory
--- local deepCyclicCopy = jestUtilModule.deepCyclicCopy
--- local helpersModule = require(script.helpers)
--- local createOutsideJestVmPath = helpersModule.createOutsideJestVmPath
--- local decodePossibleOutsideJestVmPath = helpersModule.decodePossibleOutsideJestVmPath
--- local findSiblingsWithFileExtension = helpersModule.findSiblingsWithFileExtension
--- ROBLOX deviation END
 local typesModule = require(script.types)
 export type Context = typesModule.Context
 -- ROBLOX deviation START: skipped
@@ -151,6 +57,9 @@ type FakeTimers = JestFakeTimers.FakeTimers
 -- type JestGlobals = Global_TestFrameworkGlobals & {
 -- 	expect: typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.expect ]]),
 -- }
+
+local LOADMODULE_ENABLED = pcall((debug :: any).loadmodule, Instance.new("ModuleScript"))
+
 type JestGlobals = {
 	expect: any,
 	expectExtended: any,
@@ -1955,7 +1864,6 @@ function Runtime_private:_execModule(
 	local moduleFunction, defaultEnvironment, errorMessage, cleanupFn
 
 	local modulePath = localModule.filename
-	local loadModuleEnabled = pcall((debug :: any).loadmodule, Instance.new("ModuleScript"))
 
 	if self._loadedModuleFns and self._loadedModuleFns:has(modulePath) then
 		local loadedModule = self._loadedModuleFns:get(modulePath) :: { any }
@@ -1964,7 +1872,7 @@ function Runtime_private:_execModule(
 	else
 		-- Narrowing this type here lets us appease the type checker while still
 		-- counting on types for the rest of this file
-		if loadModuleEnabled then
+		if LOADMODULE_ENABLED then
 			local loadmodule: (ModuleScript) -> (any, string, () -> any) = debug["loadmodule"]
 			moduleFunction, errorMessage, cleanupFn = loadmodule(modulePath)
 		else
@@ -1998,7 +1906,7 @@ function Runtime_private:_execModule(
 	local isInternal = if options ~= nil and options.isInternalModule then options.isInternalModule else false
 
 	-- Data model references inside of sandbox
-	local dmScript = if loadModuleEnabled then defaultEnvironment.script else modulePath
+	local dmScript = if LOADMODULE_ENABLED then defaultEnvironment.script else modulePath
 	local dmGame = defaultEnvironment.game
 	local dmWorkspace = defaultEnvironment.workspace
 	local dmPlugin = defaultEnvironment.plugin
