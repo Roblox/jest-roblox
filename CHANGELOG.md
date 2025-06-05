@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+## 3.13.3 (2025-06-04)
+
 * :hammer_and_wrench: Rojo + Luau LSP is the new default workflow for Jest
   development ([#453](https://github.com/Roblox/jest-roblox-internal/pull/453))
 * :bug: Fix test runtime regression due to loadstring fallback check ([#455](https://github.com/Roblox/jest-roblox-internal/pull/455))
