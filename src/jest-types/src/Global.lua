@@ -15,7 +15,6 @@ type Promise<T> = LuauPolyfill.Promise<T>
 
 type Generator<T, TReturn, TNext> = Object
 type Record<T, U> = { [T]: U }
-type ReturnType<T> = any
 type TemplateStringsArray = Array<string>
 
 -- ROBLOX FIXME: can't express void when defined outside of a function type
@@ -63,16 +62,16 @@ export type EachTable = ArrayTable | TemplateTable | string
 
 export type TestCallback = BlockFn | TestFn | ConcurrentTestFn
 
--- ROBLOX FIXME: add type constraint <EachCallback extends TestCallback>
-export type EachTestFn<EachCallback> = (...any) -> ReturnType<EachCallback>
+-- ROBLOX FIXME: can't express EachTestFn<EachCallback extends TestCallback> = (...any) -> ReturnType<EachCallback>
+export type EachTestFn<EachCallback> = (...any) -> ...any
 
 -- TODO: Get rid of this at some point
 type Jasmine = { _DEFAULT_TIMEOUT_INTERVAL: number?, addMatchers: (matchers: Record<string, any>) -> () }
 
--- ROBLOX FIXME: add type constraint <EachCallback extends TestCallback>
-type Each<EachCallback> =
-	((table: EachTable, ...any) -> (title: string, test: EachTestFn<EachCallback>, timeout: number?) -> ())
-	| (() -> () -> ())
+type Each<EachCallback> = (
+	table: EachTable,
+	...any
+) -> (title: string, test: EachTestFn<EachCallback>, timeout: number?) -> ()
 
 export type HookBase = (fn: TestFn, timeout: number?) -> ()
 
