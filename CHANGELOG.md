@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+* :bug: Fix the type for `each` ([#457](https://github.com/Roblox/jest-roblox-internal/pull/457))
+
 ## 3.13.3 (2025-06-04)
 
 * :hammer_and_wrench: Rojo + Luau LSP is the new default workflow for Jest
