@@ -71,8 +71,8 @@ jobs:
         run: |
           ./robloxdev-cli run --verbose --load.model default.project.json --load.asRobloxScript \
             --run bin/spec.lua --testService.errorExitCode=1 --coverage.on \
-            --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true \
-            --lua.globals=CI=true --lua.globals=GITHUB_ACTIONS=true
+            --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true -- \
+            --ci --githubActions
           mv lcov.info lcov-jest.info
 
       - name: Run tests (deferred lua)
@@ -81,15 +81,16 @@ jobs:
           ./robloxdev-cli run --verbose --load.model default.project.json \
             --run bin/spec.lua --testService.errorExitCode=1 \
             --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true \
-            EnableSignalBehavior=true DebugForceDeferredSignalBehavior=true MaxDeferReentrancyDepth=15 \
-            --lua.globals=CI=true
+            EnableSignalBehavior=true DebugForceDeferredSignalBehavior=true MaxDeferReentrancyDepth=15 -- \
+            --ci
 
       - name: Run tests (low privilege)
         shell: bash
         run: |
           ./robloxdev-cli run --verbose --load.model default.project.json \
             --run bin/spec.lua --testService.errorExitCode=1 --load.asRobloxScript \
-            --fastFlags.overrides EnableLoadModule=false --lua.globals=CI=true
+            --fastFlags.overrides EnableLoadModule=false -- \
+            --ci
 
       - name: Upload code coverage file
         uses: actions/upload-artifact@v4
