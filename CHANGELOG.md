@@ -2,7 +2,9 @@
 
 ## Unreleased Changes
 
+* :hammer_and_wrench: Added an `args` module that parses command line arguments passed in through `roblox-cli` and moving away from relying on globals to pass arguments ([#454](https://github.com/Roblox/jest-roblox-internal/pull/454))
 * :bug: Fix the type for `each` ([#457](https://github.com/Roblox/jest-roblox-internal/pull/457))
+
 
 ## 3.13.3 (2025-06-04)
 

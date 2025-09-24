@@ -36,15 +36,17 @@ Create a `default.project.json` to set up your project structure and include the
 Create a `spec.lua` to point the test runner to the correct directory with your tests. This is the entrypoint for Jest Roblox. For more information, see [runCLI Options](cli).
 ```lua title="spec.lua"
 local Packages = script.Parent.YourProject.Packages
-local runCLI = require(Packages.Dev.Jest).runCLI
+local Jest = require(Workspace.Jest.Jest)
+local runCLI = Jest.runCLI
+local args = Jest.args
 
 local processServiceExists, ProcessService = pcall(function()
 	return game:GetService("ProcessService")
 end)
 
 local status, result = runCLI(Packages.Project, {
-	verbose = false,
-	ci = false
+	verbose = args.verbose,
+	ci = args.ci
 }, { Packages.Project }):awaitStatus()
 
 if status == "Rejected" then

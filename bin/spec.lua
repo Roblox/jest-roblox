@@ -13,18 +13,21 @@
 	* limitations under the License.
 ]]
 local Workspace = script.Parent.JestRoblox._Workspace
-local runCLI = require(Workspace.Jest.Jest).runCLI
+local Jest = require(Workspace.Jest.Jest)
+local runCLI = Jest.runCLI
+local args = Jest.args
 
 local processServiceExists, ProcessService = pcall(function()
 	return game:GetService("ProcessService")
 end)
 
 local status, result = runCLI(Workspace, {
-	verbose = if _G.verbose == "true" then true else nil,
-	ci = _G.CI == "true",
-	updateSnapshot = _G.UPDATESNAPSHOT == "true",
-	testPathPattern = _G.TESTPATHPATTERN,
-	reporters = if _G.GITHUB_ACTIONS == "true" then { "default", "github-actions" } else nil
+	verbose = args.verbose,
+	ci = args.ci,
+	updateSnapshot = args.updateSnapshot,
+	testPathPattern = args.testPathPattern,
+	testNamePattern = args.testNamePattern,
+	reporters = if args.githubActions then { "default", "github-actions" } else nil
 }, { Workspace }):awaitStatus()
 
 if status == "Rejected" then

@@ -78,10 +78,15 @@ Since we just updated our component, it's reasonable to expect changes in the sn
 To resolve this, we will need to update our snapshot artifacts. You can call `runCLI` with an option that will tell it to re-generate snapshots:
 
 ```lua
+local args = Jest.args
+
 runCLI(Project, {
-	updateSnapshot = "true"
+	updateSnapshot = args.updateSnapshot
+	testPathPattern = args.testPathPattern
 }, { Project }):awaitStatus()
 ```
+
+See the [CLI](cli) page for documentation on passing `args`.
 
 You'll also need to pass the following flags to give `roblox-cli` the proper permissions to update snapshots:
 
@@ -89,24 +94,18 @@ You'll also need to pass the following flags to give `roblox-cli` the proper per
 --load.asRobloxScript --fs.readwrite="$(pwd)" 
 ```
 
-:::tip
-You can pass in configuration options into Jest Roblox by setting Lua globals in `roblox-cli`.
-
-```lua
-runCLI(Project, {
-	updateSnapshot = _G.UPDATESNAPSHOT == "true"
-}, { Project }):awaitStatus()
-```
-
-Add the `--lua.globals` flag into `roblox-cli`.
-```bash
---lua.globals=UPDATESNAPSHOT=true
-```
-:::
-
 This will re-generate snapshot artifacts for all failing snapshot tests. If we had any additional failing snapshot tests due to an unintentional bug, we would need to fix the bug before re-generating snapshots to avoid recording snapshots of the buggy behavior.
 
 If you'd like to limit which snapshot test cases get re-generated, you can pass an additional `testNamePattern` flag to re-record snapshots only for those tests that match the pattern.
+
+:::tip
+For example, to only update snapshots for `mytest.test.lua`, you can pass in the following two args:
+
+```bash
+roblox-cli run --load.model default.project.json -- \
+  --updateSnapshot --testPathPattern="mytest.test.lua"
+```
+:::
 
 ### Property Matchers
 
