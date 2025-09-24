@@ -6,25 +6,31 @@ title: runCLI Options
 
 ![Deviation](/img/deviation.svg)
 
-The `Jest` packages exports `runCLI`, which is the main entrypoint to run Jest Roblox tests. In your entrypoint script, import `runCLI` from the `Jest` package. A basic entrypoint script can look like the following:
+The `Jest` packages exports `runCLI`, which is the main entrypoint to run Jest Roblox tests. In your entrypoint script, import `runCLI` from the `Jest` package.
+
+You can also import the `args` package, which exposes command line arguments passed in through `roblox-cli`. You can passthrough arguments from `roblox-cli`by including them after a -- (double dash) or by using the `--args` flag. For example
+
+A basic entrypoint script can look like the following:
 ```lua title="spec.lua"
 local Packages = script.Parent.YourProject.Packages
-local runCLI = require(Packages.Dev.Jest).runCLI
+local Jest = require(Workspace.Jest.Jest)
+local runCLI = Jest.runCLI
+local args = Jest.args
 
 local processServiceExists, ProcessService = pcall(function()
 	return game:GetService("ProcessService")
 end)
 
 local status, result = runCLI(Packages.Project, {
-	verbose = false,
-	ci = false
+	verbose = args.verbose,
+	ci = args.ci
 }, { Packages.Project }):awaitStatus()
 
 if status == "Rejected" then
 	print(result)
 end
 
-if status == "Resolved" and result.results.numFailedTestSuites == 0 and result.results.numFailedTests == 0 then
+if status == "Resolved" and result.results.success then
 	if processServiceExists then
 		ProcessService:ExitAsync(0)
 	end
