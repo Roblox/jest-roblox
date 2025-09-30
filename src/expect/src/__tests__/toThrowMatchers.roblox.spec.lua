@@ -16,6 +16,7 @@
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
+local Workspace = Packages.Parent
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local it = JestGlobals.it
@@ -36,6 +37,7 @@ local jestExpect = require(CurrentModule)
 describe("Lua toThrowMatcher tests", function()
 	beforeAll(function()
 		expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
+		expect.addSnapshotSerializer(require(Workspace.normalizeStackTraces))
 	end)
 
 	local CustomError = extends(Error, "CustomError", function(self, message)

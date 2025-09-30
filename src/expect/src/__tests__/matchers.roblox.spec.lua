@@ -15,6 +15,7 @@
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
+local Workspace = Packages.Parent
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local describe = JestGlobals.describe
@@ -43,6 +44,7 @@ end
 local screenGui
 beforeAll(function()
 	expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
+	expect.addSnapshotSerializer(require(Workspace.normalizeStackTraces))
 
 	screenGui = Instance.new("ScreenGui")
 	screenGui.Name = "Root"
