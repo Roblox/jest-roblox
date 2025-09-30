@@ -6,7 +6,7 @@ exports[ [=[.formatExecError() - Promise throw Error 1]=] ] = [=[
 
     kaboom
 
-      LoadedCode.JestRoblox._Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:49
+      _Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:49
 "
 ]=]
 
@@ -14,9 +14,9 @@ exports[ [=[.formatExecError() - Promise throw string 1]=] ] = [=[
 
 "  <bold>● </>Test suite failed to run
 
-    LoadedCode.JestRoblox._Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:34: kaboom
+    _Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:34: kaboom
 
-      LoadedCode.JestRoblox._Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:34
+      _Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:34
 "
 ]=]
 
@@ -26,7 +26,7 @@ exports[ [=[.formatExecError() - nested Promise throw Error 1]=] ] = [=[
 
     kaboom
 
-      LoadedCode.JestRoblox._Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:82
+      _Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:82
 "
 ]=]
 
@@ -34,9 +34,9 @@ exports[ [=[.formatExecError() - nested Promise throw string 1]=] ] = [=[
 
 "  <bold>● </>Test suite failed to run
 
-    LoadedCode.JestRoblox._Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:65: kaboom
+    _Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:65: kaboom
 
-      LoadedCode.JestRoblox._Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:65
+      _Workspace.JestMessageUtil.JestMessageUtil.__tests__.messages.roblox.spec:65
 "
 ]=]
 

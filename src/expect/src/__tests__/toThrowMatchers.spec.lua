@@ -9,6 +9,7 @@
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
+local Workspace = Packages.Parent
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local describe = JestGlobals.describe
@@ -29,6 +30,7 @@ local alignedAnsiStyleSerializer = require(Packages.Dev.TestUtils).alignedAnsiSt
 
 beforeAll(function()
 	expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
+	expect.addSnapshotSerializer(require(Workspace.normalizeStackTraces))
 end)
 
 local CustomError = extends(Error, "CustomError", function(self, message)

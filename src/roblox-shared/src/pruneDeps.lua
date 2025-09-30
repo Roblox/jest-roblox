@@ -13,6 +13,8 @@
 	* limitations under the License.
 ]]
 
+local loadModuleEnabled = pcall((debug :: any).loadmodule, Instance.new("ModuleScript"))
+
 local cleanLoadStringStack = require(script.Parent.cleanLoadStringStack)
 
 local function pruneDeps(str: string?): string?
@@ -22,10 +24,12 @@ local function pruneDeps(str: string?): string?
 
 	local newLines = {}
 	for _, line in (str :: string):split("\n") do
-		if line:find("LoadedCode.JestRoblox._Index.") then
+		if line:find("_Index.") then
 			continue
 		end
-		line = cleanLoadStringStack(line)
+		if not loadModuleEnabled then
+			line = cleanLoadStringStack(line)
+		end
 		table.insert(newLines, line)
 	end
 	return table.concat(newLines, "\n")
