@@ -14,8 +14,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:39
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:39
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -41,8 +41,8 @@ Difference:
 <green>-   \"foo\": \"foo\",</>
 <red>+   \"foo\": \"fooBar\",</>
 <dim>  }</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -68,8 +68,8 @@ Difference:
 <green>-   \"foo\": \"foo\",</>
 <red>+   \"foo\": \"fooBar\",</>
 <dim>  }</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -89,8 +89,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -110,8 +110,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -131,8 +131,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -152,8 +152,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -173,8 +173,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -194,8 +194,8 @@ Table {
 Difference:
 
 <dim>Compared values have no visual difference.</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -221,8 +221,8 @@ Difference:
 <green>-   \"foo\": \"foo\",</>
 <red>+   \"foo\": \"fooBar\",</>
 <dim>  }</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }
@@ -248,8 +248,8 @@ Difference:
 <green>-   \"foo\": \"foo\",</>
 <red>+   \"foo\": \"fooBar\",</>
 <dim>  }</>
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
-LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circus.utils:369
+_Workspace.JestCircus.JestCircus.circus.__tests__.formatNodeAssertErrors.roblox.spec:118
+_Workspace.JestCircus.JestCircus.circus.utils:369
 ",
   },
 }

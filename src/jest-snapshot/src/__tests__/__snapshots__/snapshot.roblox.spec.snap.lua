@@ -4,7 +4,7 @@ exports[ [=[custom snapshot matchers: toMatchTrimmedSnapshot 1]=] ] = [=[
 "extra long"]=]
 
 exports[ [=[native lua errors 1]=] ] = [=[
-"LoadedCode.JestRoblox._Workspace.JestSnapshot.JestSnapshot.__tests__.snapshot.roblox.spec:35: oops"]=]
+"_Workspace.JestSnapshot.JestSnapshot.__tests__.snapshot.roblox.spec:35: oops"]=]
 
 exports[ [=[test with newlines
 in the name
