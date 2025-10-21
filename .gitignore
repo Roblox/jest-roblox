@@ -35,7 +35,9 @@ roblox.toml
 .idea
 .vscode
 
+# Artifacts from tooling
 jest_runner_tmp
 lcov.info
 rbx-aged-tool.log
 sourcemap.json
+**/__pycache__

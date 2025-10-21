@@ -2,6 +2,8 @@
 
 set -x
 
+bin/patch_error_polyfill.sh
+
 echo "Run static analysis"
 selene src
 stylua -c src

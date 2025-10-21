@@ -41,7 +41,9 @@ jobs:
 
       - name: Install rotriever packages
         shell: bash
-        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
+        run: |
+          rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
+          sed -i '1i--!optimize 1' "Packages/_Index/LuauPolyfill/LuauPolyfill/Error/Error.global.lua"
 
       - name: Get robloxdev-cli via rbx-aged-cli
         shell: bash
@@ -91,6 +93,15 @@ jobs:
             --run bin/spec.lua --testService.errorExitCode=1 --load.asRobloxScript \
             --fastFlags.overrides EnableLoadModule=false -- \
             --ci
+
+      - name: Run tests (ocale)
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+          ROBLOX_UNIVERSE_ID: ${{ secrets.ROBLOX_UNIVERSE_ID }}
+          ROBLOX_PLACE_ID: ${{ secrets.ROBLOX_PLACE_ID }}
+        run: |
+          bin/run-in-ocale.sh
 
       - name: Upload code coverage file
         uses: actions/upload-artifact@v4
