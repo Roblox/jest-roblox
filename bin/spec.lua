@@ -12,7 +12,20 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
-local Workspace = script.Parent.JestRoblox._Workspace
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Workspace
+
+if ReplicatedStorage:FindFirstChild("Packages") then
+	Workspace = ReplicatedStorage.Packages._Workspace
+	-- rojo doesn't combine folders in the DM with the same name
+	for _, child in ipairs(ReplicatedStorage.Packages.TestRoot:GetChildren()) do
+		child.Parent = Workspace
+	end
+else
+	Workspace = script.Parent.JestRoblox._Workspace
+end
+
 local Jest = require(Workspace.Jest.Jest)
 local runCLI = Jest.runCLI
 local args = Jest.args
@@ -38,10 +51,12 @@ if status == "Resolved" and result.results.success then
 	if processServiceExists then
 		ProcessService:ExitAsync(0)
 	end
-end
-
-if processServiceExists then
-	ProcessService:ExitAsync(1)
+else
+	if processServiceExists then
+		ProcessService:ExitAsync(1)
+	else
+		error("Tests failed")
+	end
 end
 
 return nil
