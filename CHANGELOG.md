@@ -5,6 +5,7 @@
 * :hammer_and_wrench: Added an `args` module that parses command line arguments passed in through `roblox-cli` and moving away from relying on globals to pass arguments ([#454](https://github.com/Roblox/jest-roblox-internal/pull/454))
 * :bug: Fix the type for `each` ([#457](https://github.com/Roblox/jest-roblox-internal/pull/457))
 * :hammer_and_wrench: Run CI in OCALE ([#458](https://github.com/Roblox/jest-roblox-internal/pull/458))
+* :hammer_and_wrench: All build scripts are now in lute and unified across local and CI runs. Run `lute scripts/analyze` to run static analysis and `lute run scripts/test <config>` to run the different test configurations. ([#462](https://github.com/Roblox/jest-roblox-internal/pull/462))
 
 
 ## 3.13.3 (2025-06-04)
