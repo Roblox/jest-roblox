@@ -40,7 +40,7 @@ local status, result = runCLI(Workspace, {
 	updateSnapshot = args.updateSnapshot,
 	testPathPattern = args.testPathPattern,
 	testNamePattern = args.testNamePattern,
-	reporters = if args.githubActions then { "default", "github-actions" } else nil
+	reporters = if args.githubActions then { "default", "github-actions" } else nil,
 }, { Workspace }):awaitStatus()
 
 if status == "Rejected" then
