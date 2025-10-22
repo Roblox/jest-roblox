@@ -14,6 +14,9 @@ jobs:
     name: Jest Roblox Tests
     timeout-minutes: 3
     runs-on: [self-hosted, generic-linux]
+    permissions:
+      contents: read
+      id-token: write
     container:
       image: docker.artifactory.rbx.com/rbx-lua-build-tools:v1.0.1
     steps:
@@ -32,18 +35,12 @@ jobs:
         with:
           version: "^1.0.0"
           token: ${{ steps.setup_token.outputs.token }}
-
-      - name: Run linting
-        shell: bash
-        run: |
-          selene src
-          stylua -c src
+          allow-external-github-orgs: true
 
       - name: Install rotriever packages
         shell: bash
         run: |
           rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
-          sed -i '1i--!optimize 1' "Packages/_Index/LuauPolyfill/LuauPolyfill/Error/Error.global.lua"
 
       - name: Get robloxdev-cli via rbx-aged-cli
         shell: bash
@@ -63,36 +60,25 @@ jobs:
           foreman list
           cat rotriever.lock
 
-      - name: Run type checking
+      - name: Run static analysis
         shell: bash
         run: |
-          ./robloxdev-cli analyze default.project.json --fastFlags.allOnLuau
+          lute run scripts/analyze
 
       - name: Run tests
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model default.project.json --load.asRobloxScript \
-            --run bin/spec.lua --testService.errorExitCode=1 --coverage.on \
-            --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true -- \
-            --ci --githubActions
-          mv lcov.info lcov-jest.info
+          lute run scripts/test default --ci --githubActions
 
       - name: Run tests (deferred lua)
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model default.project.json \
-            --run bin/spec.lua --testService.errorExitCode=1 \
-            --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true DebugDisableOptimizedBytecode=true \
-            EnableSignalBehavior=true DebugForceDeferredSignalBehavior=true MaxDeferReentrancyDepth=15 -- \
-            --ci
+          lute run scripts/test deferredlua --ci
 
-      - name: Run tests (low privilege)
+      - name: Run tests (loadstring)
         shell: bash
         run: |
-          ./robloxdev-cli run --verbose --load.model default.project.json \
-            --run bin/spec.lua --testService.errorExitCode=1 --load.asRobloxScript \
-            --fastFlags.overrides EnableLoadModule=false -- \
-            --ci
+          lute run scripts/test loadstring --ci
 
       - name: Run tests (ocale)
         shell: bash
@@ -101,71 +87,13 @@ jobs:
           ROBLOX_UNIVERSE_ID: ${{ secrets.ROBLOX_UNIVERSE_ID }}
           ROBLOX_PLACE_ID: ${{ secrets.ROBLOX_PLACE_ID }}
         run: |
-          bin/run-in-ocale.sh
-
-      - name: Upload code coverage file
-        uses: actions/upload-artifact@v4
-        with:
-          name: jest-code-coverage
-          path: lcov-jest.info
-          retention-days: 1
-
-  coverage:
-    name: Code Coverage
-    needs: [jest]
-    runs-on: [self-hosted, generic-linux]
-    permissions:
-      contents: read
-      id-token: write
-    container:
-      image: docker.artifactory.rbx.com/rbx-lua-build-tools:v1.0.1
-    timeout-minutes: 5
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Download Jest code coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: jest-code-coverage
-
-      - name: Generate access token
-        uses: Roblox-ActionsCache/tibdex-github-app-token@v1.4.0
-        id: setup_token
-        with:
-          app_id: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_ID }}
-          private_key: ${{ secrets.TOKENS_APP_LUA_ECOSYSTEM_DEPENDENCIES_KEY }}
-
-      - name: Get foreman and run foreman install
-        uses: Roblox/setup-foreman@v3
-        with:
-          token: ${{ steps.setup_token.outputs.token }}
-
-      - name: Get foreman and run foreman install
-        uses: Roblox/setup-foreman@v3
-        with:
-          version: "^1.0.0"
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-      - name: Install rotriever packages
-        shell: bash
-        run: rotrieve install --auth https://DummyUser:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com
-
-      - name: Merge coverage reports
-        shell: bash
-        run: |
-          lcov -a lcov-jest.info -o lcov.info
-
-      - name: Remove tests and Packages from coverage results
-        shell: bash
-        run: |
-          lcov --remove lcov.info '*/_Index/*' '*Dev*' '*/bin/*' '*/__tests__/*' '*LoadedCode*' '*EmbeddedScript*' 'modules/*' '*/Packages/*.lua' -o lcov-filtered.info
+          lute run scripts/test ocale
 
       - name: Report code coverage
         uses: codecov/codecov-action@v4
         with:
           use_oidc: true
-          files: lcov-filtered.info
+          files: lcov.info
           url: ${{ env.CODECOV_URL }}
           verbose: true
           fail_ci_if_error: false
