@@ -150,7 +150,7 @@ print(returnsTrue()) -- true
 
 Creates a mock function similar to `jest.fn` but also tracks calls to `object[methodName]`. Returns a Jest [mock function](MockFunctionAPI.md).
 
-_Note: By default, `jest.spyOn` also calls the **spied** method. This is different behavior from most other test libraries. If you want to overwrite the original function, you can use `jest.spyOn(object, methodName):mockImplementation(function() ... end)` or `object[methodName] = jest.fn(function ... end)`_
+_Note: By default, `jest.spyOn` also calls the **spied** method. This is different behavior from most other test libraries. If you want to overwrite the original function, you can use `jest.spyOn(object, methodName).mockImplementation(function() ... end)` or `object[methodName] = jest.fn(function ... end)`_
 
 Example:
 
