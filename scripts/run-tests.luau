@@ -12,6 +12,12 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 ]]
+
+-- Enable React testing globals (must be set before React is required)
+_G.__DEV__ = true
+_G.__ROACT_17_MOCK_SCHEDULER__ = true
+_G.__ROACT_17_INLINE_ACT__ = true
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Workspace

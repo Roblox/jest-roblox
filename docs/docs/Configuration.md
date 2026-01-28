@@ -325,9 +325,14 @@ Allows overriding specific snapshot formatting options documented in the [pretty
 
 ![Deviation](/img/deviation.svg)
 
-`pretty-format` also supports the formatting option `printInstanceDefaults` (default: `true`) which can be set to `false` to only print properties of a Roblox `Instance` that have been changed.
+`pretty-format` also supports the following Roblox-specific formatting options for `Instance` serialization:
 
-For example, this config would have the snapshot formatter not print out any unmodified values of `TextLabel`.
+#### `printInstanceDefaults` \[boolean]
+
+Default: `true`
+
+When set to `false`, only prints properties of a Roblox `Instance` that have been changed from their default values.
+
 ```lua title="jest.config.lua"
 return {
 	testMatch = { "**/*.spec" },
@@ -349,6 +354,67 @@ TextLabel {
 }
 ]=]
 ```
+
+#### `printInstanceTags` \[boolean]
+
+Default: `false`
+
+When set to `true`, prints the tags applied to a Roblox `Instance` via `CollectionService` or `React.Tag`. Tags are printed alphabetically at the beginning of the Instance output.
+
+```lua title="jest.config.lua"
+return {
+	testMatch = { "**/*.spec" },
+	snapshotFormat = { printInstanceDefaults = false, printInstanceTags = true }
+}
+```
+```lua title="test.spec.lua"
+test('printInstanceTags', function()
+	local button = Instance.new("TextButton")
+	button.Name = "MyButton"
+	button:AddTag("Clickable")
+	button:AddTag("Primary")
+	expect(button).toMatchSnapshot()
+end)
+```
+```lua title="test.spec.snap.lua"
+exports[ [=[printInstanceTags 1]=] ] = [=[
+
+TextButton {
+  "Tags": Table {
+    "Clickable",
+    "Primary",
+  },
+  "Name": "MyButton",
+}
+]=]
+```
+
+#### `useStyledProperties` \[boolean]
+
+Default: `false`
+
+When set to `true`, reads Instance properties using the `GetStyled` API, which returns the computed styled value after all StyleSheet rules are applied. This is useful when testing components that use Roblox's styling system (StyleSheet, StyleRule, StyleLink).
+
+When `false`, properties are read directly from the Instance without considering applied styles.
+
+```lua title="jest.config.lua"
+return {
+	testMatch = { "**/*.spec" },
+	snapshotFormat = { printInstanceDefaults = false, useStyledProperties = true }
+}
+```
+
+:::note
+
+The `useStyledProperties` option is primarily useful when testing styled components where you want snapshots to reflect the final computed style values rather than the base property values set on the Instance.
+
+:::
+
+:::warning Pseudoinstances in Snapshots
+
+Styling infrastructure instances (`StyleSheet`, `StyleRule`, `StyleLink`, `StyleDerive`) are currently visible in snapshot output when they are children of a serialized Instance. This behavior may change in future versions of the Roblox engine.
+
+:::
 
 `pretty-format` further supports redacting stack traces from error logs via the
 `RedactStackTraces` plugin. By default, this only attempts to redact the

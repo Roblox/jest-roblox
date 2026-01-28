@@ -69,6 +69,12 @@ if configuration == "default" then
 	table.insert(runCmd, "--fastFlags.allOnLuau")
 	table.insert(runCmd, "--fastFlags.overrides")
 	table.insert(runCmd, "EnableLoadModule=true")
+	table.insert(runCmd, "EngineStylingEnabled2=true")
+	table.insert(runCmd, "EnableInstanceGetStyledAPI=true")
+	table.insert(runCmd, "InstanceGetStyledPublicSecurity=true")
+	-- Enable headless renderer for styling support
+	table.insert(runCmd, "--headlessRenderer=true")
+	table.insert(runCmd, "--virtualInput=true")
 
 	if ci then
 		table.insert(runCmd, "--coverage.on")
@@ -85,12 +91,24 @@ if configuration == "deferredlua" then
 	table.insert(runCmd, "--fastFlags.overrides")
 	table.insert(runCmd, "EnableLoadModule=true")
 	table.insert(runCmd, "DebugForceDeferredSignalBehavior=true")
+	table.insert(runCmd, "EngineStylingEnabled2=true")
+	table.insert(runCmd, "EnableInstanceGetStyledAPI=true")
+	table.insert(runCmd, "InstanceGetStyledPublicSecurity=true")
+	-- Enable headless renderer for styling support
+	table.insert(runCmd, "--headlessRenderer=true")
+	table.insert(runCmd, "--virtualInput=true")
 end
 
 if configuration == "loadstring" then
 	table.insert(runCmd, "--load.asRobloxScript")
 	table.insert(runCmd, "--fastFlags.overrides")
 	table.insert(runCmd, "EnableLoadModule=false")
+	table.insert(runCmd, "EngineStylingEnabled2=true")
+	table.insert(runCmd, "EnableInstanceGetStyledAPI=true")
+	table.insert(runCmd, "InstanceGetStyledPublicSecurity=true")
+	-- Enable headless renderer for styling support
+	table.insert(runCmd, "--headlessRenderer=true")
+	table.insert(runCmd, "--virtualInput=true")
 end
 
 if #extraArgs > 0 then
