@@ -12,7 +12,7 @@ env:
 jobs:
   jest:
     name: Jest Roblox Tests
-    timeout-minutes: 3
+    timeout-minutes: 5
     runs-on: [self-hosted, generic-linux]
     permissions:
       contents: read
