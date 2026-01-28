@@ -52,23 +52,42 @@ local function printInstance(
 		return a.Name < b.Name
 	end)
 
-	local propertiesMap = RobloxInstance.listProps(val)
+	local propertiesMap = RobloxInstance.listProps(val, {
+		useStyledProperties = config.useStyledProperties,
+	})
 	local printPropsList = Object.keys(propertiesMap)
 	if not config.printInstanceDefaults then
-		local defaultsMap = RobloxInstance.listDefaultProps(val.ClassName)
+		local defaultsMap = RobloxInstance.listDefaultProps(val.ClassName, config.useStyledProperties)
 		printPropsList = Array.filter(printPropsList, function(name)
 			return propertiesMap[name] ~= defaultsMap[name]
 		end)
 	end
 	table.sort(printPropsList)
 
+	-- Get tags if config option is enabled
+	local tags = if config.printInstanceTags then RobloxInstance.getTags(val) else {}
+	table.sort(tags)
+
 	local willPrintProps = #printPropsList > 0
 	local willPrintChildren = #printChildrenList > 0
+	local willPrintTags = #tags > 0
 
-	if willPrintProps or willPrintChildren then
+	if willPrintProps or willPrintChildren or willPrintTags then
 		result = result .. config.spacingOuter
 
 		local indentationNext = indentation .. config.indent
+
+		-- print tags of Instance first
+		if willPrintTags then
+			local printTagsValue = printer(tags, config, indentationNext, depth, refs)
+			result = string.format("%s%s%s: %s", result, indentationNext, '"Tags"', printTagsValue)
+
+			if willPrintProps or willPrintChildren then
+				result = result .. "," .. config.spacingInner
+			elseif not config.min then
+				result = result .. ","
+			end
+		end
 
 		-- print properties of Instance
 		for propOrder, propName in ipairs(printPropsList) do

@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+* :sparkles: Added `printInstanceTags` formatting option that toggles whether Instance tags are printed in snapshots (available in `snapshot` config and `pretty-format`)
+* :sparkles: Added `useStyledProperties` formatting option that uses the `GetStyled` API to read styled property values for Instance serialization (available in `snapshot` config and `pretty-format`)
 * :hammer_and_wrench: Added an `args` module that parses command line arguments passed in through `roblox-cli` and moving away from relying on globals to pass arguments ([#454](https://github.com/Roblox/jest-roblox-internal/pull/454))
 * :bug: Fix the type for `each` ([#457](https://github.com/Roblox/jest-roblox-internal/pull/457))
 * :hammer_and_wrench: Run CI in OCALE ([#458](https://github.com/Roblox/jest-roblox-internal/pull/458))
