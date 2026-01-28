@@ -5,7 +5,7 @@
 ]]
 local net = require("@lute/net")
 local json = require("@std/json")
-local fs = require("@lute/fs")
+local fs = require("@std/fs")
 local task = require("@lute/task")
 
 local DemoSDK = {}

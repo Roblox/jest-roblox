@@ -836,4 +836,16 @@ exports[ [=[Instance serializes nested Roblox Instance 1]=] ] = [=[
 }"
 ]=]
 
+exports[ [=[config.printInstanceTags prints multiple tags sorted alphabetically 1]=] ] = [=[
+
+"TextLabel {
+  \"Tags\": Table {
+    \"Alpha\",
+    \"Middle\",
+    \"Zebra\",
+  },
+  \"Name\": \"MultiTagLabel\",
+}"
+]=]
+
 return exports
