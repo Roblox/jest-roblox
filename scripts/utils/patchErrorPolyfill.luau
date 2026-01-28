@@ -1,4 +1,4 @@
-local fs = require("@lute/fs")
+local fs = require("@std/fs")
 
 local OPTIMIZE_DIRECTIVE = "--!optimize 1"
 

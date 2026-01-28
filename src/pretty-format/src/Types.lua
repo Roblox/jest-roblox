@@ -47,10 +47,12 @@ export type Options = {
 	plugins: Plugins,
 	printBasicPrototype: boolean,
 	printInstanceDefaults: boolean,
+	printInstanceTags: boolean,
 	printFunctionName: boolean,
 	-- ROBLOX deviation: stable stacktrace snapshots
 	redactStackTracesInStrings: boolean?,
 	theme: Theme,
+	useStyledProperties: boolean,
 }
 
 export type PrettyFormatOptions = {
@@ -65,10 +67,12 @@ export type PrettyFormatOptions = {
 	plugins: Plugins?,
 	printBasicPrototype: boolean?,
 	printInstanceDefaults: boolean?,
+	printInstanceTags: boolean?,
 	printFunctionName: boolean?,
 	-- ROBLOX deviation: stable stacktrace snapshots
 	redactStackTracesInStrings: boolean?,
 	theme: ThemeReceived?,
+	useStyledProperties: boolean?,
 }
 
 export type OptionsReceived = PrettyFormatOptions
@@ -87,11 +91,13 @@ export type Config = {
 	plugins: Plugins,
 	printBasicPrototype: boolean,
 	printInstanceDefaults: boolean,
+	printInstanceTags: boolean,
 	printFunctionName: boolean,
 	-- ROBLOX deviation: stable stacktrace snapshots
 	redactStackTracesInStrings: boolean,
 	spacingInner: string,
 	spacingOuter: string,
+	useStyledProperties: boolean,
 }
 
 export type Printer = (any, Config, string, number, Refs, boolean?) -> string
