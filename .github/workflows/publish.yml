@@ -19,6 +19,7 @@ jobs:
         uses: Roblox/setup-foreman@v3
         with:
           token: ${{ steps.setup_token.outputs.token }}
+          allow-external-github-orgs: true
       - name: Composite Publish
         uses: Roblox/rotriever-registry-workflows/composite-publish@v1
         with:
