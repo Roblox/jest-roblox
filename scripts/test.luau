@@ -1,6 +1,5 @@
 local process = require("@lute/process")
 local run = require("./utils/run")
-local ocaleSdk = require("./ocale/ocaleSdk")
 
 local ARGS = { ... }
 local configuration = ARGS[2]
@@ -26,31 +25,28 @@ if not table.find(availableConfigurations, configuration) then
 end
 
 if configuration == "ocale" then
-	local apiKey = process.env.ROBLOX_API_KEY or error("ROBLOX_API_KEY environment variable is not set")
-	local placeInfo = {
-		universeId = tonumber(process.env.ROBLOX_UNIVERSE_ID)
-			or error("ROBLOX_UNIVERSE_ID environment variable is not set"),
-		placeId = tonumber(process.env.ROBLOX_PLACE_ID) or error("ROBLOX_PLACE_ID environment variable is not set"),
-	}
-
-	run({ "rojo", "build", "ocale.project.json", "--output", "tests.rbxl" })
-	print("Uploading place to Roblox...")
-	ocaleSdk.uploadPlaceFile("tests.rbxl", placeInfo, apiKey)
-
-	print("Creating the OCALE task...")
-	local task = ocaleSdk.createTask(apiKey, placeInfo, "scripts/run-tests.luau")
-
-	print("Waiting for OCALE task to complete...")
-	local completedTask = ocaleSdk.pollTaskCompletion(apiKey, task.path)
-
-	local logs = ocaleSdk.getTaskLogs(apiKey, completedTask.path)
-	print(table.concat(logs, "\n"))
-
-	if completedTask.state == "FAILED" then
-		error(`Task failed with error: {completedTask.error.code}\n{completedTask.error.message}`)
-	elseif completedTask.state == "CANCELLED" then
-		error("Task was cancelled")
+	if not process.env.ROBLOX_API_KEY then
+		error("ROBLOX_API_KEY environment variable is not set")
 	end
+
+	local universeId = tonumber(process.env.ROBLOX_UNIVERSE_ID)
+		or error("ROBLOX_UNIVERSE_ID environment variable is not set")
+	local placeId = tonumber(process.env.ROBLOX_PLACE_ID) or error("ROBLOX_PLACE_ID environment variable is not set")
+
+	run({
+		"rocale-cli",
+		"run",
+		"--script",
+		"scripts/run-tests.luau",
+		"--universeId",
+		universeId,
+		"--placeId",
+		placeId,
+		"--load.project",
+		"ocale.project.json",
+		"--verbose",
+	})
+
 	return
 end
 
