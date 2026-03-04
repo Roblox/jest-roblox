@@ -1,0 +1,15 @@
+[package]
+name = "eyycheev/jest-globals"
+version = "3.14.0"
+license = "MIT"
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+authors = ["EYYCHEEV"]
+description = "Forked JestGlobals package based on Roblox/jest-roblox."
+repository = "https://github.com/EYYCHEEV/stronk-jest"
+
+[dependencies]
+LuauPolyfill = "jsdotlua/luau-polyfill@1.2.7"
+Expect = "jsdotlua/expect@3.10.0"
+JestEnvironment = "jsdotlua/jest-environment@3.10.0"
+JestTypes = "jsdotlua/jest-types@3.10.0"

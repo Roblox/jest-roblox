@@ -1,0 +1,88 @@
+name: Security
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  gitleaks:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Gitleaks
+        env:
+          GITLEAKS_VERSION: "8.18.4"
+          GITLEAKS_SHA256: "ba6dbb656933921c775ee5a2d1c13a91046e7952e9d919f9bac4cec61d628e7d"
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o gitleaks.tar.gz
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/
+          rm gitleaks.tar.gz
+
+      - name: Run Gitleaks
+        id: gitleaks
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            LOG_OPTS="${BASE_SHA}..${HEAD_SHA}"
+          elif [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            BEFORE_SHA="${{ github.event.before }}"
+            AFTER_SHA="${{ github.sha }}"
+            if [[ "${BEFORE_SHA}" == "0000000000000000000000000000000000000000" ]]; then
+              LOG_OPTS="${AFTER_SHA}"
+            else
+              LOG_OPTS="${BEFORE_SHA}..${AFTER_SHA}"
+            fi
+          else
+            LOG_OPTS="--all"
+          fi
+
+          set +e
+          gitleaks detect \
+            --source . \
+            --config=.gitleaks.toml \
+            --report-format=sarif \
+            --report-path=results.sarif \
+            --log-opts="${LOG_OPTS}" \
+            --redact \
+            --follow-symlinks \
+            --verbose
+          code=$?
+          set -e
+          echo "GITLEAKS_EXIT_CODE=$code" >> "$GITHUB_ENV"
+          exit 0
+        continue-on-error: true
+
+      - name: Verify scan ran
+        if: always()
+        run: |
+          if [[ ! -f results.sarif ]]; then
+            echo "::error::Gitleaks did not produce results.sarif"
+            exit 1
+          fi
+
+      - name: Upload SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@2b983b380ce715a6c836c917154509c332c19b3a # v3
+        if: always() && hashFiles('results.sarif') != ''
+        with:
+          sarif_file: results.sarif
+        continue-on-error: true
+
+      - name: Fail If Secrets Found
+        if: always() && env.GITLEAKS_EXIT_CODE != '0'
+        run: |
+          echo "::error::Potential secrets detected (exit code: $GITLEAKS_EXIT_CODE)."
+          exit 1

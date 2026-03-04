@@ -1,0 +1,23 @@
+title = "stronk-jest gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow template/example placeholders only"
+paths = [
+  ".*\\.example$",
+  ".*\\.sample$",
+  ".*\\.template$"
+]
+regexes = [
+  "sk-ant-(?:api0[0-9]|admin)-[xX]{20,}",
+  "sk-proj-[xX]{20,}",
+  "sk-[xX]{32,}",
+  "AIza[xX]{35}",
+  "YOUR_API_KEY(_HERE)?",
+  "YOUR_[A-Z_]+_KEY",
+  "<your-[a-z-]+-key>",
+  "REPLACE_WITH_YOUR_[A-Z_]+",
+  "INSERT_[A-Z_]+_HERE"
+]

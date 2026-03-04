@@ -41,3 +41,8 @@ lcov.info
 rbx-aged-tool.log
 sourcemap.json
 **/__pycache__
+
+# Local agent/tool state
+.codex/
+.gemini/
+.stronk-agents/
