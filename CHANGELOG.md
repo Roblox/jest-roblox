@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+* :hammer_and_wrench: Use rocale-cli for running OCALE tests ([#469](https://github.com/Roblox/jest-roblox-internal/pull/469))
+
 ## 3.14.0 (2026-01-28)
 
 * :sparkles: Added `printInstanceTags` formatting option that toggles whether Instance tags are printed in snapshots (available in `snapshot` config and `pretty-format`) ([#466](https://github.com/Roblox/jest-roblox-internal/pull/466))
