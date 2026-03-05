@@ -1,9 +1,9 @@
 [package]
 name = "eyycheev/stronk-jest"
-version = "3.10.0-stronk.5"
+version = "3.10.0-stronk.6"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
 
 [dependencies]
-"jest-core" = "eyycheev/jest-core@3.10.0-stronk.5"
+"jest-core" = "eyycheev/jest-core@3.10.0-stronk.6"

@@ -6,34 +6,127 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  ]]
-local Packages = script.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+-- ROBLOX deviation START: skipped
+-- type void = nil --[[ ROBLOX FIXME: adding `void` type alias to make it easier to use Luau `void` equivalent when supported ]]
+-- ROBLOX deviation END
+local LuauPolyfill = require(script.Parent:WaitForChild("luau-polyfill")) -- ROBLOX deviation START: skipped
+-- local Array = LuauPolyfill.Array
+-- ROBLOX deviation END
+
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
 local Map = LuauPolyfill.Map
 local Object = LuauPolyfill.Object
+-- ROBLOX deviation START: skipped
+-- local Set = LuauPolyfill.Set
+-- local WeakMap = LuauPolyfill.WeakMap
+-- local console = LuauPolyfill.console
+-- local instanceof = LuauPolyfill.instanceof
+-- ROBLOX deviation END
 type Array<T> = LuauPolyfill.Array<T>
+-- ROBLOX deviation START: skipped
+-- type Error = LuauPolyfill.Error
+-- ROBLOX deviation END
 type Map<T, U> = LuauPolyfill.Map<T, U>
 type Promise<T> = LuauPolyfill.Promise<T>
+-- ROBLOX deviation START: skipped
+-- type Set<T> = LuauPolyfill.Set<T>
+-- type WeakMap<T, U> = LuauPolyfill.WeakMap<T, U>
+-- ROBLOX deviation END
 type Omit<T, K> = T --[[ ROBLOX TODO: TS 'Omit' built-in type is not available in Luau ]]
-local jestTypesModule = require(Packages.JestTypes)
+-- ROBLOX deviation START: skipped
+-- type Parameters<T> = any --[[ ROBLOX TODO: TS 'Parameters' built-in type is not available in Luau ]]
+-- local Promise = require("@pkg/@jsdotlua/promise")
+-- local exports = {}
+-- local nativeModule = require("@pkg/module")
+-- local path = require("@pkg/@jsdotlua/path")
+-- local urlModule = require("@pkg/url")
+-- local URL = urlModule.URL
+-- local fileURLToPath = urlModule.fileURLToPath
+-- local pathToFileURL = urlModule.pathToFileURL
+-- local vmModule = require("@pkg/vm")
+-- local Script = vmModule.Script
+-- -- @ts-expect-error: experimental, not added to the types
+-- local SourceTextModule = vmModule.SourceTextModule
+-- -- @ts-expect-error: experimental, not added to the types
+-- local SyntheticModule = vmModule.SyntheticModule
+-- local VMContext = vmModule.Context
+-- -- @ts-expect-error: experimental, not added to the types
+-- local VMModule = vmModule.Module
+-- local parseCjs = require("@pkg/cjs-module-lexer").parse
+-- local collectV8CoverageModule = require("@pkg/collect-v8-coverage")
+-- local CoverageInstrumenter = collectV8CoverageModule.CoverageInstrumenter
+-- local V8Coverage = collectV8CoverageModule.V8Coverage
+-- local execa = require("@pkg/execa")
+-- local fs = require("@pkg/graceful-fs")
+-- local slash = require("@pkg/slash")
+-- local stripBOM = require("@pkg/strip-bom")
+-- local jestEnvironmentModule = require("@pkg/@jsdotlua/jest-environment")
+-- type Jest = jestEnvironmentModule.Jest
+-- type JestEnvironment = jestEnvironmentModule.JestEnvironment
+-- type Module = jestEnvironmentModule.Module
+-- type ModuleWrapper = jestEnvironmentModule.ModuleWrapper
+-- local jestFakeTimersModule = require("@pkg/@jsdotlua/jest-fake-timers")
+-- type LegacyFakeTimers = jestFakeTimersModule.LegacyFakeTimers
+-- type ModernFakeTimers = jestFakeTimersModule.ModernFakeTimers
+-- local jestGlobalsModule = require("@pkg/@jsdotlua/jest-globals")
+-- local JestGlobals = jestGlobalsModule
+-- local jestSourceMapModule = require(Packages["@jest"]["source-map"])
+-- type SourceMapRegistry = jestSourceMapModule.SourceMapRegistry
+-- local jestTestResultModule = require("@pkg/@jsdotlua/jest-test-result")
+-- type RuntimeTransformResult = jestTestResultModule.RuntimeTransformResult
+-- type V8CoverageResult = jestTestResultModule.V8CoverageResult
+-- local jestTransformModule = require(Packages["@jest"].transform)
+-- local CallerTransformOptions = jestTransformModule.CallerTransformOptions
+-- local ScriptTransformer = jestTransformModule.ScriptTransformer
+-- local ShouldInstrumentOptions = jestTransformModule.ShouldInstrumentOptions
+-- local TransformResult = jestTransformModule.TransformResult
+-- local TransformationOptions = jestTransformModule.TransformationOptions
+-- local handlePotentialSyntaxError = jestTransformModule.handlePotentialSyntaxError
+-- local shouldInstrument = jestTransformModule.shouldInstrument
+local jestTypesModule = require(script.Parent:WaitForChild("jest-types")) -- type Config = jestTypesModule.Config
+-- type Config_Path = jestTypesModule.Config_Path
+
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
-local jestMockModule = require(Packages.JestMock)
--- ROBLOX deviation: not implemented yet
+-- type Global = jestTypesModule.Global
+-- type Global_TestFrameworkGlobals = jestTypesModule.Global_TestFrameworkGlobals
+-- local jestHasteMapModule = require("@pkg/jest-haste-map")
+-- type IModuleMap = jestHasteMapModule.IModuleMap
+-- local HasteMap = require("@pkg/jest-haste-map").default
+-- local jestMessageUtilModule = require("@pkg/@jsdotlua/jest-message-util")
+-- local formatStackTrace = jestMessageUtilModule.formatStackTrace
+-- local separateMessageFromStack = jestMessageUtilModule.separateMessageFromStack
+-- ROBLOX deviation END
+local jestMockModule = require(script.Parent:WaitForChild("jest-mock")) -- ROBLOX deviation: not implemented yet
 -- type MockFunctionMetadata = jestMockModule.MockFunctionMetadata
 -- ROBLOX deviation END
+
 type ModuleMocker = jestMockModule.ModuleMocker
 -- ROBLOX deviation START: (addition) importing ModuleMocker class instead of injecting it via runTests
 local ModuleMocker = jestMockModule.ModuleMocker
 -- ROBLOX deviation END
 -- ROBLOX deviation START: mocking globals
-local jestMockGenvModule = require(Packages.JestMockGenv)
+local jestMockGenvModule = require(script.Parent:WaitForChild("jest-mock-genv"))
 local GlobalMocker = jestMockGenvModule.GlobalMocker
 type GlobalMocker = jestMockGenvModule.GlobalMocker
-local typesModule = require(script.types)
+-- ROBLOX deviation START: skipped
+-- local escapePathForRegex = require("@pkg/jest-regex-util").escapePathForRegex
+-- local jestResolveModule = require("@pkg/jest-resolve")
+-- local Resolver = jestResolveModule.default
+-- local ResolveModuleConfig = jestResolveModule.ResolveModuleConfig
+-- local Snapshot = require("@pkg/@jsdotlua/jest-snapshot")
+-- local jestUtilModule = require("@pkg/@jsdotlua/jest-util")
+-- local createDirectory = jestUtilModule.createDirectory
+-- local deepCyclicCopy = jestUtilModule.deepCyclicCopy
+-- local helpersModule = require("./helpers")
+-- local createOutsideJestVmPath = helpersModule.createOutsideJestVmPath
+-- local decodePossibleOutsideJestVmPath = helpersModule.decodePossibleOutsideJestVmPath
+-- local findSiblingsWithFileExtension = helpersModule.findSiblingsWithFileExtension
+-- ROBLOX deviation END
+local typesModule = require(script:WaitForChild("types"))
 export type Context = typesModule.Context
 -- ROBLOX deviation START: skipped
--- local typesModule = require(script.types)
+-- local typesModule = require("./types")
 -- exports.Context = typesModule.Context
 
 -- ROBLOX deviation START: adding mocked ResolveModuleConfig type until implemented
@@ -42,13 +135,13 @@ type ResolveModuleConfig = any
 
 -- ROBLOX deviation START: additional dependencies
 local TypeError = Error
-local _typesModule = require(script._types)
+local _typesModule = require(script:WaitForChild("_types"))
 export type Jest = _typesModule.Jest
 type MockFactory = _typesModule.MockFactory
 
-local jestExpectModule = require(Packages.Expect)
+local jestExpectModule = require(script.Parent:WaitForChild("expect"))
 type Expect = jestExpectModule.Expect
-local JestFakeTimers = require(Packages.JestFakeTimers)
+local JestFakeTimers = require(script.Parent:WaitForChild("jest-fake-timers"))
 type FakeTimers = JestFakeTimers.FakeTimers
 -- ROBLOX deviation END
 -- local esmIsAvailable = typeof(SourceTextModule) == "function"
@@ -57,9 +150,6 @@ type FakeTimers = JestFakeTimers.FakeTimers
 -- type JestGlobals = Global_TestFrameworkGlobals & {
 -- 	expect: typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.expect ]]),
 -- }
-
-local LOADMODULE_ENABLED = pcall((debug :: any).loadmodule, Instance.new("ModuleScript"))
-
 type JestGlobals = {
 	expect: any,
 	expectExtended: any,
@@ -72,8 +162,7 @@ type JestGlobals = {
 type JestGlobalsWithJest = JestGlobals & {
 	-- ROBLOX deviation START: use Jest type
 	-- jest: typeof(__unhandledIdentifier__ --[[ ROBLOX TODO: Unhandled node for type: TSQualifiedName ]] --[[ JestGlobals.jest ]]),
-	jest: Jest,
-	-- ROBLOX deviation END
+	jest: Jest, -- ROBLOX deviation END
 }
 -- ROBLOX deviation START: skipped
 -- type HasteMapOptions = {
@@ -509,8 +598,7 @@ type Runtime_private = { --
 	-- getGlobalsForCjs: (self: Runtime_private, from: Config_Path) -> JestGlobalsWithJest,
 	-- getGlobalsForEsm: (self: Runtime_private, from: Config_Path, context: VMContext) -> Promise<VMModule>,
 	-- ROBLOX deviation END
-	getGlobalsFromEnvironment: (self: Runtime_private) -> JestGlobals,
-	-- ROBLOX deviation START: skipped
+	getGlobalsFromEnvironment: (self: Runtime_private) -> JestGlobals, -- ROBLOX deviation START: skipped
 	-- readFile: (self: Runtime_private, filename: Config_Path) -> string,
 	-- ROBLOX deviation END
 }
@@ -525,12 +613,11 @@ type Runtime_statics = {
 	-- 	coverageOptions: ShouldInstrumentOptions,
 	-- 	testPath: Config_Path
 	-- ) -> Runtime,
-	new: (loadedModuleFns: Map<ModuleScript, any>?) -> Runtime,
-	-- ROBLOX deviation END
+	new: (loadedModuleFns: Map<ModuleScript, any>?) -> Runtime, -- ROBLOX deviation END
 }
 
 local Runtime = {} :: Runtime & Runtime_statics
-local Runtime_private = Runtime :: Runtime_private & Runtime_statics;
+local Runtime_private = Runtime :: Runtime_private & Runtime_statics
 (Runtime :: any).__index = Runtime
 -- ROBLOX deviation START: skipped
 -- Runtime.shouldInstrument = shouldInstrument
@@ -586,16 +673,6 @@ function Runtime.new(config: Config_ProjectConfig, loadedModuleFns: Map<ModuleSc
 	-- ROBLOX deviation START: instantiate the module mocker here instead of being passed in as an arg from runTest
 	-- self._moduleMocker = self._environment.moduleMocker
 	self._moduleMocker = ModuleMocker.new(config)
-	-- ROBLOX deviation END
-	-- ROBLOX deviation START: mock data model
-	self._moduleMocker:protectDataModel(function(instance, method)
-		if instance:IsA("DataModel") then
-			if method == "GetService" then
-				return true
-			end
-		end
-		return false
-	end)
 	-- ROBLOX deviation END
 	-- ROBLOX deviation START: mocking globals
 	self._globalMocker = GlobalMocker.new(jestMockGenvModule.MOCKABLE_GLOBALS)
@@ -1365,7 +1442,7 @@ function Runtime_private:requireModuleOrMock<T>(moduleName: ModuleScript): T
 	-- 	-- @ts-expect-error: we don't care that it's not assignable to T
 	-- 	return self:getGlobalsForCjs(from)
 	-- end
-	if moduleName.Name == "JestGlobals" then
+	if moduleName.Name == "JestGlobals" or moduleName.Name == "jest-globals" then
 		local globals = self:getGlobalsFromEnvironment()
 		return Object.assign({}, globals, {
 			jest = self._jestObject,
@@ -1509,7 +1586,7 @@ function Runtime_private:resetModules(): ()
 	-- 	if Boolean.toJSBoolean(self._environment.global) then
 	-- 		local envGlobal = self._environment.global
 	-- 		Array.forEach(
-	-- 			Object.keys(envGlobal) :: Array<any> --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof typeof globalThis ]],
+	-- 			Object.keys(envGlobal) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof typeof globalThis ]]>,
 	-- 			function(key)
 	-- 				local globalMock = envGlobal[tostring(key)]
 	-- 				if
@@ -1623,9 +1700,7 @@ function Runtime_private:restoreAllMocks(): ()
 	self._moduleMocker:restoreAllMocks()
 end
 function Runtime_private:resetAllMocks(): ()
-	self._moduleMocker:unmockGlobals(self._globalMocker)
 	self._moduleMocker:resetAllMocks()
-	self._moduleMocker:mockGlobals(self._globalMocker, getfenv(0))
 end
 function Runtime_private:clearAllMocks(): ()
 	self._moduleMocker:clearAllMocks()
@@ -1817,7 +1892,7 @@ function Runtime_private:_execModule(
 	-- 	end
 	-- 	local jestObject = self:_createJestObjectFor(filename)
 	-- 	self.jestObjectCaches:set(filename, jestObject)
-	-- 	local lastArgs: Array<Jest | nil | any> --[[ ROBLOX TODO: Unhandled node for type: TSRestType ]] --[[ ...Array<Global.Global> ]] = Array.concat(
+	-- 	local lastArgs: Array<Jest | nil | any --[[ ROBLOX TODO: Unhandled node for type: TSRestType ]] --[[ ...Array<Global.Global> ]]> = Array.concat(
 	-- 		{},
 	-- 		{
 	-- 			if Boolean.toJSBoolean(self._config.injectGlobals) then jestObject else nil,
@@ -1864,6 +1939,69 @@ function Runtime_private:_execModule(
 	local moduleFunction, defaultEnvironment, errorMessage, cleanupFn
 
 	local modulePath = localModule.filename
+	local loadmoduleValue = (debug :: any).loadmodule
+	local loadmodule: ((ModuleScript) -> (any, string, () -> any))? = if type(loadmoduleValue) == "function"
+		then loadmoduleValue
+		else nil
+	local NO_MODULE_RETURN_ERROR = "Module code did not return exactly one value"
+	-- `_G.__NO_LOADMODULE__` can be set by external probes that are stricter than
+	-- runtime module loading itself. Prefer direct capability checks here.
+	local loadModuleEnabled = loadmodule ~= nil
+
+	local function tryRequireFallback(loadReason: any): boolean
+		local globalTable: any = _G
+		local hadInjectedGlobals = false
+		local previousInjectedGlobals = nil
+		if type(globalTable) == "table" then
+			hadInjectedGlobals = globalTable.__STRONK_JEST_GLOBALS__ ~= nil
+			previousInjectedGlobals = globalTable.__STRONK_JEST_GLOBALS__
+			local injectedGlobals = Object.assign({}, self:getGlobalsFromEnvironment(), {
+				jest = self._jestObject,
+			})
+			globalTable.__STRONK_JEST_GLOBALS__ = injectedGlobals
+		end
+
+		local requireOk, requireResultOrErr = pcall(require, modulePath)
+
+		if type(globalTable) == "table" then
+			if hadInjectedGlobals then
+				globalTable.__STRONK_JEST_GLOBALS__ = previousInjectedGlobals
+			else
+				globalTable.__STRONK_JEST_GLOBALS__ = nil
+			end
+		end
+
+		if requireOk then
+			localModule.exports = requireResultOrErr
+			return true
+		end
+		local requireErr = tostring(requireResultOrErr)
+
+		if noModuleReturnRequired == true and requireErr == NO_MODULE_RETURN_ERROR then
+			localModule.exports = nil
+			return true
+		end
+
+		local sourceOk, sourceOrErr = pcall(function()
+			return modulePath.Source
+		end)
+		if not sourceOk then
+			error(
+				Error.new(
+					("Unable to load module '%s': debug.loadmodule unavailable or failed (%s); require(module) failed (%s); and ModuleScript.Source cannot be read (%s)"):format(
+						modulePath:GetFullName(),
+						tostring(loadReason),
+						requireErr,
+						tostring(sourceOrErr)
+					)
+				)
+			)
+		end
+
+		moduleFunction = loadstring(sourceOrErr :: string, modulePath:GetFullName())
+		errorMessage = requireErr
+		return false
+	end
 
 	if self._loadedModuleFns and self._loadedModuleFns:has(modulePath) then
 		local loadedModule = self._loadedModuleFns:get(modulePath) :: { any }
@@ -1872,11 +2010,20 @@ function Runtime_private:_execModule(
 	else
 		-- Narrowing this type here lets us appease the type checker while still
 		-- counting on types for the rest of this file
-		if LOADMODULE_ENABLED then
-			local loadmodule: (ModuleScript) -> (any, string, () -> any) = debug["loadmodule"]
-			moduleFunction, errorMessage, cleanupFn = loadmodule(modulePath)
+		if loadModuleEnabled then
+			local loadmoduleFn = loadmodule :: (ModuleScript) -> (any, string, () -> any)
+			local loadOk, loadErr = pcall(function()
+				moduleFunction, errorMessage, cleanupFn = loadmoduleFn(modulePath)
+			end)
+			if not loadOk then
+				if tryRequireFallback(loadErr) then
+					return
+				end
+			end
+		elseif tryRequireFallback("disabled") then
+			return
 		else
-			moduleFunction = loadstring(modulePath.Source, modulePath:GetFullName())
+			errorMessage = "Unable to load module using debug.loadmodule or require fallback."
 		end
 		-- ROBLOX NOTE: we are not using assert() as it throws a bare string and we need to throw an Error object
 		if moduleFunction == nil then
@@ -1905,17 +2052,6 @@ function Runtime_private:_execModule(
 	-- local isInternal = false -- if options ~= nil and options.isInternalModule then options.isInternalModule else false
 	local isInternal = if options ~= nil and options.isInternalModule then options.isInternalModule else false
 
-	-- Data model references inside of sandbox
-	local dmScript = if LOADMODULE_ENABLED then defaultEnvironment.script else modulePath
-	local dmGame = defaultEnvironment.game
-	local dmWorkspace = defaultEnvironment.workspace
-	local dmPlugin = defaultEnvironment.plugin
-	if self._config.mockDataModel then
-		local dmMocker = self._moduleMocker.dataModelMocker
-		local gameProxy = dmMocker:mockInstance(defaultEnvironment.game)
-		dmGame = gameProxy.spy
-	end
-
 	-- This is the 'least mocked' environment that scripts will be able to see.
 	-- The final function environment inherits from this sandbox.
 	-- This is separate so that, in the future, `globalEnv` could expose these
@@ -1926,15 +2062,7 @@ function Runtime_private:_execModule(
 			Adding `script` directly into a table so that it is accessible to the debugger
 			It seems to be a similar issue to code inside of __index function not being debuggable
 		]]
-		script = dmScript,
-		game = dmGame,
-		workspace = dmWorkspace,
-		plugin = dmPlugin,
-
-		-- legacy aliases for data model
-		Game = dmGame,
-		Workspace = dmWorkspace,
-
+		script = if loadModuleEnabled then defaultEnvironment.script else modulePath,
 		require = if isInternal
 			then function(scriptInstance: ModuleScript | string)
 				if typeof(scriptInstance) == "string" then
@@ -2002,7 +2130,7 @@ function Runtime_private:_execModule(
 	if moduleResult.n ~= 1 and noModuleReturnRequired ~= true then
 		error(
 			string.format(
-				"[Module Error]: %s did not return a valid result\n" .. "\tModuleScripts must return exactly one value",
+				"[Module Error]: %s did not return a valid result\n\tModuleScripts must return exactly one value",
 				tostring(modulePath)
 			)
 		)
@@ -2765,8 +2893,9 @@ function Runtime_private:getGlobalsFromEnvironment(): JestGlobals
 	end
 
 	-- ROBLOX deviation START: additional extracted variables
-	local jestSnapshot = self:requireModuleOrMock(Packages.JestSnapshot)
-	local jestExpect = self:requireModuleOrMock(Packages.Expect)
+	local jestSnapshot = require(script.Parent:WaitForChild("jest-snapshot")) -- local jestSnapshot = self:requireModuleOrMock(Packages.JestSnapshot)
+
+	local jestExpect = require(script.Parent:WaitForChild("expect")) -- local jestExpect = self:requireModuleOrMock(Packages.Expect)
 	-- ROBLOX deviation END
 
 	return {
