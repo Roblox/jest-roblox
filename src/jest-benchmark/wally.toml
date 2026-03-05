@@ -1,0 +1,11 @@
+[package]
+name = "eyycheev/jest-benchmark"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"JestGlobals" = "eyycheev/stronk-jest-globals@3.14.0-rbx.2"
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"

@@ -6,14 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent.Parent.Parent
-
 local exports = {}
 
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
-local expect = require(Packages.Expect)
-local jest_snapshotModule = require(Packages.JestSnapshot)
+local expect = require(script.Parent.Parent.Parent.Parent:WaitForChild('expect'))
+local jest_snapshotModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-snapshot'))
 local addSerializer = jest_snapshotModule.addSerializer
 -- ROBLOX TODO: not implemented yet
 -- local toMatchInlineSnapshot = jest_snapshotModule.toMatchInlineSnapshot
@@ -25,7 +23,7 @@ export type Expect = typeof(expect)
 
 -- ROBLOX deviation: inline type as Pick utility type is not available in Luau
 type Pick_Config_GlobalConfig_expand = {
-	expand: boolean,
+	expand: boolean
 }
 exports.default = function(config: Pick_Config_GlobalConfig_expand): Expect
 	expect.setState({ expand = config.expand })

@@ -5,17 +5,16 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  ]]
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 type Array<T> = LuauPolyfill.Array<T>
 
 local exports = {}
 
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
-local getProjectDisplayName = require(script.Parent.getProjectDisplayName).default
+local getProjectDisplayName = require(script.Parent:WaitForChild('getProjectDisplayName')).default
 
 -- ROBLOX deviation START: add hoisted function declarations
 local createProjectFilter
@@ -25,8 +24,8 @@ local function getConfigsOfProjectsToRun(
 	projectConfigs: Array<Config_ProjectConfig>,
 	opts: {
 		ignoreProjects: Array<string> | nil,
-		selectProjects: Array<string> | nil,
-	}
+		selectProjects: Array<string> | nil	
+}
 ): Array<Config_ProjectConfig>
 	local projectFilter = createProjectFilter(opts)
 	return Array.filter(projectConfigs, function(config)
@@ -42,8 +41,8 @@ function createProjectFilter(
 	opts: {
 		-- ROBLOX deviation END
 		ignoreProjects: Array<string> | nil,
-		selectProjects: Array<string> | nil,
-	}
+		selectProjects: Array<string> | nil	
+}
 )
 	-- ROBLOX deviation START: ensure arrays are not nil for 'includes'
 	-- local selectProjects, ignoreProjects = opts.selectProjects, opts.ignoreProjects

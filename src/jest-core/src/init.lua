@@ -8,11 +8,11 @@
 
 local exports = {}
 
-exports.SearchSource = require(script.SearchSource).default
-exports.createTestScheduler = require(script.TestScheduler).createTestScheduler
-exports.TestWatcher = require(script.TestWatcher).default
-exports.runCLI = require(script.cli).runCLI
+exports.SearchSource = require(script:WaitForChild('SearchSource')).default
+exports.createTestScheduler = require(script:WaitForChild('TestScheduler')).createTestScheduler
+exports.TestWatcher = require(script:WaitForChild('TestWatcher')).default
+exports.runCLI = require(script:WaitForChild('cli')).runCLI
 -- ROBLOX deviation START: not needed
--- exports.getVersion = require(script.version).default
+-- exports.getVersion = require("./version").default
 -- ROBLOX deviation END
 return exports

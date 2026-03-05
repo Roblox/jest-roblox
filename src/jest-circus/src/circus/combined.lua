@@ -11,9 +11,7 @@
 
 local exports = {}
 
-local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Circus_EventHandler = typesModule.Circus_EventHandler
 
 -- ROBLOX deviation START: predefine common variables
@@ -25,14 +23,14 @@ local restoreGlobalErrorHandlers
 
 -- ROBLOX FILE START: eventHandler.ts
 do
-	local LuauPolyfill = require(Packages.LuauPolyfill)
-	local Array = LuauPolyfill.Array
+	local LuauPolyfill = require(script.Parent.Parent.Parent:WaitForChild('luau-polyfill'))	
+local Array = LuauPolyfill.Array
 	local Boolean = LuauPolyfill.Boolean
 	local Error = LuauPolyfill.Error
 
-	local RegExp = require(Packages.RegExp)
-
-	type Circus_EventHandler = typesModule.Circus_EventHandler
+	local RegExp = require(script.Parent.Parent.Parent:WaitForChild('luau-regexp'))
+	
+type Circus_EventHandler = typesModule.Circus_EventHandler
 	type Circus_Event = typesModule.Circus_Event
 	type Circus_State = typesModule.Circus_State
 	type Circus_TestEntry = typesModule.Circus_TestEntry
@@ -48,10 +46,10 @@ do
 		} from './globalErrorHandlers';
 	]]
 	-- ROBLOX FIXME: resolve cyclic dep
-	local TEST_TIMEOUT_SYMBOL = require(script.Parent.types).TEST_TIMEOUT_SYMBOL
+	local TEST_TIMEOUT_SYMBOL = require(script.Parent:WaitForChild('types')).TEST_TIMEOUT_SYMBOL
 	-- ROBLOX FIXME: resolve cyclic dep
-	local utilsModule = require(script.Parent.utils)
-	local addErrorToEachTestUnderDescribe = utilsModule.addErrorToEachTestUnderDescribe
+	local utilsModule = require(script.Parent:WaitForChild('utils'))	
+local addErrorToEachTestUnderDescribe = utilsModule.addErrorToEachTestUnderDescribe
 	local describeBlockHasTests = utilsModule.describeBlockHasTests
 	local getTestDuration = utilsModule.getTestDuration
 	local invariant = utilsModule.invariant
@@ -304,8 +302,8 @@ end
 
 -- ROBLOX FILE START: globalErrorHandlers.ts
 do
-	local LuauPolyfill = require(Packages.LuauPolyfill)
-	local Array = LuauPolyfill.Array
+	local LuauPolyfill = require(script.Parent.Parent.Parent:WaitForChild('luau-polyfill'))	
+local Array = LuauPolyfill.Array
 
 	-- ROBLOX FIXME START: added types and objects that do not exist in Luau
 	type NodeJS_UncaughtExceptionListener = any
@@ -359,13 +357,13 @@ end
 
 -- ROBLOX FILE START: state.ts
 do
-	local LuauPolyfill = require(Packages.LuauPolyfill)
-	type Array<T> = LuauPolyfill.Array<T>
+	local LuauPolyfill = require(script.Parent.Parent.Parent:WaitForChild('luau-polyfill'))	
+type Array<T> = LuauPolyfill.Array<T>
 	type Promise<T> = LuauPolyfill.Promise<T>
 
-	local Promise = require(Packages.Promise)
-
-	type Circus_EventHandler = typesModule.Circus_EventHandler
+	local Promise = require(script.Parent.Parent.Parent:WaitForChild('promise'))
+	
+type Circus_EventHandler = typesModule.Circus_EventHandler
 	type Circus_State = typesModule.Circus_State
 	type Circus_AsyncEvent = typesModule.Circus_AsyncEvent
 	type Circus_SyncEvent = typesModule.Circus_SyncEvent
@@ -375,14 +373,14 @@ do
 		import eventHandler from './eventHandler';
 	]]
 	-- ROBLOX FIXME: resolve cyclic dep
-	local formatNodeAssertErrors = require(script.Parent.formatNodeAssertErrors).default
+	local formatNodeAssertErrors = require(script.Parent:WaitForChild('formatNodeAssertErrors')).default
 	-- ROBLOX FIXME: resolve cyclic dep
-	local STATE_SYM = require(script.Parent.types).STATE_SYM
-	local makeDescribe = require(script.Parent.utils).makeDescribe
+	local STATE_SYM = require(script.Parent:WaitForChild('types')).STATE_SYM
+	local makeDescribe = require(script.Parent:WaitForChild('utils')).makeDescribe
 	local eventHandlers: Array<Circus_EventHandler> = { eventHandler, formatNodeAssertErrors }
 	-- ROBLOX deviation START: move to `state_.lua` to avoid cyclic dependency
-	local stateCommonModule = require(script.Parent.state_)
-	local ROOT_DESCRIBE_BLOCK_NAME = stateCommonModule.ROOT_DESCRIBE_BLOCK_NAME
+	local stateCommonModule = require(script.Parent:WaitForChild('state_'))	
+local ROOT_DESCRIBE_BLOCK_NAME = stateCommonModule.ROOT_DESCRIBE_BLOCK_NAME
 	-- ROBLOX deviation END
 	exports.ROOT_DESCRIBE_BLOCK_NAME = ROOT_DESCRIBE_BLOCK_NAME
 	local function createState(): Circus_State

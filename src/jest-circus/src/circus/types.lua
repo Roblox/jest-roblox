@@ -6,17 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent.Parent:WaitForChild('luau-polyfill'))
 local Symbol = LuauPolyfill.Symbol
 
 local exports = {}
 
 -- Used as type
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Circus_State = typesModule.Circus_State
-local expect = require(Packages.Expect)
+local expect = require(script.Parent.Parent.Parent:WaitForChild('expect'))
 
 local STATE_SYM = (Symbol("JEST_STATE_SYMBOL") :: unknown) :: "STATE_SYM_SYMBOL"
 exports.STATE_SYM = STATE_SYM
@@ -31,7 +29,7 @@ export type NodeJS_Global = {
 	STATE_SYM_SYMBOL: Circus_State,
 	RETRY_TIMES_SYMBOL: string,
 	TEST_TIMEOUT_SYMBOL: number,
-	expect: typeof(expect),
+	expect: typeof(expect)
 }
 
 return exports

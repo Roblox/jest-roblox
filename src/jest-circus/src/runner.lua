@@ -7,5 +7,5 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 -- Allow people to use `jest-circus/runner` as a runner.
-local runner = require(script.Parent.circus["legacy-code-todo-rewrite"].jestAdapter)
+local runner = require(script.Parent:WaitForChild('circus'):WaitForChild('legacy-code-todo-rewrite'):WaitForChild('jestAdapter'))
 return runner

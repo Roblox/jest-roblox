@@ -1,0 +1,10 @@
+[package]
+name = "eyycheev/jest-get-type"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"RegExp" = "jsdotlua/luau-regexp@0.2.1"

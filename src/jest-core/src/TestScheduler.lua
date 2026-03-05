@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
@@ -17,31 +16,32 @@ local WeakMap = LuauPolyfill.WeakMap
 type Array<T> = LuauPolyfill.Array<T>
 type Promise<T> = LuauPolyfill.Promise<T>
 type Set<T> = LuauPolyfill.Set<T>
-local Promise = require(Packages.Promise)
+local Promise = require(script.Parent.Parent:WaitForChild('promise'))
 type Function = (...any) -> ...any
 type Record<K, T> = { [K]: T }
 
 local exports = {}
 
 --[[ eslint-disable local/ban-types-eventually ]]
-local chalk = require(Packages.ChalkLua)
-local exit = require(Packages.RobloxShared).nodeUtils.exit
-local reportersModule = require(Packages.JestReporters)
--- ROBLOX deviation START: not needed
+local chalk = require(script.Parent.Parent:WaitForChild('chalk'))
+local exit = require(script.Parent.Parent:WaitForChild('jest-roblox-shared')).nodeUtils.exit
+local reportersModule = require(script.Parent.Parent:WaitForChild('jest-reporters'))-- ROBLOX deviation START: not needed
 -- local CoverageReporter = reportersModule.CoverageReporter
 -- ROBLOX deviation END
+
 local DefaultReporter = reportersModule.DefaultReporter
 type JestReporter = reportersModule.BaseReporter
+-- ROBLOX deviation START: not needed
+-- local NotifyReporter = reportersModule.NotifyReporter
+-- ROBLOX deviation END
 type Reporter = reportersModule.Reporter
 type ReporterContext = reportersModule.ReporterContext
-local GitHubActionsReporter = reportersModule.GitHubActionsReporter
 local SummaryReporter = reportersModule.SummaryReporter
 local VerboseReporter = reportersModule.VerboseReporter
-local test_resultModule = require(Packages.JestTestResult)
+local test_resultModule = require(script.Parent.Parent:WaitForChild('jest-test-result'))
 type AggregatedResult = test_resultModule.AggregatedResult
 type SerializableError = test_resultModule.SerializableError
 type Test = test_resultModule.Test
-type TestContext = test_resultModule.TestContext
 type TestResult = test_resultModule.TestResult
 local addResult = test_resultModule.addResult
 local buildFailureTestResult = test_resultModule.buildFailureTestResult
@@ -49,26 +49,31 @@ local makeEmptyAggregatedTestResult = test_resultModule.makeEmptyAggregatedTestR
 -- ROBLOX deviation START: not needed
 -- local createScriptTransformer = require(Packages["@jest"].transform).createScriptTransformer
 -- ROBLOX deviation END
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_Path = typesModule.Config_Path
 type Config_ReporterConfig = typesModule.Config_ReporterConfig
-local formatExecError = require(Packages.JestMessageUtil).formatExecError
-local jest_runnerModule = require(Packages.JestRunner)
+local formatExecError = require(script.Parent.Parent:WaitForChild('jest-message-util')).formatExecError
+local jest_runnerModule = require(script.Parent.Parent:WaitForChild('jest-runner'))
 type TestRunner = jest_runnerModule.TestRunner
 type TestRunnerContext = jest_runnerModule.TestRunnerContext
+local jest_runtimeModule = require(script.Parent.Parent:WaitForChild('jest-runtime'))
+type Context = jest_runtimeModule.Context
 -- ROBLOX deviation START: snapshot not used yet
--- local snapshot = require(Packages.JestSnapshot)
+-- local snapshot = require("@pkg/@jsdotlua/jest-snapshot")
 -- ROBLOX deviation END
-local ReporterDispatcherModule = require(script.Parent.ReporterDispatcher)
+-- ROBLOX deviation START: not needed
+-- local requireOrImportModule = require("@pkg/@jsdotlua/jest-util").requireOrImportModule
+-- ROBLOX deviation END
+local ReporterDispatcherModule = require(script.Parent:WaitForChild('ReporterDispatcher'))
 local ReporterDispatcher = ReporterDispatcherModule.default
 type ReporterDispatcher = ReporterDispatcherModule.ReporterDispatcher
-local TestWatcherModule = require(script.Parent.TestWatcher)
+local TestWatcherModule = require(script.Parent:WaitForChild('TestWatcher'))
 type TestWatcher = TestWatcherModule.TestWatcher
-local shouldRunInBand = require(script.Parent.testSchedulerHelper).shouldRunInBand
+local shouldRunInBand = require(script.Parent:WaitForChild('testSchedulerHelper')).shouldRunInBand
 
 -- ROBLOX deviation START: add additional imports and types
-local types = require(script.Parent.types)
+local types = require(script.Parent:WaitForChild('types'))
 type ReporterConstructor = types.ReporterConstructor
 -- ROBLOX deviation END
 
@@ -80,7 +85,10 @@ local getEstimatedTime
 -- ROBLOX deviation END
 
 export type TestSchedulerOptions = { startRun: (globalConfig: Config_GlobalConfig) -> () }
+-- ROBLOX deviation START: luau is not resolving type intersection as expected
+-- export type TestSchedulerContext = ReporterContext & TestRunnerContext
 export type TestSchedulerContext = ReporterContext | TestRunnerContext
+-- ROBLOX deviation END
 
 local function createTestScheduler(
 	globalConfig: Config_GlobalConfig,
@@ -98,12 +106,12 @@ type TestScheduler = {
 	addReporter: (self: TestScheduler, reporter: Reporter) -> (),
 	removeReporter: (self: TestScheduler, reporterConstructor: ReporterConstructor) -> (),
 	scheduleTests: (self: TestScheduler, tests: Array<Test>, watcher: TestWatcher) -> Promise<AggregatedResult>,
-	_setupReporters: (self: TestScheduler) -> Promise<nil>,
+	_setupReporters: (self: TestScheduler) -> Promise<nil>
 }
 
 type TestSchedulerPrivate = {
 	addReporter: (self: TestSchedulerPrivate, reporter: Reporter) -> (),
-	removeReporter: (self: TestSchedulerPrivate, reporterConstructor: ReporterConstructor) -> (),
+	removeReporter: (self: TestSchedulerPrivate, ReporterClass: Function) -> (),
 	scheduleTests: (
 		self: TestSchedulerPrivate,
 		tests: Array<Test>,
@@ -111,25 +119,41 @@ type TestSchedulerPrivate = {
 	) -> Promise<AggregatedResult>,
 	_setupReporters: (self: TestSchedulerPrivate) -> Promise<nil>,
 
-	_context: TestSchedulerContext,
 	_dispatcher: ReporterDispatcher,
 	_globalConfig: Config_GlobalConfig,
+	_options: TestSchedulerOptions,
+	_context: TestSchedulerContext,
+
 	_partitionTests: (
 		self: TestSchedulerPrivate,
 		testRunners: Record<string, TestRunner>,
 		tests: Array<Test>
 	) -> Record<string, Array<Test>> | nil,
-	_addCustomReporter: (self: TestSchedulerPrivate, reporter: ModuleScript, options: Record<string, any>) -> any,
+	_shouldAddDefaultReporters: (
+		self: TestSchedulerPrivate,
+		reporters: Array<string | Config_ReporterConfig>?
+	) -> boolean,
+	_setupDefaultReporters: (self: TestSchedulerPrivate, _collectCoverage: boolean) -> (),
+	-- ROBLOX deviation START: no custom reporters support yet
+	-- _addCustomReporters: (
+	-- 	self: TestSchedulerPrivate,
+	-- 	reporters: Array<string | Config_ReporterConfig>
+	-- ) -> Promise<nil>,
+	-- ROBLOX deviation END
+	_getReporterProps: (
+		self: TestSchedulerPrivate,
+		reporter: string | Config_ReporterConfig
+	) -> { path: string, options: Record<string, unknown> },
 	_bailIfNeeded: (
 		self: TestSchedulerPrivate,
-		testContexts: Set<TestContext>,
+		contexts: Set<Context>,
 		aggregatedResults: AggregatedResult,
 		watcher: TestWatcher
-	) -> Promise<nil>,
+	) -> Promise<nil>
 }
 
 type TestScheduler_statics = {
-	new: (globalConfig: Config_GlobalConfig, context: TestSchedulerContext) -> TestScheduler,
+	new: (globalConfig: Config_GlobalConfig, context: TestSchedulerContext) -> TestScheduler
 }
 
 TestScheduler = {} :: TestSchedulerPrivate & TestScheduler_statics;
@@ -147,8 +171,8 @@ function TestScheduler:addReporter(reporter: Reporter): ()
 	self._dispatcher:register(reporter)
 end
 
-function TestScheduler:removeReporter(reporterConstructor: ReporterConstructor): ()
-	self._dispatcher:unregister(reporterConstructor)
+function TestScheduler:removeReporter(ReporterClass: Function): ()
+	self._dispatcher:unregister(ReporterClass)
 end
 
 function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): Promise<AggregatedResult>
@@ -192,8 +216,12 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 				if Boolean.toJSBoolean(testResult.leaks) then
 					local message = ("%sYour test suite is leaking memory. Please ensure all references are cleaned.\n"):format(
 						tostring(chalk.red:bold("EXPERIMENTAL FEATURE!\n"))
-					) .. "\n" .. "There is a number of things that can leak memory:\n" .. "  - Async operations that have not finished (e.g. fs.readFile).\n" .. "  - Timers not properly mocked (e.g. setInterval, setTimeout).\n" .. "  - Keeping references to the global scope."
-					return onFailure(test, { message = message, stack = Error.new(message).stack })
+					) .. [[
+
+There is a number of things that can leak memory:
+  - Async operations that have not finished (e.g. fs.readFile).
+  - Timers not properly mocked (e.g. setInterval, setTimeout).
+  - Keeping references to the global scope.]]					return onFailure(test, { message = message, stack = Error.new(message).stack })
 				end
 
 				addResult(aggregatedResults, testResult)
@@ -276,14 +304,16 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 
 		local testRunners: { [string]: TestRunner } = {}
 		local contextsByTestRunner = WeakMap.new()
-		Promise.all(Array.map(Array.from(testContexts), function(context)
-			return Promise.resolve():andThen(function()
+		local testContextsArray = Array.from(testContexts)
+		local testContextPromises = Array.map(
+			testContextsArray,
+			Promise.promisify(function(context)
 				local config = context.config
 				if not Boolean.toJSBoolean(testRunners[config.runner]) then
 					-- ROBLOX deviation START: use regular require to load TestRunner
 					-- local transformer = createScriptTransformer(config):expect()
 					-- local Runner: TestRunner = transformer:requireAndTranspileModule(config.runner):expect()
-					local Runner: TestRunner = require(Packages.JestRunner).default
+					local Runner: TestRunner = require(script.Parent.Parent:WaitForChild('jest-runner')).default
 					-- ROBLOX deviation END
 					local runner = Runner.new(self._globalConfig, {
 						changedFiles = self._context.changedFiles,
@@ -293,7 +323,8 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 					contextsByTestRunner:set(runner, context)
 				end
 			end)
-		end)):expect()
+		)
+		Promise.all(testContextPromises):expect()
 
 		local testsByRunner = self:_partitionTests(testRunners, tests)
 
@@ -316,28 +347,34 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 					 * for third party test runners.
 					]]
 					if testRunner.__PRIVATE_UNSTABLE_API_supportsEventEmitters__ then
+						local function onFileStart(ref)
+							local test = ref[1]
+							return onTestFileStart(test)
+						end
+						local function onFileSuccess(ref)
+							local test, testResult = table.unpack(ref, 1, 2)
+							return onResult(test, testResult)
+						end
+						local function onFileFailure(ref)
+							local test, error_ = table.unpack(ref, 1, 2)
+							return onFailure(test, error_)
+						end
+						local function onCaseResult(ref)
+							local testPath, testCaseResult = table.unpack(ref, 1, 2)
+							local test: Test = {
+								context = context,
+								-- ROBLOX FIXME: need script path
+								path = testPath.Name,
+								script = testPath,
+							}
+							self._dispatcher:onTestCaseResult(test, testCaseResult)
+						end
+
 						local unsubscribes = {
-							testRunner:on("test-file-start", function(ref)
-								local test = ref[1]
-								return onTestFileStart(test)
-							end),
-							testRunner:on("test-file-success", function(ref)
-								local test, testResult = table.unpack(ref, 1, 2)
-								return onResult(test, testResult)
-							end),
-							testRunner:on("test-file-failure", function(ref)
-								local test, error_ = table.unpack(ref, 1, 2)
-								return onFailure(test, error_)
-							end),
-							testRunner:on("test-case-result", function(ref)
-								local testPath, testCaseResult = table.unpack(ref, 1, 2)
-								local test: Test = {
-									context = context,
-									path = testPath,
-									script = nil :: any, -- TODO: remove when we clean up Test type
-								}
-								self._dispatcher:onTestCaseResult(test, testCaseResult)
-							end),
+							testRunner:on("test-file-start", onFileStart),
+							testRunner:on("test-file-success", onFileSuccess),
+							testRunner:on("test-file-failure", onFileFailure),
+							testRunner:on("test-case-result", onCaseResult),
 						}
 
 						testRunner
@@ -352,9 +389,9 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 							)
 							:expect()
 
-						Array.forEach(unsubscribes, function(sub)
-							return sub()
-						end)
+						for _, sub in unsubscribes do
+							sub()
+						end
 					else
 						testRunner
 							:runTests(
@@ -394,7 +431,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 		)
 		local anyReporterErrors = self._dispatcher:hasErrors()
 
-		aggregatedResults.success = not (anyTestFailures or aggregatedResults.snapshot.failure or anyReporterErrors)
+		aggregatedResults.success = anyTestFailures or aggregatedResults.snapshot.failure or anyReporterErrors
 
 		return aggregatedResults
 	end)
@@ -423,67 +460,122 @@ function TestScheduler:_partitionTests(
 	end
 end
 
+function TestScheduler:_shouldAddDefaultReporters(reporters: Array<string | Config_ReporterConfig>?): boolean
+	return reporters == nil
+		or Boolean.toJSBoolean(Array.find(reporters, function(reporter)
+			return self:_getReporterProps(reporter).path == "default"
+		end))
+end
+
 function TestScheduler:_setupReporters()
 	return Promise.resolve():andThen(function()
-		local ref = self._globalConfig
-		local coverage, notify, verbose = false, false, ref.verbose
-		local reporters
-		-- ROBLOX deviation: ReporterConfig is a named table since we can't type tuples
-		if ref.reporters ~= nil then
-			reporters = ref.reporters
-		else
-			reporters = { { reporter = "default", options = {} } }
-		end
-		local summary = false
-		for _, val in reporters do
-			local reporter = val
-			local options = {}
-			if typeof(val) == "table" then
-				reporter = val.reporter
-				options = val.options
-			end
+		-- ROBLOX deviation START: not supported: collectCoverage, notify, reporters
+		-- ROBLOX FIXME Luau: it seems this type is not inferred correctly without explicit cast
+		-- local ref = self._globalConfig :: Config_GlobalConfig
+		-- local collectCoverage, _notify, reporters = ref.collectCoverage, ref.notify, ref.reporters
+		local collectCoverage, reporters = false		-- ROBLOX deviation END
+		local isDefault = self:_shouldAddDefaultReporters(reporters)
 
-			if typeof(reporter) == "string" then
-				if reporter == "default" then
-					summary = true
-					self:addReporter(
-						if verbose
-							then VerboseReporter.new(self._globalConfig)
-							else DefaultReporter.new(self._globalConfig)
-					)
-				elseif reporter == "github-actions" then
-					self:addReporter(GitHubActionsReporter.new(self._globalConfig))
-				elseif reporter == "summary" then
-					summary = true
-				end
-			elseif typeof(reporter) == "Instance" and reporter:IsA("ModuleScript") then
-				self:_addCustomReporter(reporter, options):expect()
-			end
+		if isDefault then
+			self:_setupDefaultReporters(collectCoverage)
 		end
 
-		if summary then
-			self:addReporter(SummaryReporter.new(self._globalConfig))
-		end
+		-- ROBLOX deviation START: no collectCoverage support
+		-- if not isDefault and collectCoverage then
+		-- 	self:addReporter(CoverageReporter.new(self._globalConfig, {
+		-- 		changedFiles = if typeof(self._context) == "table" then self._context.changedFiles else nil,
+		-- 		sourcesRelatedToTestsInChangedFiles = if typeof(self._context) == "table"
+		-- 			then self._context.sourcesRelatedToTestsInChangedFiles
+		-- 			else nil,
+		-- 	}))
+		-- end
+		-- ROBLOX deviation END
+
+		-- ROBLOX deviation START: no NotifyReporter support
+		-- if notify then
+		-- 	self:addReporter(NotifyReporter.new(self._globalConfig, self._options.startRun, self._context))
+		-- end
+		-- ROBLOX deviation END
+
+		-- ROBLOX deviation START: no custom reporters support yet
+		-- if reporters ~= nil and Array.isArray(reporters) then
+		-- 	self:_addCustomReporters(reporters):expect()
+		-- end
+		-- ROBLOX deviation END
 	end)
 end
 
-function TestScheduler:_addCustomReporter(reporter: ModuleScript, options: Record<string, any>)
-	return Promise.resolve():andThen(function()
-		local ok, result, hasReturned = xpcall(function()
-			local reporterConstructor: ReporterConstructor = require(reporter) :: any
-			self:addReporter(reporterConstructor.new(self._globalConfig, options, self._context :: ReporterContext))
-		end, function(error_)
-			error_.message = ('An error occurred while adding the reporter at path "%s".\n%s'):format(
-				chalk.bold(reporter),
-				error_.message
-			)
-			error(error_)
-		end)
-	end)
+function TestScheduler:_setupDefaultReporters(_collectCoverage: boolean)
+	self:addReporter(
+		if self._globalConfig.verbose
+			then VerboseReporter.new(self._globalConfig)
+			else DefaultReporter.new(self._globalConfig)
+	)
+
+	-- ROBLOX deviation START: no collectCoverage support
+	-- if collectCoverage then
+	-- 	self:addReporter(CoverageReporter.new(self._globalConfig, {
+	-- 		changedFiles = if typeof(self._context) == "table" then self._context.changedFiles else nil,
+	-- 		sourcesRelatedToTestsInChangedFiles = if typeof(self._context) == "table"
+	-- 			then self._context.sourcesRelatedToTestsInChangedFiles
+	-- 			else nil,
+	-- 	}))
+	-- end
+	-- ROBLOX deviation END
+
+	self:addReporter(SummaryReporter.new(self._globalConfig))
+end
+
+-- ROBLOX deviation START: no custom reporters support yet
+-- function TestScheduler:_addCustomReporters(reporters: Array<string | Config_ReporterConfig>)
+-- 	return Promise.resolve():andThen(function()
+-- 		for _, reporter in reporters do
+-- 			local ref = self:_getReporterProps(reporter)
+-- 			local options, path = ref.options, ref.path
+
+-- 			if path == "default" then
+-- 				continue
+-- 			end
+
+-- 			local ok, result = pcall(function()
+-- 				local Reporter = requireOrImportModule(path, true):expect()
+-- 				self:addReporter(Reporter.new(self._globalConfig, options))
+-- 			end)
+
+-- 			if not ok then
+-- 				local error_ = result
+-- 				error_.message = 'An error occurred while adding the reporter at path "'
+-- 					.. chalk.bold(path)
+-- 					.. '".'
+-- 					.. error_.message
+-- 				error(error_)
+-- 			end
+-- 		end
+-- 	end)
+-- end
+-- ROBLOX deviation END
+
+--[[*
+ * Get properties of a reporter in an object
+ * to make dealing with them less painful.
+]]
+function TestScheduler:_getReporterProps(
+	reporter: string | Config_ReporterConfig
+): { path: string, options: Record<string, unknown> }
+	if typeof(reporter) == "string" then
+		return { options = self._options :: any, path = reporter }
+	elseif Array.isArray(reporter) then
+		-- ROBLOX deviation START: need explicit types as Luau doesn't support tuple types
+		local path, options = reporter[1] :: string, reporter[2] :: Record<string, any>
+		-- ROBLOX deviation END
+		return { options = options, path = path }
+	end
+
+	error(Error.new("Reporter should be either a string or an array"))
 end
 
 function TestScheduler:_bailIfNeeded(
-	testContexts: Set<TestContext>,
+	contexts: Set<Context>,
 	aggregatedResults: AggregatedResult,
 	watcher: TestWatcher
 ): Promise<nil>
@@ -494,9 +586,8 @@ function TestScheduler:_bailIfNeeded(
 				return
 			end
 
-			local ok, result = pcall(function()
-				self._dispatcher:onRunComplete(testContexts, aggregatedResults):expect()
-			end)
+			local ok, result = self._dispatcher:onRunComplete(contexts, aggregatedResults):await()
+
 			local exitCode = self._globalConfig.testFailureExitCode
 			exit(exitCode)
 			if not ok then

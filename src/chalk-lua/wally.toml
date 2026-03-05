@@ -1,0 +1,11 @@
+[package]
+name = "eyycheev/chalk-lua"
+description = "Stronk fork of chalk-lua for Roblox jest compatibility."
+version = "3.14.0-rbx.2"
+license = "MIT"
+authors = ["EYYCHEEV"]
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+LuauPolyfill = "jsdotlua/luau-polyfill@1.2.7"

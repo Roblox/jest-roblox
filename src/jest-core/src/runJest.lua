@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Object = LuauPolyfill.Object
 local Set = LuauPolyfill.Set
@@ -16,18 +15,18 @@ local Boolean = LuauPolyfill.Boolean
 type Array<T> = LuauPolyfill.Array<T>
 type Object = LuauPolyfill.Object
 type Promise<T> = LuauPolyfill.Promise<T>
-local Promise = require(Packages.Promise)
+local Promise = require(script.Parent.Parent:WaitForChild('promise'))
 
 local exports = {}
 
 -- ROBLOX deviation START: unused
--- local path = require(Packages.path)
--- local chalk = require(Packages.ChalkLua)
--- local exit = require(Packages.exit)
--- local fs = require(Packages["graceful-fs"])
+-- local path = require("@pkg/@jsdotlua/path")
+-- local chalk = require("@pkg/@jsdotlua/chalk")
+-- local exit = require("@pkg/exit")
+-- local fs = require("@pkg/graceful-fs")
 -- ROBLOX deviation END
-local CustomConsole = require(Packages.JestConsole).CustomConsole
-local test_resultModule = require(Packages.JestTestResult)
+local CustomConsole = require(script.Parent.Parent:WaitForChild('jest-console')).CustomConsole
+local test_resultModule = require(script.Parent.Parent:WaitForChild('jest-test-result'))
 type AggregatedResult = test_resultModule.AggregatedResult
 type Test = test_resultModule.Test
 type TestContext = test_resultModule.TestContext
@@ -40,55 +39,55 @@ local makeEmptyAggregatedTestResult = test_resultModule.makeEmptyAggregatedTestR
 -- local test_sequencerModule = require(Packages["@jest"]["test-sequencer"])
 -- type TestSequencer = test_sequencerModule.default
 -- ROBLOX deviation END
-local jestTypesModule = require(Packages.JestTypes)
+local jestTypesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 type Config_Path = jestTypesModule.Config_Path
 -- ROBLOX deviation START: changed files not supported
--- local jest_changed_filesModule = require(Packages["jest-changed-files"])
+-- local jest_changed_filesModule = require("@pkg/jest-changed-files")
 -- type ChangedFiles = jest_changed_filesModule.ChangedFiles
 type ChangedFiles = nil
 -- type ChangedFilesPromise = jest_changed_filesModule.ChangedFilesPromise
 type ChangedFilesPromise = Promise<ChangedFiles>
--- local Resolver = require(Packages["jest-resolve"]).default
+-- local Resolver = require("@pkg/jest-resolve").default
 -- ROBLOX deviation END
-local jest_runtimeModule = require(Packages.JestRuntime)
+local jest_runtimeModule = require(script.Parent.Parent:WaitForChild('jest-runtime'))
 type Context = jest_runtimeModule.Context
 -- ROBLOX deviation START:
--- local jest_utilModule = require(Packages.JestUtil)
+-- local jest_utilModule = require("@pkg/@jsdotlua/jest-util")
 -- local requireOrImportModule = jest_utilModule.requireOrImportModule
 -- local tryRealpath = jest_utilModule.tryRealpath
--- local jest_watcherModule = require(Packages["jest-watcher"])
+-- local jest_watcherModule = require("@pkg/jest-watcher")
 -- local JestHook = jest_watcherModule.JestHook
 -- local JestHookEmitter = jest_watcherModule.JestHookEmitter
 type JestHookEmitter = nil
--- local FailedTestsCacheModule = require(script.Parent.FailedTestsCache)
+-- local FailedTestsCacheModule = require("./FailedTestsCache")
 -- type FailedTestsCache = FailedTestsCacheModule.FailedTestsCache
 type FailedTestsCache = nil
 -- ROBLOX deviation END
-local searchSourceModule = require(script.Parent.SearchSource)
+local searchSourceModule = require(script.Parent:WaitForChild('SearchSource'))
 local SearchSource = searchSourceModule.default
 type SearchSource = searchSourceModule.SearchSource
-local TestSchedulerModule = require(script.Parent.TestScheduler)
+local TestSchedulerModule = require(script.Parent:WaitForChild('TestScheduler'))
 type TestSchedulerContext = TestSchedulerModule.TestSchedulerContext
 local createTestScheduler = TestSchedulerModule.createTestScheduler
-local TestWatcherModule = require(script.Parent.TestWatcher)
+local TestWatcherModule = require(script.Parent:WaitForChild('TestWatcher'))
 type TestWatcher = TestWatcherModule.TestWatcher
 -- ROBLOX deviation START: collectHandles not supported
--- local collectHandlesModule = require(script.Parent.collectHandles)
+-- local collectHandlesModule = require("./collectHandles")
 -- local collectNodeHandles = collectHandlesModule.default
 -- type HandleCollectionResult = collectHandlesModule.HandleCollectionResult
 type HandleCollectionResult = nil
 -- ROBLOX deviation END
-local getNoTestsFoundMessage = require(script.Parent.getNoTestsFoundMessage).default
+local getNoTestsFoundMessage = require(script.Parent:WaitForChild('getNoTestsFoundMessage')).default
 -- ROBLOX deviation START: no global hooks supported yet
--- local runGlobalHook = require(script.Parent.runGlobalHook).default
+-- local runGlobalHook = require("./runGlobalHook").default
 -- ROBLOX deviation END
-local typesModule = require(script.Parent.types)
+local typesModule = require(script.Parent:WaitForChild('types'))
 type Filter = typesModule.Filter
 type TestRunData = typesModule.TestRunData
 
 -- ROBLOX deviation START: added missing variables to limit nr deviations
-local RobloxShared = require(Packages.RobloxShared)
+local RobloxShared = require(script.Parent.Parent:WaitForChild('jest-roblox-shared'))
 local nodeUtils = RobloxShared.nodeUtils
 local process = nodeUtils.process
 local exit = nodeUtils.exit
@@ -146,19 +145,19 @@ type ProcessResultOptions =
 	-- ROBLOX deviation START: inline Pick<Config_GlobalConfig, "json" | "outputFile" | "testResultsProcessor"> as Luau doesn't support Pick type
 	{
 		json: boolean,
-		outputFile: Config_Path?,
-		-- testResultsProcessor: string?,
-	}
+		outputFile: Config_Path?		-- testResultsProcessor: string?,
+	
+}
 	-- ROBLOX deviation END
 	& {
 		-- ROBLOX deviation START: not supported
 		-- collectHandles: HandleCollectionResult?,
 		-- ROBLOX deviation END
-		onComplete: ((result: AggregatedResult) -> ())?,
-		-- ROBLOX deviation START: not supported
+		onComplete: ((result: AggregatedResult) -> ())?		-- ROBLOX deviation START: not supported
 		-- outputStream: NodeJS_WriteStream,
 		-- ROBLOX deviation END
-	}
+	
+}
 
 local function processResults(runResults: AggregatedResult, options: ProcessResultOptions)
 	return Promise.resolve():andThen(function()
@@ -214,25 +213,25 @@ local function runJest(ref: {
 	changedFilesPromise: ChangedFilesPromise?,
 	onComplete: (testResults: AggregatedResult) -> (),
 	failedTestsCache: FailedTestsCache?,
-	filter: Filter?,
+	filter: Filter?
 }): Promise<nil>
 	-- ROBLOX FIXME Stylua
 	-- stylua: ignore
-	local contexts, globalConfig, outputStream, testWatcher, jestHooks, startRun, _changedFilesPromise, onComplete, _failedTestsCache, filter =
+	local contexts, globalConfig, outputStream, testWatcher, startRun, _changedFilesPromise, onComplete, _failedTestsCache, filter ,jestHooks=
 		ref.contexts,
 		ref.globalConfig,
 		ref.outputStream,
 		ref.testWatcher,
-		-- ROBLOX deviation START: no JestHook support
-		nil,
 		-- if ref.jestHooks == nil then JestHook.new():getEmitter() else ref.jestHooks,
 		-- ROBLOX deviation END
-		ref.startRun,
+		
+
+ref.startRun,
 		ref.changedFilesPromise,
 		ref.onComplete,
-		ref.failedTestsCache,
-		ref.filter
-	return Promise.resolve():andThen(function()
+		ref.failedTestsCache,(		
+ref.filter
+)	return Promise.resolve():andThen(function()
 		-- Clear cache for required modules - there might be different resolutions
 		-- from Jest's config loading to running the tests
 
@@ -247,7 +246,7 @@ local function runJest(ref: {
 		-- if changedFilesPromise ~= nil and globalConfig.watch then
 		-- 	local repos = changedFilesPromise:expect().repos
 		-- 	local noSCM = Array.every(
-		-- 		Object.keys(repos) :: Array<any> --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof ChangedFiles['repos'] ]],
+		-- 		Object.keys(repos) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof ChangedFiles['repos'] ]]>,
 		-- 		function(scm)
 		-- 			return repos[scm].size == 0
 		-- 		end
@@ -326,18 +325,10 @@ local function runJest(ref: {
 
 		if not hasTests then
 			local noTestsFound = getNoTestsFoundMessage(testRunData, globalConfig)
-
 			local exitWith0 = noTestsFound.exitWith0
 			local noTestsFoundMessage = noTestsFound.message
 
-			if
-				globalConfig.passWithNoTests
-				-- ROBLOX deviation START: not supported
-				-- or globalConfig.findRelatedTests
-				-- or globalConfig.lastCommit
-				-- or globalConfig.onlyChanged
-				-- ROBLOX deviation END
-			then
+			if exitWith0 then
 				CustomConsole.new(outputStream, outputStream):log(noTestsFoundMessage)
 			else
 				CustomConsole.new(outputStream, outputStream):error(noTestsFoundMessage)
@@ -350,8 +341,7 @@ local function runJest(ref: {
 		end
 
 		-- ROBLOX deviation START: detectOpenHandles not supported
-		local collectHandles = nil
-
+		local collectHandles 
 		-- if globalConfig.detectOpenHandles then
 		-- 	collectHandles = collectNodeHandles()
 		-- end
@@ -391,7 +381,8 @@ local function runJest(ref: {
 		-- end
 		-- ROBLOX deviation END
 
-		local scheduler =
+		
+local scheduler =
 			createTestScheduler(globalConfig, Object.assign({}, { startRun = startRun }, testSchedulerContext)):expect()
 
 		local results = scheduler:scheduleTests(allTests, testWatcher):expect()

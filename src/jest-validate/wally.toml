@@ -1,0 +1,10 @@
+[package]
+name = "eyycheev/jest-validate"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"ChalkLua" = "eyycheev/chalk-lua@3.14.0-rbx.2"

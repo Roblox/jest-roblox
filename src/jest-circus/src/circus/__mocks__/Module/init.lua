@@ -15,17 +15,15 @@
 type CleanupFn = () -> any
 type Function = (...any) -> any
 
-type FIXME_ANALYZE = (ModuleScript) -> any
-
 local requiredModules: { [ModuleScript]: any } = {}
 local moduleCleanup: { [ModuleScript]: (() -> any)? } = {}
 local mocks: { [ModuleScript]: CleanupFn } = {}
 
 if _G.__NO_LOADMODULE__ then
-	warn("debug.loadmodule not enabled. Test plans relying on resetModules " .. "will not work properly.")
+	warn([[debug.loadmodule not enabled. Test plans relying on resetModules will not work properly.]])
 
 	return {
-		requireOverride = require :: FIXME_ANALYZE,
+		requireOverride = require,
 		resetModules = function()
 			-- Should we warn on calling this more than once?
 		end,
@@ -68,7 +66,7 @@ local function requireOverride(scriptInstance: ModuleScript): any
 	-- FIXME: an extra special hack that prevents us from frequently reloading
 	-- `jest-roblox`, and therefore dodges the expensive modules found in:
 	-- jest-roblox -> luau-polyfill@0.1.5 -> RegExp
-	if scriptInstance.Name == "RegExp" then
+	if scriptInstance.Name == "RegExp" or scriptInstance.Name == "luau-regexp" then
 		return require(scriptInstance) :: any
 	end
 
@@ -87,7 +85,7 @@ local function requireOverride(scriptInstance: ModuleScript): any
 		if moduleResult == nil then
 			error(
 				string.format(
-					"[Mock Error]: %s did not return a valid result\n" .. "\tmocks must return a non-nil value",
+'[Mock Error]: %s did not return a valid result\n\tmocks must return a non-nil value',
 					tostring(scriptInstance)
 				)
 			)
@@ -108,8 +106,8 @@ local function requireOverride(scriptInstance: ModuleScript): any
 		if moduleResult == nil then
 			error(
 				string.format(
-					"[Module Error]: %s did not return a valid result\n"
-						.. "\tModuleScripts must return a non-nil value",
+'[Module Error]: %s did not return a valid result\n\tModuleScripts must return a non-nil value'
+,
 					tostring(scriptInstance)
 				)
 			)

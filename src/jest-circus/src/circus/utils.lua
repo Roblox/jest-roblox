@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
@@ -16,9 +14,9 @@ type Array<T> = LuauPolyfill.Array<T>
 type Error = LuauPolyfill.Error
 type Promise<T> = LuauPolyfill.Promise<T>
 
-local Promise = require(Packages.Promise)
-
+local Promise = require(script.Parent.Parent.Parent:WaitForChild('promise'))
 -- ROBLOX deviation START: predefine variables
+
 local makeTestResults
 local getTestID
 local _getError
@@ -27,17 +25,17 @@ local invariant
 -- ROBLOX deviation END
 
 -- ROBLOX deviation START: add additional imports
-local RegExp = require(Packages.RegExp)
--- ROBLOX deviation END
+local RegExp = require(script.Parent.Parent.Parent:WaitForChild('luau-regexp'))-- ROBLOX deviation END
 
 -- ROBLOX deviation START: add function to extract bare string message from stacktrace line
+
 local function separateMessageFromStack(content: string): { message: string, stack: string }
 	if not content then
 		return { message = "", stack = "" }
 	end
 	local message = content
 	local stack = ""
-	local re = RegExp([=[^(\s*LoadedCode.*:\d+)?(: )?(.*)$]=])
+	local re = RegExp([=[^(\s*.*:\d+)?(: )?(.*)$]=])
 	local messageMatch = re:exec(content)
 	if messageMatch then
 		message = messageMatch[4]
@@ -54,13 +52,13 @@ type NodeJS_Timeout = LuauPolyfill.Timeout
 local exports = {}
 
 -- ROBLOX deviation START: not using path and co dependencies
--- local path = require(Packages.path)
--- local co = require(Packages.co).default
+-- local path = require("@pkg/@jsdotlua/path")
+-- local co = require("@pkg/co").default
 -- ROBLOX deviation END
 -- ROBLOX deviation: use dedent implementation from graphql-lua
-local dedent = require(Packages.RobloxShared).dedent
+local dedent = require(script.Parent.Parent.Parent:WaitForChild('jest-roblox-shared')).dedent
 -- ROBLOX deviation: generator functions are not supported in Lua
--- local isGeneratorFn = require(Packages["is-generator-fn"]).default
+-- local isGeneratorFn = require("@pkg/is-generator-fn").default
 --[[
 	ROBLOX deviation:
 	not using slash and stack-utils dependencies
@@ -68,10 +66,10 @@ local dedent = require(Packages.RobloxShared).dedent
 	import slash = require('slash');
 	import StackUtils = require('stack-utils');
 ]]
-local testResultModule = require(Packages.JestTestResult)
+local testResultModule = require(script.Parent.Parent.Parent:WaitForChild('jest-test-result'))
 type AssertionResult = testResultModule.AssertionResult
 type Status = testResultModule.Status
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Circus_BlockName = typesModule.Circus_BlockName
 type Circus_DescribeBlock = typesModule.Circus_DescribeBlock
 type Circus_BlockMode = typesModule.Circus_BlockMode
@@ -90,13 +88,13 @@ type Circus_RunResult = typesModule.Circus_RunResult
 type Global_PromiseReturningTestFn = typesModule.Global_PromiseReturningTestFn
 type Global_TestReturnValue = typesModule.Global_TestReturnValue
 type Global_GeneratorReturningTestFn = typesModule.Global_GeneratorReturningTestFn
-local jestUtilModule = require(Packages.JestUtil)
+local jestUtilModule = require(script.Parent.Parent.Parent:WaitForChild('jest-util'))
 local ErrorWithStack = jestUtilModule.ErrorWithStack
 local convertDescriptorToString = jestUtilModule.convertDescriptorToString
 local formatTime = jestUtilModule.formatTime
-local prettyFormat = require(Packages.PrettyFormat).format
+local prettyFormat = require(script.Parent.Parent.Parent:WaitForChild('pretty-format')).format
 -- ROBLOX deviation: move to `state_.lua` to avoid cyclic dependency
-local stateModule = require(script.Parent.state_)
+local stateModule = require(script.Parent:WaitForChild('state_'))
 local ROOT_DESCRIBE_BLOCK_NAME = stateModule.ROOT_DESCRIBE_BLOCK_NAME
 local getState = stateModule.getState
 
@@ -197,7 +195,7 @@ end
 
 type DescribeHooks = {
 	beforeAll: Array<Circus_Hook>,
-	afterAll: Array<Circus_Hook>,
+	afterAll: Array<Circus_Hook>
 }
 
 local function getAllHooksForDescribe(describe: Circus_DescribeBlock): DescribeHooks
@@ -219,7 +217,7 @@ exports.getAllHooksForDescribe = getAllHooksForDescribe
 
 type TestHooks = {
 	beforeEach: Array<Circus_Hook>,
-	afterEach: Array<Circus_Hook>,
+	afterEach: Array<Circus_Hook>
 }
 
 local function getEachHooksForTest(test: Circus_TestEntry): TestHooks
@@ -296,9 +294,9 @@ local function callAsyncCircusFn(
 		-- If this fn accepts `done` callback we return a promise that fulfills as
 		-- soon as `done` called.
 		if takesDoneCallback(fn) then
-			local returnedValue: unknown = nil
-
-			local function done(reason: (Error | string)?): ()
+			local returnedValue: unknown 
+			
+local function done(reason: (Error | string)?): ()
 				-- We need to keep a stack here before the promise tick
 				local errorAtDone = ErrorWithStack.new(nil, done)
 
@@ -465,8 +463,7 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 		parent = (parent :: Circus_TestEntry | Circus_DescribeBlock).parent
 	until parent == nil
 
-	local location = nil
-	-- ROBLOX TODO START: uncomment when implemented relevant pieces of stackUtils
+	local location 	-- ROBLOX TODO START: uncomment when implemented relevant pieces of stackUtils
 	-- if includeTestLocationInResult then
 	-- 	local stackLines = String.split(test.asyncError.stack, "\n")
 	-- 	local stackLine = stackLines[2]
@@ -488,7 +485,8 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 	-- end
 	-- ROBLOX TODO END
 
-	local errorsDetailed = Array.map(test.errors, _getError)
+	
+local errorsDetailed = Array.map(test.errors, _getError)
 
 	return {
 		duration = test.duration,

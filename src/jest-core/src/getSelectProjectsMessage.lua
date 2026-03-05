@@ -6,18 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 type Array<T> = LuauPolyfill.Array<T>
 
 local exports = {}
 
-local chalk = require(Packages.ChalkLua)
-local typesModule = require(Packages.JestTypes)
+local chalk = require(script.Parent.Parent:WaitForChild('chalk'))
+local typesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
-local getProjectDisplayName = require(script.Parent.getProjectDisplayName).default
+local getProjectDisplayName = require(script.Parent:WaitForChild('getProjectDisplayName')).default
 
 -- ROBLOX deviation START: predefine functions
 local getNoSelectionWarning
@@ -29,8 +28,8 @@ local function getSelectProjectsMessage(
 	projectConfigs: Array<Config_ProjectConfig>,
 	opts: {
 		ignoreProjects: Array<string> | nil,
-		selectProjects: Array<string> | nil,
-	}
+		selectProjects: Array<string> | nil	
+}
 ): string
 	-- ROBLOX deviation START: fix length check
 	-- if projectConfigs.length == 1 then
@@ -44,7 +43,7 @@ exports.default = getSelectProjectsMessage
 
 function getNoSelectionWarning(opts: {
 	ignoreProjects: Array<string> | nil,
-	selectProjects: Array<string> | nil,
+	selectProjects: Array<string> | nil
 }): string
 	if
 		Boolean.toJSBoolean(
@@ -52,14 +51,14 @@ function getNoSelectionWarning(opts: {
 		)
 	then
 		return chalk.yellow(
-			"You provided values for --selectProjects and --ignoreProjects, but no projects were found matching the selection.\n"
-				.. "Are you ignoring all the selected projects?\n"
-		)
+[[You provided values for --selectProjects and --ignoreProjects, but no projects were found matching the selection.
+Are you ignoring all the selected projects?
+]]		)
 	elseif Boolean.toJSBoolean(opts.ignoreProjects) then
 		return chalk.yellow(
-			"You provided values for --ignoreProjects, but no projects were found matching the selection.\n"
-				.. "Are you ignoring all projects?\n"
-		)
+[[You provided values for --ignoreProjects, but no projects were found matching the selection.
+Are you ignoring all projects?
+]]		)
 	elseif Boolean.toJSBoolean(opts.selectProjects) then
 		return chalk.yellow(
 			"You provided values for --selectProjects but no projects were found matching the selection.\n"

@@ -7,8 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 type Array<T> = LuauPolyfill.Array<T>
 type Error = LuauPolyfill.Error
 type Promise<T> = LuauPolyfill.Promise<T>
@@ -18,20 +17,20 @@ type void = nil
 
 -- ROBLOX deviation: no emittery available
 type Emittery<T> = any
-local environmentModule = require(Packages.JestEnvironment)
+local environmentModule = require(script.Parent.Parent:WaitForChild('jest-environment'))
 type JestEnvironment = environmentModule.JestEnvironment
-local test_resultModule = require(Packages.JestTestResult)
+local test_resultModule = require(script.Parent.Parent:WaitForChild('jest-test-result'))
 type SerializableError = test_resultModule.SerializableError
 type Context = test_resultModule.Context
 type Test = test_resultModule.Test
 type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 -- ROBLOX TODO:
--- local jest_runtimeModule = require(Packages.JestRuntime)
+-- local jest_runtimeModule = require("@pkg/@jsdotlua/jest-runtime")
 type RuntimeType = any -- jest_runtimeModule.default
 
 export type ErrorWithCode = Error & { code: string? }
@@ -55,7 +54,7 @@ export type TestRunnerOptions = { serial: boolean }
 -- make sure all props here are present in the type below it as well
 export type TestRunnerContext = {
 	changedFiles: Set<Config_Path>?,
-	sourcesRelatedToTestsInChangedFiles: Set<Config_Path>?,
+	sourcesRelatedToTestsInChangedFiles: Set<Config_Path>?
 }
 type SerializeSet<T> = any --[[ ROBLOX TODO: Unhandled node for type: TSConditionalType ]] --[[ T extends Set<infer U> ? Array<U> : T ]]
 export type TestRunnerSerializedContext = any --[[ ROBLOX TODO: Unhandled node for type: TSMappedType ]] --[[ {
@@ -73,7 +72,7 @@ export type CallbackTestRunnerInterface = {
 		onResult: OnTestSuccess,
 		onFailure: OnTestFailure,
 		options: TestRunnerOptions
-	) -> Promise<void>,
+	) -> Promise<void>
 }
 
 -- TODO: Should live in `@jest/core` or `jest-watcher`
@@ -82,6 +81,6 @@ export type TestWatcher = Emittery<{ change: WatcherState }> & {
 	state: WatcherState,
 	setState: (self: TestWatcher, state: WatcherState) -> (),
 	isInterrupted: (self: TestWatcher) -> boolean,
-	isWatchMode: (self: TestWatcher) -> boolean,
+	isWatchMode: (self: TestWatcher) -> boolean
 }
 return {}

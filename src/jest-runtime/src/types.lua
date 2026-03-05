@@ -7,17 +7,16 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 
 export type Context = {
-	config: Config_ProjectConfig,
-	-- ROBLOX deviation START: no supported
+	config: Config_ProjectConfig	-- ROBLOX deviation START: no supported
 	-- hasteFS: HasteFS,
 	-- moduleMap: ModuleMap,
 	-- resolver: Resolver,
 	-- ROBLOX deviation END
+
 }
 
 return {}

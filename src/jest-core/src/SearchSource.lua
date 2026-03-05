@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 -- ROBLOX deviation START: not needed
@@ -18,54 +17,49 @@ local Boolean = LuauPolyfill.Boolean
 type Array<T> = LuauPolyfill.Array<T>
 type Promise<T> = LuauPolyfill.Promise<T>
 type Set<T> = LuauPolyfill.Set<T>
-local Promise = require(Packages.Promise)
-local RegExp = require(Packages.RegExp)
+local Promise = require(script.Parent.Parent:WaitForChild('promise'))
+local RegExp = require(script.Parent.Parent:WaitForChild('luau-regexp'))
 
 local exports = {}
 
 -- ROBLOX deviation START: not needed
--- local os_ = require(Packages.os)
--- local path = require(Packages.path)
--- local micromatch = require(Packages.micromatch)
+-- local os_ = require("@pkg/os")
+-- local path = require("@pkg/@jsdotlua/path")
+-- local micromatch = require("@pkg/micromatch")
 -- ROBLOX deviation END
-local test_resultModule = require(Packages.JestTestResult)
+local test_resultModule = require(script.Parent.Parent:WaitForChild('jest-test-result'))
 type Test = test_resultModule.Test
-local jestTypesModule = require(Packages.JestTypes)
+local jestTypesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
 -- ROBLOX deviation START: not needed
--- local jest_changed_filesModule = require(Packages["jest-changed-files"])
+-- local jest_changed_filesModule = require("@pkg/jest-changed-files")
 -- type ChangedFiles = jest_changed_filesModule.ChangedFiles
 type ChangedFiles = nil
--- local replaceRootDirInPath = require(Packages["jest-config"]).replaceRootDirInPath
--- local escapePathForRegex = require(Packages["jest-regex-util"]).escapePathForRegex
--- local DependencyResolver = require(Packages["jest-resolve-dependencies"]).DependencyResolver
+-- local replaceRootDirInPath = require("@pkg/jest-config").replaceRootDirInPath
+-- local escapePathForRegex = require("@pkg/jest-regex-util").escapePathForRegex
+-- local DependencyResolver = require("@pkg/jest-resolve-dependencies").DependencyResolver
 -- ROBLOX deviation END
-local jest_runtimeModule = require(Packages.JestRuntime)
+local jest_runtimeModule = require(script.Parent.Parent:WaitForChild('jest-runtime'))
 type Context = jest_runtimeModule.Context
 -- ROBLOX deviation START: not needed
--- local buildSnapshotResolver = require(Packages.JestSnapshot).buildSnapshotResolver
+-- local buildSnapshotResolver = require("@pkg/@jsdotlua/jest-snapshot").buildSnapshotResolver
 -- ROBLOX deviation END
-local jest_utilModule = require(Packages.JestUtil)
+local jest_utilModule = require(script.Parent.Parent:WaitForChild('jest-util'))
 local globsToMatcher = jest_utilModule.globsToMatcher
 local testPathPatternToRegExp = jest_utilModule.testPathPatternToRegExp
-local typesModule = require(script.Parent.types)
+local typesModule = require(script.Parent:WaitForChild('types'))
 type Filter = typesModule.Filter
 type Stats = typesModule.Stats
 type TestPathCases = typesModule.TestPathCases
 
-local globalTypesModule = require(Packages.JestTypes)
+local globalTypesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_Path = globalTypesModule.Config_Path
 
 -- ROBLOX deviation START: custom implementation for getting all files
 type FileInfo = { path: Config_Path, script: ModuleScript }
 
-local getRelativePath = require(Packages.RobloxShared).getRelativePath
-
--- ROBLOX deviation START: additional function to construct file path from ModuleScript
-local getDataModelService = require(Packages.RobloxShared).getDataModelService
-local CoreScriptSyncService = getDataModelService("CoreScriptSyncService")
--- ROBLOX deviation END
+local getRelativePath = require(script.Parent.Parent:WaitForChild('jest-roblox-shared')).getRelativePath
 
 local function getAllFiles(context: Context): Array<FileInfo>
 	local descendants = context.config.rootDir:GetDescendants()
@@ -74,18 +68,7 @@ local function getAllFiles(context: Context): Array<FileInfo>
 			return descendant:isA("ModuleScript")
 		end),
 		function(script_: ModuleScript)
-			-- ROBLOX deviation: resolve to a FS path if CoreScriptSyncService is available
-			local path_ = nil
-			if CoreScriptSyncService then
-				path_ = CoreScriptSyncService:GetScriptFilePath(script_)
-			else
-				path_ = getRelativePath(script_, context.config.rootDir)
-			end
-			-- ROBLOX deviation END
-			return {
-				path = path_,
-				script = script_,
-			}
+			return { path = getRelativePath(script_, context.config.rootDir), script = script_ }
 		end
 	)
 end
@@ -98,7 +81,7 @@ export type SearchResult = {
 	-- collectCoverageFrom: Set<string>?,
 	-- ROBLOX deviation END
 	tests: Array<Test>,
-	total: number?,
+	total: number?
 }
 
 export type TestSelectionConfig = {
@@ -108,7 +91,7 @@ export type TestSelectionConfig = {
 	paths: Array<Config_Path>?,
 	shouldTreatInputAsPattern: boolean?,
 	testPathPattern: string?,
-	watch: boolean?,
+	watch: boolean?
 }
 
 local function regexToMatcher(testRegex: typeof((({} :: any) :: Config_ProjectConfig).testRegex))
@@ -181,13 +164,13 @@ export type SearchSource = {
 		globalConfig: Config_GlobalConfig,
 		changedFiles: ChangedFiles?,
 		filter: Filter?
-	) -> Promise<SearchResult>,
-	-- ROBLOX deviation START: not ported
+	) -> Promise<SearchResult>	-- ROBLOX deviation START: not ported
 	-- findRelatedSourcesFromTestsInChangedFiles: (
 	-- 	self: SearchSource,
 	-- 	changedFilesInfo: ChangedFiles
 	-- ) -> Promise<Array<string>>,
 	-- ROBLOX deviation END
+
 }
 
 type SearchSourcePrivate = {
@@ -237,17 +220,17 @@ type SearchSourcePrivate = {
 		globalConfig: Config_GlobalConfig,
 		changedFiles: ChangedFiles | nil,
 		filter: Filter?
-	) -> Promise<SearchResult>,
-	-- ROBLOX deviation START: not ported
+	) -> Promise<SearchResult>	-- ROBLOX deviation START: not ported
 	-- findRelatedSourcesFromTestsInChangedFiles: (
 	-- 	self: SearchSourcePrivate,
 	-- 	changedFilesInfo: ChangedFiles
 	-- ) -> Promise<Array<string>>,
 	-- ROBLOX deviation END
+
 }
 
 type SearchSource_statics = {
-	new: (context: Context) -> SearchSource,
+	new: (context: Context) -> SearchSource
 }
 
 local SearchSource = {} :: SearchSourcePrivate & SearchSource_statics;
@@ -276,22 +259,14 @@ function SearchSource.new(context: Context): SearchSource
 	-- ROBLOX deviation END
 
 	if #config.testMatch > 0 then
-		-- TODO LDP-145: remove optional file extension
-		for i, path in config.testMatch do
-			config.testMatch[i] = path .. "?(.lua|.luau)"
-		end
 		table.insert(self._testPathCases, { isMatch = globsToMatcher(config.testMatch), stat = "testMatch" })
 	end
 
 	if #config.testPathIgnorePatterns > 0 then
+		local testIgnorePatternsRegex = RegExp(Array.join(config.testPathIgnorePatterns, "|"))
 		table.insert(self._testPathCases, {
 			isMatch = function(path)
-				for _, p in config.testPathIgnorePatterns do
-					if RegExp(p):test(path) then
-						return false
-					end
-				end
-				return true
+				return not testIgnorePatternsRegex:test(path)
 			end,
 			stat = "testPathIgnorePatterns",
 		})

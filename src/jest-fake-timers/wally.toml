@@ -1,0 +1,11 @@
+[package]
+name = "eyycheev/jest-fake-timers"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"JestGetType" = "eyycheev/jest-get-type@3.14.0-rbx.2"
+"JestMock" = "eyycheev/jest-mock@3.14.0-rbx.2"

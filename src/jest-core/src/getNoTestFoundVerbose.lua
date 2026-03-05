@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Object = LuauPolyfill.Object
@@ -16,11 +15,11 @@ type Record<K, T> = { [K]: T }
 
 local exports = {}
 
-local chalk = require(Packages.ChalkLua)
-local jestTypesModule = require(Packages.JestTypes)
+local chalk = require(script.Parent.Parent:WaitForChild('chalk'))
+local jestTypesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
-local pluralize = require(script.Parent.pluralize).default
-local typesModule = require(script.Parent.types)
+local pluralize = require(script.Parent:WaitForChild('pluralize')).default
+local typesModule = require(script.Parent:WaitForChild('types'))
 type Stats = typesModule.Stats
 type TestRunData = typesModule.TestRunData
 
@@ -35,7 +34,7 @@ local function getNoTestFoundVerbose(
 		local statsMessage = Array.join(
 			Array.filter(
 				Array.map(
-					Object.keys(stats_) :: Array<any>, --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Stats ]]
+					Object.keys(stats_) :: Array<any --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof Stats ]]>,
 					function(key): string | nil
 						if key == "roots" and #config.roots == 1 then
 							return nil
@@ -63,11 +62,11 @@ local function getNoTestFoundVerbose(
 				pluralize("file", Boolean.toJSBoolean(testRun.matches.total) and testRun.matches.total or 0, "s")
 			) .. statsMessage
 			else ("No files found in %s.\n"):format(tostring(config.rootDir))
-				.. "Make sure Jest's configuration does not exclude this directory."
-				.. "\nTo set up Jest, make sure a package.json file exists.\n"
-				.. "Jest Documentation: "
-				.. "https://jestjs.io/docs/configuration"
-	end)
+				.. [[Make sure Jest's configuration does not exclude this directory.
+To set up Jest, make sure a package.json file exists.
+Jest Documentation: https://jestjs.io/docs/configuration]]	
+
+end)
 	local dataMessage
 	if globalConfig.runTestsByPath then
 		dataMessage = ("Files: %s"):format(Array.join(

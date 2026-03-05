@@ -6,18 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 
 local exports = {}
 
-local chalk = require(Packages.ChalkLua)
-local jestTypesModule = require(Packages.JestTypes)
+local chalk = require(script.Parent.Parent:WaitForChild('chalk'))
+local jestTypesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
-local pluralize = require(script.Parent.pluralize).default
-local typesModule = require(script.Parent.types)
+local pluralize = require(script.Parent:WaitForChild('pluralize')).default
+local typesModule = require(script.Parent:WaitForChild('types'))
 type TestRunData = typesModule.TestRunData
 
 local function getNoTestFound(

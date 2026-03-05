@@ -7,13 +7,10 @@
  ]]
 
 local exports = {}
-local CurrentModule = script.Parent
-local SrcModule = CurrentModule.Parent
-local Packages = SrcModule.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent.Parent.Parent:WaitForChild('luau-polyfill'))
 local console = LuauPolyfill.console
 
-local CircusModule = require(Packages.JestTypes)
+local CircusModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Circus_EventHandler = CircusModule.Circus_EventHandler
 
 local testEventHandler: Circus_EventHandler

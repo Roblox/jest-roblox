@@ -1,0 +1,12 @@
+[package]
+name = "eyycheev/jest"
+version = "3.10.0-stronk.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+authors = ["EYYCHEEV"]
+description = "Stronk fork of Roblox Jest package"
+repository = "https://github.com/EYYCHEEV/stronk-jest"
+
+[dependencies]
+JestCore = "jsdotlua/jest-core@3.10.0"

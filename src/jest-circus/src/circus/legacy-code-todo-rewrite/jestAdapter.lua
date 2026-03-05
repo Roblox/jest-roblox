@@ -6,28 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 type Promise<T> = LuauPolyfill.Promise<T>
-local Promise = require(Packages.Promise)
+local Promise = require(script.Parent.Parent.Parent.Parent:WaitForChild('promise'))
 
-local environmentModule = require(Packages.JestEnvironment)
+local environmentModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-environment'))
 type JestEnvironment = environmentModule.JestEnvironment
-local test_resultModule = require(Packages.JestTestResult)
+local test_resultModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-test-result'))
 type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
-local jest_runtimeModule = require(Packages.JestRuntime)
+local jest_runtimeModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-runtime'))
 type Runtime = jest_runtimeModule.Runtime
 -- ROBLOX TODO START: not implemented yet
--- local jest_snapshotModule = require(Packages.JestSnapshot)
+-- local jest_snapshotModule = require("@pkg/@jsdotlua/jest-snapshot")
 type SnapshotStateType = any -- jest_snapshotModule.SnapshotStateType
 -- ROBLOX TODO END
-local deepCyclicCopy = require(Packages.JestUtil).deepCyclicCopy
+local deepCyclicCopy = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-util')).deepCyclicCopy
 local FRAMEWORK_INITIALIZER = script.Parent.jestAdapterInit
 
 -- ROBLOX deviation START: predeclare variables

@@ -1,0 +1,22 @@
+[package]
+name = "eyycheev/jest-runner"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"Promise" = "jsdotlua/promise@3.5.2"
+"ChalkLua" = "eyycheev/chalk-lua@3.14.0-rbx.2"
+"JestTestResult" = "eyycheev/jest-test-result@3.14.0-rbx.2"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"
+"JestUtil" = "eyycheev/jest-util@3.14.0-rbx.2"
+"JestConsole" = "eyycheev/jest-console@3.14.0-rbx.2"
+"JestEnvironment" = "eyycheev/jest-environment@3.14.0-rbx.2"
+"JestMessageUtil" = "eyycheev/jest-message-util@3.14.0-rbx.2"
+"JestRuntime" = "eyycheev/jest-runtime@3.14.0-rbx.2"
+"JestCircus" = "eyycheev/jest-circus@3.14.0-rbx.2"
+"Throat" = "eyycheev/throat@3.14.0-rbx.2"
+"Emittery" = "eyycheev/emittery@3.14.0-rbx.2"
+"RobloxShared" = "eyycheev/roblox-shared@3.14.0-rbx.2"

@@ -6,15 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Object = LuauPolyfill.Object
 type Promise<T> = LuauPolyfill.Promise<T>
-local Promise = require(Packages.Promise)
+local Promise = require(script.Parent.Parent:WaitForChild('promise'))
 
 local exports = {}
 
-local emitteryModule = require(Packages.Emittery)
+local emitteryModule = require(script.Parent.Parent:WaitForChild('emittery'))
 local emittery = emitteryModule.default
 type emittery<EventData> = emitteryModule.Emittery
 
@@ -25,7 +24,7 @@ export type TestWatcher = emittery<{ change: State }> & {
 	setState: (self: TestWatcher, state: State) -> Promise<nil>,
 	isInterrupted: (self: TestWatcher) -> boolean,
 	isWatchMode: (self: TestWatcher) -> boolean,
-	_isWatchMode: boolean,
+	_isWatchMode: boolean
 }
 local TestWatcher = setmetatable({}, { __index = emittery })
 TestWatcher.__index = TestWatcher

@@ -1,6 +1,6 @@
 {
-    "name": "JestRunner",
-    "tree": {
-        "$path": "src"
-    }
+  "name": "jest-runner",
+  "tree": {
+    "$path": "src"
+  }
 }

@@ -1,0 +1,15 @@
+[package]
+name = "eyycheev/jest-each"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"ChalkLua" = "eyycheev/chalk-lua@3.14.0-rbx.2"
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"RegExp" = "jsdotlua/luau-regexp@0.2.1"
+"JestGetType" = "eyycheev/jest-get-type@3.14.0-rbx.2"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"
+"JestUtil" = "eyycheev/jest-util@3.14.0-rbx.2"
+"PrettyFormat" = "eyycheev/pretty-format@3.14.0-rbx.2"

@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Set = LuauPolyfill.Set
 local String = LuauPolyfill.String
@@ -20,17 +19,15 @@ local exports = {}
 --[[ eslint-disable local/ban-types-eventually ]]
 
 -- ROBLOX deviation START: not needed
--- local asyncHooks = require(Packages.async_hooks)
--- local promisify = require(Packages.util).promisify
+-- local asyncHooks = require("@pkg/async_hooks")
+-- local promisify = require("@pkg/util").promisify
 -- ROBLOX deviation END
-local RobloxShared = require(Packages.RobloxShared)
-local stripAnsi = RobloxShared.stripAnsi
-
-local typesModule = require(Packages.JestTypes)
+local stripAnsi = require(script.Parent:WaitForChild('jsHelpers'):WaitForChild('stripAnsi'))
+local typesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
-local formatExecError = require(Packages.JestMessageUtil).formatExecError
+local formatExecError = require(script.Parent.Parent:WaitForChild('jest-message-util')).formatExecError
 -- ROBLOX deviation START: collectHandles not ported
--- local ErrorWithStack = require(Packages.JestUtil).ErrorWithStack
+-- local ErrorWithStack = require("@pkg/@jsdotlua/jest-util").ErrorWithStack
 -- export type HandleCollectionResult = () -> Promise<Array<Error>>
 -- local function stackIsFromUser(stack: string)
 -- 	-- Either the test file, or something required by it

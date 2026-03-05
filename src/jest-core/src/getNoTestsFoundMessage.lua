@@ -6,24 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent:WaitForChild('luau-polyfill'))
 local Boolean = LuauPolyfill.Boolean
 
 local exports = {}
 
-local jestTypesModule = require(Packages.JestTypes)
+local jestTypesModule = require(script.Parent.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
-local getNoTestFound = require(script.Parent.getNoTestFound).default
+local getNoTestFound = require(script.Parent:WaitForChild('getNoTestFound')).default
 -- ROBLOX deviation START: not needed
--- local getNoTestFoundFailed = require(script.Parent.getNoTestFoundFailed).default
+-- local getNoTestFoundFailed = require("./getNoTestFoundFailed").default
 -- ROBLOX deviation END
-local getNoTestFoundPassWithNoTests = require(script.Parent.getNoTestFoundPassWithNoTests).default
+local getNoTestFoundPassWithNoTests = require(script.Parent:WaitForChild('getNoTestFoundPassWithNoTests')).default
 -- ROBLOX deviation START: not needed
--- local getNoTestFoundRelatedToChangedFiles = require(script.Parent.getNoTestFoundRelatedToChangedFiles).default
+-- local getNoTestFoundRelatedToChangedFiles = require("./getNoTestFoundRelatedToChangedFiles").default
 -- ROBLOX deviation END
-local getNoTestFoundVerbose = require(script.Parent.getNoTestFoundVerbose).default
-local typesModule = require(script.Parent.types)
+local getNoTestFoundVerbose = require(script.Parent:WaitForChild('getNoTestFoundVerbose')).default
+local typesModule = require(script.Parent:WaitForChild('types'))
 type TestRunData = typesModule.TestRunData
 
 local function getNoTestsFoundMessage(

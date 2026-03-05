@@ -1,0 +1,6 @@
+{
+  "name": "chalk-lua",
+  "tree": {
+    "$path": "src/"
+  }
+}

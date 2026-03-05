@@ -1,0 +1,13 @@
+[package]
+name = "eyycheev/jest-environment"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"JestFakeTimers" = "eyycheev/jest-fake-timers@3.14.0-rbx.2"
+"JestMock" = "eyycheev/jest-mock@3.14.0-rbx.2"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"
+"JestMockGenv" = "eyycheev/jest-mock-genv@3.14.0-rbx.2"

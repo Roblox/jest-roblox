@@ -1,0 +1,20 @@
+[package]
+name = "eyycheev/jest-reporters"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"ChalkLua" = "eyycheev/chalk-lua@3.14.0-rbx.2"
+"RegExp" = "jsdotlua/luau-regexp@0.2.1"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"
+"JestTestResult" = "eyycheev/jest-test-result@3.14.0-rbx.2"
+"JestMessageUtil" = "eyycheev/jest-message-util@3.14.0-rbx.2"
+"JestUtil" = "eyycheev/jest-util@3.14.0-rbx.2"
+"TestUtils" = "eyycheev/test-utils@3.14.0-rbx.2"
+"JestConsole" = "eyycheev/jest-console@3.14.0-rbx.2"
+"JestMock" = "eyycheev/jest-mock@3.14.0-rbx.2"
+"RobloxShared" = "eyycheev/roblox-shared@3.14.0-rbx.2"
+"Path" = "eyycheev/path@3.14.0-rbx.2"

@@ -1,0 +1,15 @@
+[package]
+name = "eyycheev/jest-util"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"Promise" = "jsdotlua/promise@3.5.2"
+"ChalkLua" = "eyycheev/chalk-lua@3.14.0-rbx.2"
+"RegExp" = "jsdotlua/luau-regexp@0.2.1"
+"Picomatch" = "jsdotlua/picomatch@0.4.0"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"
+"RobloxShared" = "eyycheev/roblox-shared@3.14.0-rbx.2"

@@ -1,0 +1,13 @@
+[package]
+name = "eyycheev/test-utils"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"PrettyFormat" = "eyycheev/pretty-format@3.14.0-rbx.2"
+"ChalkLua" = "eyycheev/chalk-lua@3.14.0-rbx.2"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"
+"JestEnvironmentLuau" = "eyycheev/jest-environment-luau@3.14.0-rbx.2"
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"

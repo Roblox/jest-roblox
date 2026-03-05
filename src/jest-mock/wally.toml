@@ -1,0 +1,12 @@
+[package]
+name = "eyycheev/jest-mock"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"JestMockGenv" = "eyycheev/jest-mock-genv@3.14.0-rbx.2"
+"JestMockRbx" = "eyycheev/jest-mock-rbx@3.14.0-rbx.2"
+"JestTypes" = "eyycheev/jest-types@3.14.0-rbx.2"

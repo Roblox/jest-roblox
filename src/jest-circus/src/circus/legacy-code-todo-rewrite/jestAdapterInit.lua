@@ -6,34 +6,33 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent.Parent.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Object = LuauPolyfill.Object
 type Array<T> = LuauPolyfill.Array<T>
 type Promise<T> = LuauPolyfill.Promise<T>
-local Promise = require(Packages.Promise)
-
+local Promise = require(script.Parent.Parent.Parent.Parent:WaitForChild('promise'))
 -- ROBLOX FIXME START: added types and objects that do not exist in Luau
+
 type NodeJS_Process = any
 -- ROBLOX FIXME END
 
 local exports = {}
 
-local throatModule = require(Packages.Throat)
+local throatModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('throat'))
 local throat = throatModule.default
 type ThroatLateBound<TResult, TArgs> = throatModule.ThroatLateBound<TResult, TArgs>
 
-local environmentModule = require(Packages.JestEnvironment)
+local environmentModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-environment'))
 type JestEnvironment = environmentModule.JestEnvironment
-local test_resultModule = require(Packages.JestTestResult)
+local test_resultModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-test-result'))
 type AssertionResult = test_resultModule.AssertionResult
 type Status = test_resultModule.Status
 type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
 local createEmptyTestResult = test_resultModule.createEmptyTestResult
-local typesModule = require(Packages.JestTypes)
+local typesModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Circus_Event = typesModule.Circus_Event
 type Circus_RunResult = typesModule.Circus_RunResult
 type Circus_TestEntry = typesModule.Circus_TestEntry
@@ -48,29 +47,29 @@ type Global_ItConcurrentBase = typesModule.Global_ItConcurrentBase
 type Global_ItConcurrent = typesModule.Global_ItConcurrent
 type Global_ItConcurrentExtended = typesModule.Global_ItConcurrentExtended
 -- ROBLOX deviation END
-local expectModule = require(Packages.Expect)
+local expectModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('expect'))
 local extractExpectedAssertionsErrors = expectModule.extractExpectedAssertionsErrors
 local getState = expectModule.getState
 local setState = expectModule.setState
-local bind = require(Packages.JestEach).bind
-local jest_message_utilModule = require(Packages.JestMessageUtil)
+local bind = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-each')).bind
+local jest_message_utilModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-message-util'))
 local formatExecError = jest_message_utilModule.formatExecError
 local formatResultsErrors = jest_message_utilModule.formatResultsErrors
-local jest_snapshotModule = require(Packages.JestSnapshot)
+local jest_snapshotModule = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-snapshot'))
 local SnapshotState = jest_snapshotModule.SnapshotState
 type SnapshotStateType = jest_snapshotModule.JestSnapshot_SnapshotStateType
 local addSerializer = jest_snapshotModule.addSerializer
 local buildSnapshotResolver = jest_snapshotModule.buildSnapshotResolver
 local globals = require(script.Parent.Parent).default
-local run = require(script.Parent.Parent.run).default
-local stateModule = require(script.Parent.Parent.state)
+local run = require(script.Parent.Parent:WaitForChild('run')).default
+local stateModule = require(script.Parent.Parent:WaitForChild('state'))
 local ROOT_DESCRIBE_BLOCK_NAME = stateModule.ROOT_DESCRIBE_BLOCK_NAME
 local addEventHandler = stateModule.addEventHandler
 local dispatch = stateModule.dispatch
 local getRunnerState = stateModule.getState
-local testCaseReportHandler = require(script.Parent.Parent.testCaseReportHandler).default
-local getTestID = require(script.Parent.Parent.utils).getTestID
-local jestExpectModule = require(script.Parent.jestExpect)
+local testCaseReportHandler = require(script.Parent.Parent:WaitForChild('testCaseReportHandler')).default
+local getTestID = require(script.Parent.Parent:WaitForChild('utils')).getTestID
+local jestExpectModule = require(script.Parent:WaitForChild('jestExpect'))
 local createExpect = jestExpectModule.default
 type Expect = jestExpectModule.Expect
 
@@ -79,7 +78,7 @@ type Process = NodeJS_Process
 type JestGlobals = Global_TestFrameworkGlobals & { expect: Expect, expectExtended: any }
 
 -- ROBLOX deviation START: additional deps
-local RobloxShared = require(Packages.RobloxShared)
+local RobloxShared = require(script.Parent.Parent.Parent.Parent:WaitForChild('jest-roblox-shared'))
 local getRelativePath = RobloxShared.getRelativePath
 -- ROBLOX deviation END
 
@@ -102,8 +101,8 @@ local function initialize(
 		-- ROBLOX deviation END
 		parentProcess: Process,
 		sendMessageToJest: TestFileEvent?,
-		setGlobalsForRuntime: (globals: JestGlobals) -> (),
-	}
+		setGlobalsForRuntime: (globals: JestGlobals) -> ()	
+}
 ): Promise<{ globals: Global_TestFrameworkGlobals, snapshotState: SnapshotStateType }>
 	local config, environment, globalConfig, localRequire, parentProcess, sendMessageToJest, setGlobalsForRuntime, testPath =
 		ref.config,
@@ -264,7 +263,7 @@ exports.initialize = initialize
 local function runAndTransformResultsToJestFormat(ref: {
 	config: Config_ProjectConfig,
 	globalConfig: Config_GlobalConfig,
-	testPath: string,
+	testPath: string
 }): Promise<TestResult>
 	local config, globalConfig, testPath = ref.config, ref.globalConfig, ref.testPath
 

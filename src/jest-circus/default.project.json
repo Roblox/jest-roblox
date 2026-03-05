@@ -1,6 +1,6 @@
 {
-    "name": "JestCircus",
-    "tree": {
-        "$path": "src"
-    }
+  "name": "jest-circus",
+  "tree": {
+    "$path": "src"
+  }
 }

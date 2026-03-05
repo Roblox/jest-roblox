@@ -6,15 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent.Parent.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local instanceof = LuauPolyfill.instanceof
 
 -- ROBLOX deviation START: additional dependencies
-local RobloxShared = require(Packages.RobloxShared)
+local RobloxShared = require(script.Parent.Parent.Parent:WaitForChild('jest-roblox-shared'))
 local escapePatternCharacters = RobloxShared.escapePatternCharacters
 local normalizePromiseError = RobloxShared.normalizePromiseError
 local Error = LuauPolyfill.Error
@@ -26,17 +24,17 @@ type Record<K, T> = { [K]: T }
 local exports = {}
 local AssertionError = LuauPolyfill.AssertionError
 type AssertionError = LuauPolyfill.AssertionError
-local chalk = require(Packages.ChalkLua)
-local typesModule = require(Packages.JestTypes)
+local chalk = require(script.Parent.Parent.Parent:WaitForChild('chalk'))
+local typesModule = require(script.Parent.Parent.Parent:WaitForChild('jest-types'))
 type Circus_Event = typesModule.Circus_Event
 type Circus_State = typesModule.Circus_State
 type Circus_TestError = typesModule.Circus_TestError
-local jestMatcherUtilsModule = require(Packages.JestMatcherUtils)
+local jestMatcherUtilsModule = require(script.Parent.Parent.Parent:WaitForChild('jest-matcher-utils'))
 type DiffOptions = jestMatcherUtilsModule.DiffOptions
 local diff = jestMatcherUtilsModule.diff
 local printExpected = jestMatcherUtilsModule.printExpected
 local printReceived = jestMatcherUtilsModule.printReceived
-local prettyFormat = require(Packages.PrettyFormat).format
+local prettyFormat = require(script.Parent.Parent.Parent:WaitForChild('pretty-format')).format
 
 -- ROBLOX deviation START: predefine variables
 local formatNodeAssertErrors

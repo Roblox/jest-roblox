@@ -1,6 +1,6 @@
 {
-    "name": "JestCore",
-    "tree": {
-        "$path": "src"
-    }
+  "name": "jest-core",
+  "tree": {
+    "$path": "src"
+  }
 }

@@ -1,0 +1,11 @@
+[package]
+name = "eyycheev/roblox-shared"
+version = "3.14.0-rbx.2"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+
+[dependencies]
+"JestGetType" = "eyycheev/jest-get-type@3.14.0-rbx.2"
+"LuauPolyfill" = "jsdotlua/luau-polyfill@1.2.7"
+"JestMock" = "eyycheev/jest-mock@3.14.0-rbx.2"

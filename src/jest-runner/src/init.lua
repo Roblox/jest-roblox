@@ -7,8 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local Packages = script.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
+local LuauPolyfill = require(script.Parent:WaitForChild('luau-polyfill'))
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
@@ -19,40 +18,45 @@ type Error = LuauPolyfill.Error
 type Map<T, U> = LuauPolyfill.Map<T, U>
 type Promise<T> = LuauPolyfill.Promise<T>
 
-local Promise = require(Packages.Promise)
+local Promise = require(script.Parent:WaitForChild('promise'))
+-- ROBLOX deviation START: additional function to construct file path from ModuleScript
+
+local getDataModelService = require(script.Parent:WaitForChild('jest-roblox-shared')).getDataModelService
+local CoreScriptSyncService = getDataModelService("CoreScriptSyncService")
+-- ROBLOX deviation END
 
 local exports = {}
 
 -- ROBLOX deviation: chalk used only in parallel tests
--- local chalk = require(Packages.ChalkLua)
-local emitteryModule = require(Packages.Emittery)
+-- local chalk = require("@pkg/@jsdotlua/chalk")
+local emitteryModule = require(script.Parent:WaitForChild('emittery'))
 local Emittery = emitteryModule.default
 type Emittery = emitteryModule.Emittery
 type Emittery_UnsubscribeFn = emitteryModule.Emittery_UnsubscribeFn
 
 -- ROBLOX deviation: exit used only in parallel tests
--- local exit = require(Packages.exit)
-local throatModule = require(Packages.Throat)
+-- local exit = require("@pkg/exit")
+local throatModule = require(script.Parent:WaitForChild('throat'))
 local throat = throatModule.default
 type ThroatLateBound<TResult, TArgs> = throatModule.ThroatLateBound<TResult, TArgs>
-local test_resultModule = require(Packages.JestTestResult)
+local test_resultModule = require(script.Parent:WaitForChild('jest-test-result'))
 type SerializableError = test_resultModule.SerializableError
 type Context = test_resultModule.Context
 export type Test = test_resultModule.Test
 export type TestEvents = test_resultModule.TestEvents
 export type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
-local jestTypesModule = require(Packages.JestTypes)
+local jestTypesModule = require(script.Parent:WaitForChild('jest-types'))
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
-local deepCyclicCopy = require(Packages.JestUtil).deepCyclicCopy
+local deepCyclicCopy = require(script.Parent:WaitForChild('jest-util')).deepCyclicCopy
 -- ROBLOX deviation START: Worker not used yet
--- local jest_workerModule = require(Packages.JestWorker)
+-- local jest_workerModule = require("@pkg/JestWorker")
 -- local PromiseWithCustomMessage = jest_workerModule.PromiseWithCustomMessage
 -- local Worker = jest_workerModule.Worker
 -- ROBLOX deviation END
-local runTest = require(script.runTest).default
+local runTest = require(script:WaitForChild('runTest')).default
 -- ROBLOX deviation START: Worker not used yet
--- local testWorkerModule = require(script.testWorker)
+-- local testWorkerModule = require("./testWorker")
 -- type SerializableResolver = testWorkerModule.SerializableResolver
 -- type worker = testWorkerModule.worker
 -- ROBLOX deviation END
@@ -70,7 +74,7 @@ local runTest = require(script.runTest).default
 -- type WorkerInterface = Worker & { worker: typeof(worker) }
 -- ROBLOX deviation END
 
-local typesModule = require(script.types)
+local typesModule = require(script:WaitForChild('types'))
 export type OnTestFailure = typesModule.OnTestFailure
 export type OnTestStart = typesModule.OnTestStart
 export type OnTestSuccess = typesModule.OnTestSuccess
@@ -129,7 +133,7 @@ export type TestRunner = {
 		onStart: OnTestStart?,
 		onResult: OnTestSuccess?,
 		onFailure: OnTestFailure?
-	) -> Promise<nil>,
+	) -> Promise<nil>
 }
 
 local TestRunner = {} :: TestRunner;
@@ -175,6 +179,9 @@ function TestRunner:_createInBandTestRun(
 		-- process.env.JEST_WORKER_ID = "1"
 		local mutex = throat(1) :: ThroatLateBound<nil, nil>
 		return Array.reduce(tests, function(promise: Promise<nil>, test: Test)
+			if CoreScriptSyncService then
+				test.path = CoreScriptSyncService:GetScriptFilePath(test.script)
+			end
 			return mutex(function()
 				-- ROBLOX FIXME START: Promise type doesn't support changing return type with :andThen call
 				return (promise :: Promise<any>)
@@ -394,11 +401,11 @@ end
 
 function TestRunner:on<Name>(
 	eventName: Name,
-	listener: (
+	listener: ((
 		eventData: any
 		--[[ ROBLOX TODO: Unhandled node for type: TSIndexedAccessType ]]
 		--[[ TestEvents[Name] ]]
-	) -> () | Promise<nil>
+	) -> () )| Promise<nil>
 ): Emittery_UnsubscribeFn
 	return self.eventEmitter:on(eventName, listener)
 end
