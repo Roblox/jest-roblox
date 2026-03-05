@@ -1,9 +1,10 @@
 [package]
 name = "eyycheev/stronk-jest-globals"
-version = "3.10.0-stronk.2"
+version = "3.10.0-stronk.3"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
 
 [dependencies]
-"JestGlobalsUpstream" = "jsdotlua/jest-globals@3.10.0"
+Expect = "jsdotlua/expect@3.10.0"
+JestCircus = "eyycheev/jest-circus@3.10.0-stronk.3"
