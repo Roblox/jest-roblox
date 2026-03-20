@@ -45,6 +45,7 @@ local TypeError = Error
 local _typesModule = require(script._types)
 export type Jest = _typesModule.Jest
 type MockFactory = _typesModule.MockFactory
+local resolveInstancePath = require(script.resolveInstancePath)
 
 local jestExpectModule = require(Packages.Expect)
 type Expect = jestExpectModule.Expect
@@ -1916,6 +1917,11 @@ function Runtime_private:_execModule(
 		dmGame = gameProxy.spy
 	end
 
+	local nativeRequire = defaultEnvironment.require
+	if nativeRequire and not self._nativeRequire then
+		self._nativeRequire = nativeRequire
+	end
+
 	-- This is the 'least mocked' environment that scripts will be able to see.
 	-- The final function environment inherits from this sandbox.
 	-- This is separate so that, in the future, `globalEnv` could expose these
@@ -1938,17 +1944,21 @@ function Runtime_private:_execModule(
 		require = if isInternal
 			then function(scriptInstance: ModuleScript | string)
 				if typeof(scriptInstance) == "string" then
-					-- Disabling this at the surface level of the API until we have
-					-- deeper support in Jest.
-					error("Require-by-string is not enabled for use inside Jest at this time.")
+					local resolved = resolveInstancePath(dmScript, scriptInstance)
+					if resolved == nil then
+						return nativeRequire(scriptInstance)
+					end
+					scriptInstance = resolved
 				end
 				return self:requireInternalModule(scriptInstance)
 			end
 			else function(scriptInstance: ModuleScript | string)
 				if typeof(scriptInstance) == "string" then
-					-- Disabling this at the surface level of the API until we have
-					-- deeper support in Jest.
-					error("Require-by-string is not enabled for use inside Jest at this time.")
+					local resolved = resolveInstancePath(dmScript, scriptInstance)
+					if resolved == nil then
+						return nativeRequire(scriptInstance)
+					end
+					scriptInstance = resolved
 				end
 				return self:requireModuleOrMock(scriptInstance)
 			end,
@@ -2383,8 +2393,16 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 	-- 	return jestObject
 	-- end
 	-- ROBLOX deviation END
-	-- ROBLOX deviation START: using ModuleScript instead of string
-	local function unmock(moduleName: ModuleScript)
+	-- ROBLOX deviation START: using ModuleScript | string
+	local function unmock(moduleName: ModuleScript | string)
+		if typeof(moduleName) == "string" then
+			local callerScript = getfenv(2).script or from
+			local resolved = resolveInstancePath(callerScript, moduleName)
+			if resolved == nil then
+				error(`cannot unmock non-Instance path "{moduleName}"`)
+			end
+			moduleName = resolved
+		end
 		-- ROBLOX deviation END
 		-- ROBLOX deviation START: using module script instead of string moduleName
 		-- local moduleID =
@@ -2403,10 +2421,18 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 	-- 	return jestObject
 	-- end
 	-- ROBLOX deviation END
-	-- ROBLOX deviation START: using ModuleScript instead of string
+	-- ROBLOX deviation START: using ModuleScript | string
 	-- local mock: typeof((({} :: any) :: Jest).mock)
 	-- function mock(moduleName, mockFactory, options)
-	local function mock(moduleName: ModuleScript, mockFactory, options)
+	local function mock(moduleName: ModuleScript | string, mockFactory, options)
+		if typeof(moduleName) == "string" then
+			local callerScript = getfenv(2).script or from
+			local resolved = resolveInstancePath(callerScript, moduleName)
+			if resolved == nil then
+				error(`cannot mock non-Instance path "{moduleName}"`)
+			end
+			moduleName = resolved
+		end
 		-- ROBLOX deviation END
 		if mockFactory ~= nil then
 			return setMockFactory(moduleName, mockFactory, options)
@@ -2598,9 +2624,12 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 		-- requireActual = self.requireActual:bind(self, from),
 		requireActual = function(moduleName: ModuleScript | string)
 			if typeof(moduleName) == "string" then
-				-- Disabling this at the surface level of the API until we have
-				-- deeper support in Jest.
-				error("Require-by-string is not enabled for use inside Jest at this time.")
+				local callerScript = getfenv(2).script or from
+				local resolved = resolveInstancePath(callerScript, moduleName)
+				if resolved == nil then
+					return self._nativeRequire(moduleName)
+				end
+				moduleName = resolved
 			end
 			return self:requireActual(from, moduleName)
 		end,
