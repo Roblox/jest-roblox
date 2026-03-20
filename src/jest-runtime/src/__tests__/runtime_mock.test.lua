@@ -34,6 +34,11 @@ describe("Runtime", function()
 			local mockMeModule = require(mockMeScript)
 			expect(mockMeModule.mocked).toBe(true)
 		end)
+
+		it("returns mock when requiring a mocked Instance via string path", function()
+			local result = (require :: any)("./mock_me")
+			expect(result.mocked).toBe(true)
+		end)
 		-- ROBLOX deviation END
 		it("uses explicitly set mocks instead of automocking", function()
 			return Promise.resolve():andThen(function()
@@ -138,6 +143,53 @@ describe("Runtime", function()
 		end)
 	end)
 	-- ROBLOX deviation END
+	describe("jest.mock with string path", function()
+		it("mocks a module using string path resolution", function()
+			return Promise.resolve():andThen(function()
+				local runtime = createRuntime(__filename, JestConfig.projectDefaults):expect()
+				local root = runtime:requireModule(runtime.__mockRootPath, rootJsPath)
+
+				root.jest.mock("./mock_me", function()
+					return { mocked = true }
+				end)
+
+				expect(runtime:requireModuleOrMock(mockMeScript).mocked).toBe(true)
+			end)
+		end)
+
+		it("throws when trying to mock @std paths", function()
+			return Promise.resolve():andThen(function()
+				local runtime = createRuntime(__filename, JestConfig.projectDefaults):expect()
+				local root = runtime:requireModule(runtime.__mockRootPath, rootJsPath)
+
+				expect(function()
+					root.jest.mock("@std/foo", function()
+						return {}
+					end)
+				end).toThrow("cannot mock")
+			end)
+		end)
+	end)
+
+	describe("jest.unmock with string path", function()
+		it("unmocks a module using string path resolution", function()
+			return Promise.resolve():andThen(function()
+				local runtime = createRuntime(__filename, JestConfig.projectDefaults):expect()
+				local root = runtime:requireModule(runtime.__mockRootPath, rootJsPath)
+
+				root.jest.mock(mockMeScript, function()
+					return { mocked = true }
+				end)
+				expect(runtime:requireModuleOrMock(mockMeScript).mocked).toBe(true)
+
+				root.jest.unmock("./mock_me")
+				local restored = runtime:requireModuleOrMock(mockMeScript)
+				expect(restored.mocked).toBe(false)
+				expect(restored.actual).toBe(true)
+			end)
+		end)
+	end)
+
 	describe("jest.setMock", function()
 		it("uses explicitly set mocks instead of automocking", function()
 			return Promise.resolve():andThen(function()
