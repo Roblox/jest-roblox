@@ -131,15 +131,15 @@ export type Jest = {
 	* the top of the code block. Use this method if you want to explicitly avoid
 	* this behavior.
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	doMock: (moduleName: ModuleScript, moduleFactory: (() -> any)?) -> Jest,
+	-- ROBLOX deviation: using ModuleScript | string
+	doMock: (moduleName: ModuleScript | string, moduleFactory: (() -> any)?) -> Jest,
 	--[[*
 	* Indicates that the module system should never return a mocked version
 	* of the specified module from require() (e.g. that it should always return
 	* the real module).
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	dontMock: (moduleName: ModuleScript) -> Jest,
+	-- ROBLOX deviation: using ModuleScript | string
+	dontMock: (moduleName: ModuleScript | string) -> Jest,
 	--[[*
 	* Enables automatic mocking in the module loader.
 	]]
@@ -183,8 +183,8 @@ export type Jest = {
 	--[[*
 	* Mocks a module with an auto-mocked version when it is being required.
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	mock: (moduleName: ModuleScript, moduleFactory: (() -> any)?, options: { virtual: boolean? }?) -> Jest,
+	-- ROBLOX deviation: using ModuleScript | string
+	mock: (moduleName: ModuleScript | string, moduleFactory: (() -> any)?, options: { virtual: boolean? }?) -> Jest,
 	--[[*
 	* Mocks a module with the provided module factory when it is being imported.
 	]]
@@ -214,14 +214,14 @@ export type Jest = {
 	  getRandom(); // Always returns 10
 	 ```
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	requireActual: (moduleName: ModuleScript) -> any,
+	-- ROBLOX deviation: using ModuleScript | string
+	requireActual: (moduleName: ModuleScript | string) -> any,
 	--[[*
 	* Returns a mock module instead of the actual module, bypassing all checks
 	* on whether the module should be required normally or not.
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	requireMock: (moduleName: ModuleScript) -> any,
+	-- ROBLOX deviation: using ModuleScript | string
+	requireMock: (moduleName: ModuleScript | string) -> any,
 	--[[*
 	* Resets the state of all mocks.
 	* Equivalent to calling .mockReset() on every mocked function.
@@ -288,8 +288,8 @@ export type Jest = {
 	* API's second argument is a module factory instead of the expected
 	* exported module object.
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	setMock: (moduleName: ModuleScript, moduleExports: any) -> Jest,
+	-- ROBLOX deviation: using ModuleScript | string
+	setMock: (moduleName: ModuleScript | string, moduleExports: any) -> Jest,
 	--[[*
 	* Set the default timeout interval for tests and before/after hooks in
 	* milliseconds.
@@ -312,8 +312,8 @@ export type Jest = {
 	* the specified module from require() (e.g. that it should always return the
 	* real module).
 	]]
-	-- ROBLOX deviation: using ModuleScript instead of string
-	unmock: (moduleName: ModuleScript) -> Jest,
+	-- ROBLOX deviation: using ModuleScript | string
+	unmock: (moduleName: ModuleScript | string) -> Jest,
 	--[[*
 	* Instructs Jest to use fake versions of the standard timer functions.
 	]]
