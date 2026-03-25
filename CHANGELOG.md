@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+## 3.15.0 (2026-03-24)
+
 * :hammer_and_wrench: Use rocale-cli for running OCALE tests ([#469](https://github.com/Roblox/jest-roblox-internal/pull/469))
 * :sparkles: Require-by-string is now supported by Jest, including carveouts for
  `@std` and `@rbx` that pass through to native libraries ([#469](https://github.com/Roblox/jest-roblox-internal/pull/470))
