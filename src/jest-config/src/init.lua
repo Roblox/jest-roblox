@@ -228,6 +228,7 @@ function groupOptions(options: Config_ProjectConfig & Config_GlobalConfig): {
 					silent = options.silent,
 					skipFilter = options.skipFilter,
 					snapshotFormat = options.snapshotFormat,
+					stackDepth = options.stackDepth,
 					testFailureExitCode = options.testFailureExitCode,
 					testNamePattern = options.testNamePattern,
 					testPathPattern = options.testPathPattern,
