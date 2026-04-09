@@ -50,6 +50,7 @@ local DEFAULT_GLOBAL_CONFIG: Config_GlobalConfig = {
 	maxWorkers = 2,
 	noSCM = Object.None,
 	noStackTrace = false,
+	stackDepth = 0,
 	nonFlagArgs = {},
 	notify = false,
 	notifyMode = "failure-change",
