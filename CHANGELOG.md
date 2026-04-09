@@ -2,7 +2,11 @@
 
 ## Unreleased Changes
 
-## 3.16.0 (2026-03-24)
+## 3.16.1 (2026-04-9)
+
+* :bug: Ensures `stackDepth` is properly passed through to configuration. ([#474](https://github.com/Roblox/jest-roblox-internal/pull/474))
+
+## 3.16.0 (2026-04-9)
 
 * :sparkles: Added `stackDepth` configuration option to optionally limit the number of call frames printed on test failures. ([#472](https://github.com/Roblox/jest-roblox-internal/pull/472))
 
