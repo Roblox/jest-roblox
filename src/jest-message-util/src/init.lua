@@ -48,7 +48,7 @@ export type StackTraceConfig = {
 	testMatch: Array<string>,
 }
 
-export type StackTraceOptions = { noStackTrace: boolean, noCodeFrame: boolean? }
+export type StackTraceOptions = { noStackTrace: boolean, noCodeFrame: boolean?, stackDepth: number? }
 
 --[[
 	ROBLOX deviation: rewrote regex patterns and split up patterns for alternations
@@ -285,7 +285,13 @@ function getStackTraceLines(stack: string, options: StackTraceOptions): { string
 	if options == nil then
 		options = { noCodeFrame = false, noStackTrace = false }
 	end
-	return removeInternalStackEntries(string.split(stack, "\n"), options)
+	local lines = removeInternalStackEntries(string.split(stack, "\n"), options)
+	if options.stackDepth and options.stackDepth > 0 and #lines > options.stackDepth then
+		local truncated = table.move(lines, 1, options.stackDepth, 1, {})
+		table.insert(truncated, ("      ... %d more lines truncated"):format(#lines - options.stackDepth))
+		return truncated
+	end
+	return lines
 end
 exports.getStackTraceLines = getStackTraceLines
 

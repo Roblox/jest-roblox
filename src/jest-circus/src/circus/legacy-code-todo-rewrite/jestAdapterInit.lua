@@ -318,7 +318,7 @@ local function runAndTransformResultsToJestFormat(ref: {
 			assertionResults,
 			config,
 			-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
-			(globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean? },
+			(globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean?, stackDepth: number? },
 			testPath
 		)
 		local testExecError
@@ -335,8 +335,10 @@ local function runAndTransformResultsToJestFormat(ref: {
 						return formatExecError(
 							err,
 							config,
-							-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
-							(globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean? }
+								-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
+							(
+									globalConfig :: any
+								) :: { noStackTrace: boolean, noCodeFrame: boolean?, stackDepth: number? }
 						)
 					end),
 					"\n"

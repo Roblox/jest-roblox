@@ -212,7 +212,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 					testResult.testExecError,
 					test.context.config,
 					-- ROBLOX FIXME Luau: Config_GlobalConfig contains noStackTrace and noCodeFrame is optional in StackTraceOptions so it should be fine
-					(self._globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean? },
+					(self._globalConfig :: any) :: { noStackTrace: boolean, noCodeFrame: boolean?, stackDepth: number? },
 					test.path
 				)
 				addResult(aggregatedResults, testResult)

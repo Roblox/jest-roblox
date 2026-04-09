@@ -214,6 +214,7 @@ export type DefaultOptions = {
 	-- ROBLOX deviation: mock data model
 	mockDataModel: boolean,
 	noStackTrace: boolean,
+	stackDepth: number,
 	-- ROBLOX deviation START: not supported
 	-- notify: boolean,
 	-- notifyMode: NotifyMode,
@@ -432,6 +433,7 @@ export type InitialOptions = {
 	-- ROBLOX deviation: mock data model
 	mockDataModel: boolean?,
 	noStackTrace: boolean?,
+	stackDepth: number?,
 	-- ROBLOX deviation START: not supported
 	-- notify: boolean?,
 	-- notifyMode: string?,
@@ -585,6 +587,7 @@ export type GlobalConfig = {
 	maxConcurrency: number,
 	maxWorkers: number,
 	noStackTrace: boolean,
+	stackDepth: number,
 	nonFlagArgs: Array<string>,
 	-- ROBLOX deviation START: not supported
 	-- noSCM: boolean?,
@@ -789,6 +792,7 @@ export type Argv = Arguments<{
 	-- modulePaths: Array<string>?,
 	-- ROBLOX deviation END
 	noStackTrace: boolean?,
+	stackDepth: number?,
 	-- ROBLOX deviation START: not supported
 	-- notify: boolean?,
 	-- notifyMode: string?,
