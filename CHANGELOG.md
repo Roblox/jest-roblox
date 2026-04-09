@@ -2,6 +2,10 @@
 
 ## Unreleased Changes
 
+## 3.16.0 (2026-03-24)
+
+* :sparkles: Added `stackDepth` configuration option to optionally limit the number of call frames printed on test failures. ([#472](https://github.com/Roblox/jest-roblox-internal/pull/472))
+
 ## 3.15.0 (2026-03-24)
 
 * :hammer_and_wrench: Use rocale-cli for running OCALE tests ([#469](https://github.com/Roblox/jest-roblox-internal/pull/469))
