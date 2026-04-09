@@ -63,6 +63,7 @@ local getConsoleOutput = function(buffer: ConsoleBuffer, config: StackTraceConfi
 		local options = {
 			noStackTrace = noStackTrace,
 			noCodeFrame = noCodeFrame,
+			stackDepth = globalConfig.stackDepth,
 		}
 
 		local formattedStackTrace = formatStackTrace(origin, config, options)
