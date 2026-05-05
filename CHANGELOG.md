@@ -2,6 +2,10 @@
 
 ## Unreleased Changes
 
+## 3.17.0 (2026-05-05)
+
+* :sparkles: Exposed the `jest.retryTimes()` API for per-test retries ([#477](https://github.com/Roblox/jest-roblox-internal/pull/477))
+
 ## 3.16.1 (2026-04-9)
 
 * :bug: Ensures `stackDepth` is properly passed through to configuration. ([#474](https://github.com/Roblox/jest-roblox-internal/pull/474))
