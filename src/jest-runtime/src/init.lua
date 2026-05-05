@@ -12,6 +12,7 @@ local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
 local Map = LuauPolyfill.Map
 local Object = LuauPolyfill.Object
+local Symbol = LuauPolyfill.Symbol
 type Array<T> = LuauPolyfill.Array<T>
 type Map<T, U> = LuauPolyfill.Map<T, U>
 type Promise<T> = LuauPolyfill.Promise<T>
@@ -135,7 +136,7 @@ type ModuleRegistry = Map<ModuleScript, InitialModule | Module>
 -- 	)[1]) --[[ ROBLOX CHECK: Resulting type may differ ]] --[[ Upstream: Parameters<typeof require.resolve>[1] ]]
 -- 	& { JEST_RESOLVE_OUTSIDE_VM_OPTION: (true)? }
 -- local testTimeoutSymbol = Symbol:for_("TEST_TIMEOUT_SYMBOL")
--- local retryTimesSymbol = Symbol:for_("RETRY_TIMES")
+local retryTimesSymbol = Symbol.for_("RETRY_TIMES")
 -- local NODE_MODULES = tostring(path.sep) .. "node_modules" .. tostring(path.sep)
 -- local function getModuleNameMapper(config: Config_ProjectConfig)
 -- 	if
@@ -1632,6 +1633,11 @@ function Runtime_private:clearAllMocks(): ()
 	self._moduleMocker:clearAllMocks()
 end
 function Runtime_private:teardown(): ()
+	-- ROBLOX deviation START: circus reads retryTimes from shared _G, so clear it
+	-- during runtime teardown to keep jest.retryTimes() scoped to one test file.
+	_G[retryTimesSymbol] = nil
+	-- ROBLOX deviation END
+
 	-- ROBLOX deviation: mocking globals
 	self._moduleMocker:unmockGlobals(self._globalMocker)
 	self:restoreAllMocks()
@@ -2551,11 +2557,10 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 	-- 	end
 	-- 	return jestObject
 	-- end
-	-- local function retryTimes(numTestRetries: number)
-	-- 	-- @ts-expect-error: https://github.com/Microsoft/TypeScript/issues/24587
-	-- 	self._environment.global[tostring(retryTimesSymbol)] = numTestRetries
-	-- 	return jestObject
-	-- end
+	local function retryTimes(numTestRetries: number)
+		_G[retryTimesSymbol] = numTestRetries
+		return jestObject
+	end
 	-- ROBLOX deviation END
 	-- ROBLOX deviation START: variable predefined
 	-- local jestObject: Jest = {
@@ -2640,8 +2645,8 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 		resetAllMocks = resetAllMocks,
 		resetModules = resetModules,
 		restoreAllMocks = restoreAllMocks,
+		retryTimes = retryTimes,
 		-- ROBLOX deviation START: not implemented yet
-		-- retryTimes = retryTimes,
 		-- runAllImmediates = function()
 		-- 	local fakeTimers = _getFakeTimers()
 		-- 	if fakeTimers == self._environment.fakeTimers then

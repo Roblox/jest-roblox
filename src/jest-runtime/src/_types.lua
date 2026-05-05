@@ -39,6 +39,7 @@ export type Jest = {
 	runOnlyPendingTimers: () -> (),
 	-- setMock: (scriptInstance: ModuleScript, mock: unknown, options: { virtual: boolean? }?) -> Jest,
 	setSystemTime: (now: (number | DateTime)?) -> (),
+	retryTimes: (numTestRetries: number) -> Jest,
 	setTimeout: any,
 }
 
