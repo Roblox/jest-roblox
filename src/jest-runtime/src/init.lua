@@ -2632,7 +2632,11 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 				local callerScript = getfenv(2).script or from
 				local resolved = resolveInstancePath(callerScript, moduleName)
 				if resolved == nil then
-					return self._nativeRequire(moduleName)
+					local nativeRequire = self._nativeRequire
+					if nativeRequire == nil then
+						error(TypeError.new("native require is unavailable for unresolved module path: " .. moduleName))
+					end
+					return nativeRequire(moduleName)
 				end
 				moduleName = resolved
 			end
