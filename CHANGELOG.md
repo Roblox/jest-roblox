@@ -2,6 +2,10 @@
 
 ## Unreleased Changes
 
+## 3.17.1 (2026-05-14)
+
+* :sparkles: Add `duration` field to `FormattedAssertionResult` type to match formatter behavior and upstream Jest v28 ([#476](https://github.com/Roblox/jest-roblox-internal/pull/476))
+
 ## 3.17.0 (2026-05-05)
 
 * :sparkles: Exposed the `jest.retryTimes()` API for per-test retries ([#477](https://github.com/Roblox/jest-roblox-internal/pull/477))
