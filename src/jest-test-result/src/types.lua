@@ -81,6 +81,7 @@ export type AssertionResult = TestResult_AssertionResult
 -- ROBLOX deviation START: Pick<AssertionResult, "ancestorTitles" | "fullName" | "location" | "status" | "title">
 export type FormattedAssertionResult = {
 	ancestorTitles: Array<string>,
+	duration: (TestResult_Milliseconds | nil)?,
 	fullName: string,
 	location: (TestResult_Callsite | nil)?,
 	status: Status,
