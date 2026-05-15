@@ -1,5 +1,5 @@
 --!nonstrict
--- ROBLOX upstream: https://github.com/sindresorhus/emittery/blob/v0.11.0/test/index.js
+-- Upstream: https://github.com/sindresorhus/emittery/blob/v0.11.0/test/index.js
 --[[
 	MIT License
 
@@ -14,7 +14,6 @@ local Symbol = LuauPolyfill.Symbol
 local Promise = require(Packages.Promise)
 local setImmediate = setTimeout
 local TypeError = Error
-type Object = LuauPolyfill.Object
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local expect = JestGlobals.expect
@@ -23,8 +22,8 @@ local itFIXME = function(description: string, ...: any)
 	JestGlobals.it.todo(description)
 end
 
--- ROBLOX deviation START: implement t object to limit deviations in tests
-local function pEvent(emitter, eventName, _options: Object?)
+-- Implement t object to match upstream test helper interface
+local function pEvent(emitter, eventName, _options: { [string]: any }?)
 	return emitter:once(eventName)
 end
 local t = {
@@ -54,11 +53,7 @@ local t = {
 		error("notThrowsAsync not implemented yet")
 	end,
 }
--- ROBLOX deviation END
 
--- local test = require(Packages.ava).default
--- local delay_ = require(Packages.delay).default
--- local pEvent = require(Packages["p-event"]).default
 local Emittery = require(script.Parent.Parent).default
 it("on()", function()
 	return Promise.resolve()
@@ -322,50 +317,6 @@ it("on() - isDebug logs output", function()
 	t:is(eventStore[1].eventName, "test")
 end)
 
--- ROBLOX TODO START: implement test:serial tests
--- 	test:serial("events()", function()
--- 		return Promise.resolve():andThen(function()
--- 			local emitter = Emittery.new()
--- 			local iterator = emitter:events("🦄")
--- 			emitter:emit("🦄", "🌈"):expect()
--- 			setTimeout(function()
--- 				emitter:emit("🦄", Promise.resolve("🌟"))
--- 			end, 10)
--- 			t:plan(3)
--- 			local expected = { "🌈", "🌟" }
--- 			error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: ForOfStatement with await modifier ]] --[[ for await (const data of iterator) {
---     t.deepEqual(data, expected.shift());
-
---     if (expected.length === 0) {
---       break;
---     }
---   } ]]
--- 			t:deepEqual(iterator:next():expect(), { done = true })
--- 		end)
--- 	end)
--- 	test:serial("events() - multiple event names", function()
--- 		return Promise.resolve():andThen(function()
--- 			local emitter = Emittery.new()
--- 			local iterator = emitter:events({ "🦄", "🐶" })
--- 			emitter:emit("🦄", "🌈"):expect()
--- 			emitter:emit("🐶", "🌈"):expect()
--- 			setTimeout(function()
--- 				emitter:emit("🦄", Promise.resolve("🌟"))
--- 			end, 10)
--- 			t:plan(4)
--- 			local expected = { "🌈", "🌈", "🌟" }
--- 			error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: ForOfStatement with await modifier ]] --[[ for await (const data of iterator) {
---     t.deepEqual(data, expected.shift());
-
---     if (expected.length === 0) {
---       break;
---     }
---   } ]]
--- 			t:deepEqual(iterator:next():expect(), { done = true })
--- 		end)
--- 	end)
--- ROBLOX TODO END
-
 it("events() - return() called during emit", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -510,7 +461,6 @@ it("once() - multiple event names", function()
 	end)
 end)
 
--- ROBLOX TODO: implement throwsAsync
 itFIXME("once() - eventName must be a string, symbol, or number", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -523,45 +473,6 @@ itFIXME("once() - eventName must be a string, symbol, or number", function()
 		:expect()
 end)
 
--- ROBLOX TODO START: implement test:cb tests
--- test:cb("emit() - one event", function()
--- 	t:plan(1)
--- 	local emitter = Emittery.new()
--- 	local eventFixture = { foo = true }
--- 	emitter:on("🦄", function(data)
--- 		t:deepEqual(data, eventFixture)
--- 		t:end_()
--- 	end)
--- 	emitter:emit("🦄", eventFixture)
--- end)
--- test:cb("emit() - multiple events", function()
--- 	t:plan(1)
--- 	local emitter = Emittery.new()
--- 	local count = 0
--- 	emitter:on("🦄", function()
--- 		return Promise.resolve():andThen(function()
--- 			delay_(Math:random() * 100):expect()
--- 			if
--- 				(function()
--- 					count += 1
--- 					return count
--- 				end)()
--- 				>= 5 --[[ ROBLOX CHECK: operator '>=' works only if either both arguments are strings or both are a number ]]
--- 			then
--- 				t:is(count, 5)
--- 				t:end_()
--- 			end
--- 		end)
--- 	end)
--- 	emitter:emit("🦄")
--- 	emitter:emit("🦄")
--- 	emitter:emit("🦄")
--- 	emitter:emit("🦄")
--- 	emitter:emit("🦄")
--- end)
--- ROBLOX TODO END
-
--- ROBLOX TODO: implement throwsAsync
 itFIXME("emit() - eventName must be a string, symbol, or number", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -574,7 +485,6 @@ itFIXME("emit() - eventName must be a string, symbol, or number", function()
 		:expect()
 end)
 
--- ROBLOX TODO: implement throwsAsync
 itFIXME("emit() - userland cannot emit the meta events", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -584,21 +494,6 @@ itFIXME("emit() - userland cannot emit the meta events", function()
 		end)
 		:expect()
 end)
-
--- ROBLOX TODO START: implement test:cb tests
--- test:cb("emit() - is async", function()
--- 	t:plan(2)
--- 	local emitter = Emittery.new()
--- 	local unicorn = false
--- 	emitter:on("🦄", function()
--- 		unicorn = true
--- 		t:pass()
--- 		t:end_()
--- 	end)
--- 	emitter:emit("🦄")
--- 	t:false_(unicorn)
--- end)
--- ROBLOX TODO END
 
 it("emit() - awaits async listeners", function()
 	return Promise.resolve()
@@ -684,7 +579,6 @@ it("emit() - calls listeners subscribed when emit() was invoked", function()
 			local p2 = emitter:emit("🦄")
 			emitter:clearListeners()
 			p2:expect()
-			-- ROBLOX FIXME: this assertion fails
 			t:deepEqual(calls, { 1, 1, 2, 3, 2, 4, 5, 2, 4, 7, 6, 2, 4, 7, 6, 9, 2, 4, 7, 6, 9 })
 		end)
 		:expect()
@@ -741,7 +635,6 @@ it("emit() - returns undefined", function()
 		:expect()
 end)
 
--- ROBLOX TODO: implement throwsAsync
 itFIXME("emit() - throws an error if any listener throws", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -762,44 +655,6 @@ itFIXME("emit() - throws an error if any listener throws", function()
 		:expect()
 end)
 
--- ROBLOX TODO START: implement test:cb tests
--- test:cb("emitSerial()", function()
--- 	t:plan(1)
--- 	local emitter = Emittery.new()
--- 	local events = {}
--- 	local function listener(data)
--- 		return Promise.resolve():andThen(function()
--- 			delay_(Math:random() * 100):expect()
--- 			table.insert(events, data) --[[ ROBLOX CHECK: check if 'events' is an Array ]]
--- 			if
--- 				events.length
--- 				>= 5 --[[ ROBLOX CHECK: operator '>=' works only if either both arguments are strings or both are a number ]]
--- 			then
--- 				t:deepEqual(events, { 1, 2, 3, 4, 5 })
--- 				t:end_()
--- 			end
--- 		end)
--- 	end
--- 	emitter:on("🦄", function()
--- 		return listener(1)
--- 	end)
--- 	emitter:on("🦄", function()
--- 		return listener(2)
--- 	end)
--- 	emitter:on("🦄", function()
--- 		return listener(3)
--- 	end)
--- 	emitter:on("🦄", function()
--- 		return listener(4)
--- 	end)
--- 	emitter:on("🦄", function()
--- 		return listener(5)
--- 	end)
--- 	emitter:emitSerial("🦄", "e")
--- end)
--- ROBLOX TODO END
-
--- ROBLOX TODO: implement throwsAsync
 itFIXME("emitSerial() - eventName must be a string, symbol, or number", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -814,7 +669,6 @@ itFIXME("emitSerial() - eventName must be a string, symbol, or number", function
 		:expect()
 end)
 
--- ROBLOX TODO: implement throwsAsync
 itFIXME("emitSerial() - userland cannot emit the meta events", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -824,21 +678,6 @@ itFIXME("emitSerial() - userland cannot emit the meta events", function()
 		end)
 		:expect()
 end)
-
--- ROBLOX TODO START: implement test:cb tests
--- test:cb("emitSerial() - is async", function()
--- 	t:plan(2)
--- 	local emitter = Emittery.new()
--- 	local unicorn = false
--- 	emitter:on("🦄", function()
--- 		unicorn = true
--- 		t:pass()
--- 		t:end_()
--- 	end)
--- 	emitter:emitSerial("🦄")
--- 	t:false_(unicorn)
--- end)
--- ROBLOX TODO END
 
 it("emitSerial() - calls listeners subscribed when emitSerial() was invoked", function()
 	return Promise.resolve()
@@ -943,19 +782,16 @@ end)
 it("onAny()", function()
 	return Promise.resolve()
 		:andThen(function()
-			-- ROBLOX deviation: implement t:plan(4) using manual assertCount
 			local assertCount = 0
 			local emitter = Emittery.new()
 			local eventFixture = { foo = true }
 			emitter:onAny(function(eventName, data)
 				t:is(eventName, "🦄")
 				t:deepEqual(data, eventFixture)
-				-- ROBLOX deviation: implement t:plan(4) using manual assertCount
 				assertCount += 2
 			end)
 			emitter:emit("🦄", eventFixture):expect()
 			emitter:emitSerial("🦄", eventFixture):expect()
-			-- ROBLOX deviation: implement t:plan(4) using manual assertCount
 			expect(assertCount).toBe(4)
 		end)
 		:expect()
@@ -967,33 +803,6 @@ it("onAny() - must have a listener", function()
 		emitter:onAny()
 	end, TypeError)
 end)
-
--- ROBLOX TODO START: implement test:serial tests
--- test:serial("anyEvent()", function()
--- 	return Promise.resolve():andThen(function()
--- 		local emitter = Emittery.new()
--- 		local iterator = emitter:anyEvent()
--- 		emitter:emit("�����", "🌈"):expect()
--- 		setTimeout(function()
--- 			emitter:emit("🦄", Promise.resolve("🌟"))
--- 		end, 10)
--- 		t:plan(3)
--- 		local expected = { { "🦄", "🌈" }, { "🦄", "🌟" } }
--- 		error("not implemented")
--- 		--[[ ROBLOX TODO: Unhandled node for type: ForOfStatement with await modifier ]]
--- 		--[[
--- 			for await (const data of iterator) {
--- 				t.deepEqual(data, expected.shift());
-
--- 				if (expected.length === 0) {
--- 				break;
--- 				}
--- 			}
--- 		]]
--- 		t:deepEqual(iterator:next():expect(), { done = true })
--- 	end)
--- end)
--- ROBLOX TODO END
 
 it("anyEvent() - return() called during emit", function()
 	return Promise.resolve()
@@ -1326,245 +1135,6 @@ it("listenerCount() - eventName must be undefined if not a string, symbol, or nu
 	end, TypeError)
 end)
 
--- ROBLOX deviation START: not supporting Emittery:bindMethods for now
--- it("bindMethods()", function()
--- 	local methodsToBind = { "on", "off", "emit", "listenerCount" }
--- 	local emitter = Emittery.new()
--- 	local target = {}
--- 	local oldPropertyNames = Object.getOwnPropertyNames(target)
--- 	emitter:bindMethods(target, methodsToBind)
--- 	t:deepEqual(
--- 		Array.sort(Object.getOwnPropertyNames(target)), --[[ ROBLOX CHECK: check if 'Object.getOwnPropertyNames(target)' is an Array ]]
--- 		Array.sort(Array.concat({}, Array.spread(oldPropertyNames), Array.spread(methodsToBind)))
--- 	)
--- 	for _, method in methodsToBind do
--- 		t:is(typeof(target[tostring(method)]), "function")
--- 	end
--- 	t:is(target:listenerCount(), 0)
--- end)
-
--- it("bindMethods() - methodNames must be array of strings or undefined", function()
--- 	t:throws(function()
--- 		Emittery.new():bindMethods({}, nil)
--- 	end)
--- 	t:throws(function()
--- 		Emittery.new():bindMethods({}, "string")
--- 	end)
--- 	t:throws(function()
--- 		Emittery.new():bindMethods({}, {})
--- 	end)
--- 	t:throws(function()
--- 		Emittery.new():bindMethods({}, { nil })
--- 	end)
--- 	t:throws(function()
--- 		Emittery.new():bindMethods({}, { 1 })
--- 	end)
--- 	t:throws(function()
--- 		Emittery.new():bindMethods({}, { {} })
--- 	end)
--- end)
-
--- it("bindMethods() - must bind all methods if no array supplied", function()
--- 	local methodsExpected = {
--- 		"on",
--- 		"off",
--- 		"once",
--- 		"events",
--- 		"emit",
--- 		"emitSerial",
--- 		"onAny",
--- 		"anyEvent",
--- 		"offAny",
--- 		"clearListeners",
--- 		"listenerCount",
--- 		"bindMethods",
--- 		"logIfDebugEnabled",
--- 	}
--- 	local emitter = Emittery.new()
--- 	local target = {}
--- 	local oldPropertyNames = Object.getOwnPropertyNames(target)
--- 	emitter:bindMethods(target)
--- 	t:deepEqual(
--- 		Array.sort(Object.getOwnPropertyNames(target)), --[[ ROBLOX CHECK: check if 'Object.getOwnPropertyNames(target)' is an Array ]]
--- 		Array.sort(Array.concat({}, Array.spread(oldPropertyNames), Array.spread(methodsExpected)))
--- 	)
--- 	for _, method in
--- 		ipairs(methodsExpected) --[[ ROBLOX CHECK: check if 'methodsExpected' is an Array ]]
--- 	do
--- 		t:is(typeof(target[tostring(method)]), "function")
--- 	end
--- 	t:is(target:listenerCount(), 0)
--- end)
-
--- it("bindMethods() - methodNames must only include Emittery methods", function()
--- 	local emitter = Emittery.new()
--- 	local target = {}
--- 	t:throws(function()
--- 		return emitter:bindMethods(target, { "noexistent" })
--- 	end)
--- end)
-
--- it("bindMethods() - must not set already existing fields", function()
--- 	local emitter = Emittery.new()
--- 	local target = { on = true }
--- 	t:throws(function()
--- 		return emitter:bindMethods(target, { "on" })
--- 	end)
--- end)
-
--- it("bindMethods() - target must be an object", function()
--- 	local emitter = Emittery.new()
--- 	t:throws(function()
--- 		return emitter:bindMethods("string", {})
--- 	end)
--- 	t:throws(function()
--- 		return emitter:bindMethods(nil, {})
--- 	end)
--- 	t:throws(function()
--- 		return emitter:bindMethods(nil, {})
--- 	end)
--- end)
--- ROBLOX deviation END
-
--- ROBLOX deviation START: not supporting Emittery.mixin for now
--- it("mixin()", function()
--- 	type TestClass = {}
--- 	local TestClass = {}
--- 	TestClass.__index = TestClass
--- 	function TestClass.new(v): TestClass
--- 		local self = setmetatable({}, TestClass)
--- 		self.v = v
--- 		return (self :: any) :: TestClass
--- 	end
--- 	local TestClassWithMixin = Emittery:mixin("emitter", {
--- 		"on",
--- 		"off",
--- 		"once",
--- 		"emit",
--- 		"emitSerial",
--- 		"onAny",
--- 		"offAny",
--- 		"clearListeners",
--- 		"listenerCount",
--- 		"bindMethods",
--- 	})(TestClass)
--- 	local symbol = Symbol("test symbol")
--- 	local instance = TestClassWithMixin.new(symbol)
--- 	t:true_(
--- 		error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: BinaryExpression with 'instanceof' operator ]] --[[ instance.emitter instanceof Emittery ]]
--- 	)
--- 	t:true_(
--- 		error("not implemented") --[[ ROBLOX TODO: Unhandled node for type: BinaryExpression with 'instanceof' operator ]] --[[ instance instanceof TestClass ]]
--- 	)
--- 	t:is(instance.emitter, instance.emitter)
--- 	t:is(instance.v, symbol)
--- 	t:is(instance:listenerCount(), 0)
--- end)
-
--- it("mixin() - methodNames must be array of strings or undefined", function()
--- 	type TestClass = {}
--- 	local TestClass = {}
--- 	TestClass.__index = TestClass
--- 	function TestClass.new(): TestClass
--- 		local self = setmetatable({}, TestClass)
--- 		return (self :: any) :: TestClass
--- 	end
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", nil)(TestClass)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", "string")(TestClass)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", {})(TestClass)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", { nil })(TestClass)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", { 1 })(TestClass)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", { {} })(TestClass)
--- 	end)
--- end)
-
--- it("mixin() - must mixin all methods if no array supplied", function()
--- 	local methodsExpected = {
--- 		"on",
--- 		"off",
--- 		"once",
--- 		"events",
--- 		"emit",
--- 		"emitSerial",
--- 		"onAny",
--- 		"anyEvent",
--- 		"offAny",
--- 		"clearListeners",
--- 		"listenerCount",
--- 		"bindMethods",
--- 		"logIfDebugEnabled",
--- 	}
--- 	type TestClass = {}
--- 	local TestClass = {}
--- 	TestClass.__index = TestClass
--- 	function TestClass.new(): TestClass
--- 		local self = setmetatable({}, TestClass)
--- 		return (self :: any) :: TestClass
--- 	end
--- 	local TestClassWithMixin = Emittery:mixin("emitter")(TestClass)
--- 	t:deepEqual(
--- 		Array.sort(Object.getOwnPropertyNames(TestClassWithMixin.prototype)), --[[ ROBLOX CHECK: check if 'Object.getOwnPropertyNames(TestClassWithMixin.prototype)' is an Array ]]
--- 		Array.sort(Array.concat({}, Array.spread(methodsExpected), { "constructor", "emitter" }))
--- 	)
--- end)
-
--- it("mixin() - methodNames must only include Emittery methods", function()
--- 	type TestClass = {}
--- 	local TestClass = {}
--- 	TestClass.__index = TestClass
--- 	function TestClass.new(): TestClass
--- 		local self = setmetatable({}, TestClass)
--- 		return (self :: any) :: TestClass
--- 	end
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", { "nonexistent" })(TestClass)
--- 	end)
--- end)
-
--- it("mixin() - must not set already existing methods", function()
--- 	type TestClass = { on: (self: TestClass) -> any }
--- 	local TestClass = {}
--- 	TestClass.__index = TestClass
--- 	function TestClass.new(): TestClass
--- 		local self = setmetatable({}, TestClass)
--- 		return (self :: any) :: TestClass
--- 	end
--- 	function TestClass:on()
--- 		return true
--- 	end
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter", { "on" })(TestClass)
--- 	end)
--- end)
-
--- it("mixin() - target must be function", function()
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter")("string")
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter")(nil)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter")(nil)
--- 	end)
--- 	t:throws(function()
--- 		return Emittery:mixin("emitter")({})
--- 	end)
--- end)
--- ROBLOX deviation END
-
--- ROBLOX FIXME: implement notThrowsAsync
 itFIXME("isDebug default logger handles symbol event names and object for event data", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -1577,7 +1147,6 @@ itFIXME("isDebug default logger handles symbol event names and object for event 
 end)
 
 it("isDebug can be turned on globally during runtime", function()
-	-- ROBLOX deviation: setIsDebugEnabled instead of a setter
 	Emittery.setIsDebugEnabled(true)
 	local eventStore = {}
 
@@ -1598,7 +1167,6 @@ it("isDebug can be turned on globally during runtime", function()
 
 	emitter:on("test", function() end)
 	emitter:emit("test", "test data")
-	-- ROBLOX deviation: setIsDebugEnabled instead of a setter
 	Emittery.setIsDebugEnabled(false)
 	t:true_(#eventStore > 0)
 	t:is(eventStore[3].type, "emit")
@@ -1635,7 +1203,6 @@ it("isDebug can be turned on for and instance without using the constructor", fu
 	t:is(eventStore[3].eventData, "test data")
 end)
 
--- ROBLOX FIXME: implement notThrowsAsync
 itFIXME("debug mode - handles circular references in event data", function()
 	return Promise.resolve():andThen(function()
 		local emitter = Emittery.new({ debug = { name = "testEmitter", enabled = true } })

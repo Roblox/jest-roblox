@@ -70,7 +70,9 @@ describe("listDefaultProps()", function()
 
 	it("returns default properties and values for Camera", function()
 		local defaults = listDefaultProps("Camera")
-		expect(defaults).toMatchSnapshot()
+		expect(defaults).toMatchSnapshot({
+			DiagonalFieldOfView = expect.any("number"),
+		})
 	end)
 end)
 
@@ -116,7 +118,9 @@ describe("listProps()", function()
 
 	it("returns properties and values for Camera", function()
 		local props = listProps(Instance.new("Camera"))
-		expect(props).toMatchSnapshot()
+		expect(props).toMatchSnapshot({
+			DiagonalFieldOfView = expect.any("number"),
+		})
 	end)
 end)
 

@@ -32,9 +32,8 @@ type Emittery_UnsubscribeFn = emitteryModule.Emittery_UnsubscribeFn
 
 -- ROBLOX deviation: exit used only in parallel tests
 -- local exit = require(Packages.exit)
-local throatModule = require(Packages.Throat)
-local throat = throatModule.default
-type ThroatLateBound<TResult, TArgs> = throatModule.ThroatLateBound<TResult, TArgs>
+local throat = require(Packages.Throat)
+type ThroatLateBound<TResult, TArgs> = throat.ThroatLateBound<TResult, TArgs>
 local test_resultModule = require(Packages.JestTestResult)
 type SerializableError = test_resultModule.SerializableError
 type Context = test_resultModule.Context

@@ -1,11 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-mock/src/__tests__/index.test.ts
--- /**
---  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
---  *
---  * This source code is licensed under the MIT license found in the
---  * LICENSE file in the root directory of this source tree.
---  *
---  */
+-- Upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-mock/src/__tests__/index.test.ts
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
 
@@ -23,35 +16,14 @@ local Error = LuauPolyfill.Error
 
 local parentModule = require(CurrentModule)
 local ModuleMocker = parentModule.ModuleMocker
--- ROBLOX deviation START: can't provide these globally
--- local fn = parentModule.fn
--- local mocked = parentModule.mocked
--- local spyOn = parentModule.spyOn
+
 local moduleMocker
 beforeEach(function()
 	moduleMocker = ModuleMocker.new(JestConfig.projectDefaults)
 end)
--- ROBLOX deviation END
 
 describe("moduleMocker", function()
-	-- ROBLOX deviation START: can't provide these globally
-	-- local moduleMocker
-	-- beforeEach(function()
-	-- 	moduleMocker = ModuleMocker.new()
-	-- end)
-	-- ROBLOX deviation END
-
-	--[[
-		ROBLOX deviation: skipped code:
-		original code lines 25 - 119
-	]]
-
 	describe("generateFromMetadata", function()
-		--[[
-			ROBLOX deviation: skipped code:
-			original code lines 122 - 410
-		]]
-
 		describe("mocked functions", function()
 			it("tracks calls to mocks", function()
 				local fn = moduleMocker:fn()
@@ -71,11 +43,9 @@ describe("moduleMocker", function()
 				local fn = moduleMocker:fn()
 				expect(fn.mock.instances).toEqual({})
 
-				-- ROBLOX deviation: We have to call fn.new() because we don't have a new keyword
 				local instance1 = fn.new()
 				expect(fn.mock.instances[1]).toBe(instance1)
 
-				-- ROBLOX deviation: We have to call fn.new() because we don't have a new keyword
 				local instance2 = fn.new()
 				expect(fn.mock.instances[2]).toBe(instance2)
 			end)
@@ -95,11 +65,8 @@ describe("moduleMocker", function()
 					return fn(ctx2, ...)
 				end
 				bound2()
-				expect(fn.mock.contexts[
-					3 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(ctx2)
+				expect(fn.mock.contexts[3]).toBe(ctx2)
 
-				-- null context
 				fn(nil, table.unpack({}))
 				expect(fn.mock.contexts[4]).toBe(nil)
 				fn(nil)
@@ -107,11 +74,8 @@ describe("moduleMocker", function()
 				(function(...)
 					return fn(nil, ...)
 				end)()
-				expect(fn.mock.contexts[
-					6 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(nil)
+				expect(fn.mock.contexts[6]).toBe(nil)
 
-				-- Unspecified context is `undefined` in strict mode (like in this test) and `window` otherwise.
 				fn()
 				expect(fn.mock.contexts[7]).toBe(nil)
 			end)
@@ -239,8 +203,7 @@ describe("moduleMocker", function()
 				expect(fn2()).never.toEqual("abcd")
 			end)
 
-			-- ROBLOX deviation: test is itSKIPped because we currently don't
-			-- preserve function arity for mocked functions
+			-- Skipped: we don't preserve function arity for mocked functions
 			it.skip("maintains function arity", function()
 				local mockFunctionArity1 = moduleMocker:fn(function(x)
 					return x
@@ -260,12 +223,10 @@ describe("moduleMocker", function()
 					return "abcd"
 				end,
 			}
-			-- ROBLOX deviation: use metatables for prototype-like inheritance
-			local child = setmetatable({}, { __index = parent })
+			local child: any = setmetatable({}, { __index = parent })
 
 			moduleMocker:spyOn(child, "func").mockReturnValue("efgh")
 
-			-- ROBLOX deviation: use rawget to access through metatable
 			expect(rawget(child :: any, "func")).never.toBeNil()
 			expect(child.func()).toEqual("efgh")
 			expect(parent.func()).toEqual("abcd")
@@ -277,8 +238,7 @@ describe("moduleMocker", function()
 					return "abcd"
 				end,
 			}
-			-- ROBLOX deviation: use metatables for prototype-like inheritance
-			local child = setmetatable({}, { __index = parent })
+			local child: any = setmetatable({}, { __index = parent })
 
 			moduleMocker:spyOn(child, "func").mockReturnValue("efgh")
 
@@ -287,7 +247,7 @@ describe("moduleMocker", function()
 
 			moduleMocker:spyOn(parent, "func").mockReturnValue("jklm")
 
-			-- ROBLOX deviation: use rawget instead of hasOwnProperty
+			-- rawget checks the child table directly (like hasOwnProperty)
 			expect(rawget(child :: any, "func")).toBeNil()
 			expect(child.func()).toEqual("jklm")
 		end)
@@ -324,11 +284,6 @@ describe("moduleMocker", function()
 			expect(fake(2)).toEqual(42)
 			expect(fake(2)).toEqual(4)
 		end)
-
-		--[[
-			ROBLOX deviation: skipped code:
-			original code lines 647 - 692
-		]]
 
 		describe("return values", function()
 			it("tracks return values", function()
@@ -399,10 +354,8 @@ describe("moduleMocker", function()
 			} :: { any })
 		end)
 
-		-- ROBLOX deviation: use `nil` instead of undefined for test
 		it("a call that throws nil is tracked properly", function()
 			local fn = moduleMocker:fn(function()
-				-- eslint-disable-next-line no-throw-literal
 				error(nil)
 			end)
 			pcall(function()
@@ -415,7 +368,6 @@ describe("moduleMocker", function()
 		it("results of recursive calls are tracked properly", function()
 			-- sums up all integers from 0 -> value, using recursion
 			local fn: any
-			-- ROBLOX deviation; separate declaration from assignment for
 			fn = moduleMocker:fn(function(value: number)
 				if value == 0 then
 					return 0
@@ -423,9 +375,9 @@ describe("moduleMocker", function()
 					return value + fn(value - 1)
 				end
 			end)
-			fn(4) -- All call args tracked
-			expect(fn.mock.calls).toEqual({ { 4 }, { 3 }, { 2 }, { 1 }, { 0 } }) -- Results are tracked
-			-- (in correct order of calls, rather than order of returns)
+			fn(4)
+			expect(fn.mock.calls).toEqual({ { 4 }, { 3 }, { 2 }, { 1 }, { 0 } })
+			-- Results are tracked in correct order of calls, rather than order of returns
 			expect(fn.mock.results).toEqual({
 				{ type = "return", value = 10 },
 				{ type = "return", value = 6 },
@@ -438,7 +390,6 @@ describe("moduleMocker", function()
 		it("test results of recursive calls from within the recursive call", function()
 			-- sums up all 	integers from 0 -> value, using recursion
 			local fn: any
-			-- ROBLOX deviation; separate declaration from assignment for
 			fn = moduleMocker:fn(function(value: number)
 				if value == 0 then
 					return 0
@@ -464,7 +415,6 @@ describe("moduleMocker", function()
 		it("call mockClear inside recursive mock", function()
 			-- sums up all integers from 0 -> value, using recursion
 			local fn: any
-			-- ROBLOX deviation; separate declaration from assignment for
 			fn = moduleMocker:fn(function(value: number)
 				if value == 3 then
 					fn:mockClear()
@@ -489,27 +439,17 @@ describe("moduleMocker", function()
 				local fn1 = moduleMocker:fn()
 				expect(fn1.mock.invocationCallOrder).toEqual({})
 				fn1(1, 2, 3)
-				expect(fn1.mock.invocationCallOrder[
-					1 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(1)
+				expect(fn1.mock.invocationCallOrder[1]).toBe(1)
 				fn1("a", "b", "c")
-				expect(fn1.mock.invocationCallOrder[
-					2 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(2)
+				expect(fn1.mock.invocationCallOrder[2]).toBe(2)
 				fn1(1, 2, 3)
-				expect(fn1.mock.invocationCallOrder[
-					3 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(3)
+				expect(fn1.mock.invocationCallOrder[3]).toBe(3)
 				local fn2 = moduleMocker:fn()
 				expect(fn2.mock.invocationCallOrder).toEqual({})
 				fn2("d", "e", "f")
-				expect(fn2.mock.invocationCallOrder[
-					1 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(4)
+				expect(fn2.mock.invocationCallOrder[1]).toBe(4)
 				fn2(4, 5, 6)
-				expect(fn2.mock.invocationCallOrder[
-					2 --[[ ROBLOX adaptation: added 1 to array index ]]
-				]).toBe(5)
+				expect(fn2.mock.invocationCallOrder[2]).toBe(5)
 			end)
 
 			it("supports clearing mock invocationCallOrder", function()
@@ -542,14 +482,6 @@ describe("moduleMocker", function()
 				expect(fn1()).toEqual("abcd")
 				expect(fn2()).toEqual("abcde")
 			end)
-
-			-- ROBLOX deviation START: skip non-applicable test
-			-- it("handles a property called `prototype`", function()
-			-- 	local mock =
-			-- 		moduleMocker:generateFromMetadata(moduleMocker:getMetadata({ prototype = 1 }))
-			-- 	expect(mock.prototype).toBe(1)
-			-- end)
-			-- ROBLOX deviation END
 		end)
 	end)
 
@@ -564,28 +496,6 @@ describe("moduleMocker", function()
 		end)
 	end)
 	describe("mockImplementationOnce", function()
-		-- ROBLOX deviation START: disable Module constructor test
-		-- it("should mock constructor", function()
-		-- 	local mock1 = jest.fn()
-		-- 	local mock2 = jest.fn()
-		-- 	local Module = jest.fn(function()
-		-- 		return { someFn = mock1 }
-		-- 	end)
-		-- 	local function testFn()
-		-- 		local m = Module.new()
-		-- 		m:someFn()
-		-- 	end
-		-- 	Module:mockImplementationOnce(function()
-		-- 		return { someFn = mock2 }
-		-- 	end)
-		-- 	testFn()
-		-- 	expect(mock2).toHaveBeenCalled()
-		-- 	expect(mock1)["not"].toHaveBeenCalled()
-		-- 	testFn()
-		-- 	expect(mock1).toHaveBeenCalled()
-		-- end)
-		-- ROBLOX deviation END
-
 		it("should mock single call to a mock function", function()
 			local mockFn = moduleMocker:fn()
 			mockFn
@@ -707,13 +617,11 @@ describe("moduleMocker", function()
 			local originalCallThis
 			local originalCallArguments: { any }?
 			local obj = {
-				-- ROBLOX deviation START: use ... for args
 				method = function(self, ...)
 					isOriginalCalled = true
 					originalCallThis = self
 					originalCallArguments = table.pack(...)
 				end,
-				-- ROBLOX deviation END
 			}
 			local spy = moduleMocker:spyOn(obj, "method")
 			local thisArg = { this = true }
@@ -724,12 +632,8 @@ describe("moduleMocker", function()
 			expect(originalCallThis).toBe(thisArg)
 			assert(originalCallArguments, "luau narrow")
 			expect(#originalCallArguments).toBe(2)
-			expect(originalCallArguments[
-				1 --[[ ROBLOX adaptation: added 1 to array index ]]
-			]).toBe(firstArg)
-			expect(originalCallArguments[
-				2 --[[ ROBLOX adaptation: added 1 to array index ]]
-			]).toBe(secondArg)
+			expect(originalCallArguments[1]).toBe(firstArg)
+			expect(originalCallArguments[2]).toBe(secondArg)
 			expect(spy).toHaveBeenCalled()
 			isOriginalCalled = false
 			originalCallThis = nil
@@ -740,18 +644,14 @@ describe("moduleMocker", function()
 			expect(originalCallThis).toBe(thisArg)
 			assert(originalCallArguments, "luau narrow")
 			expect(#originalCallArguments).toBe(2)
-			expect(originalCallArguments[
-				1 --[[ ROBLOX adaptation: added 1 to array index ]]
-			]).toBe(firstArg)
-			expect(originalCallArguments[
-				2 --[[ ROBLOX adaptation: added 1 to array index ]]
-			]).toBe(secondArg)
+			expect(originalCallArguments[1]).toBe(firstArg)
+			expect(originalCallArguments[2]).toBe(secondArg)
 			expect(spy).never.toHaveBeenCalled()
 		end)
 
 		it("should throw on invalid input", function()
 			expect(function()
-				moduleMocker:spyOn(nil, "method")
+				moduleMocker:spyOn(nil :: any, "method")
 			end).toThrow()
 			expect(function()
 				moduleMocker:spyOn({}, "method")
@@ -790,18 +690,8 @@ describe("moduleMocker", function()
 			expect(#spy1.mock.calls).toBe(1)
 			expect(#spy2.mock.calls).toBe(1)
 		end)
-
-		--[[
-			ROBLOX deviation: skipped code (getters & prototypes):
-			original code lines 1250 - 1300
-		]]
 	end)
-	--[[
-		ROBLOX deviation: skipped code (spyOnProperty not supported):
-		original code lines 1098 - 1307
-	]]
 
-	-- ROBLOX deviation START: add additional test for luau case
 	it("mocks a function with return value of nil", function()
 		local fn = moduleMocker:fn(function()
 			return nil
@@ -809,13 +699,11 @@ describe("moduleMocker", function()
 		expect(fn()).toEqual(nil)
 		expect(fn.mock.calls).toEqual({ {} })
 	end)
-	-- ROBLOX deviation END
 end)
 
 describe("mocked", function()
 	it("should return unmodified input", function()
 		local subject = {}
-		-- ROBLOX deviation: can't provide these globally
 		expect(moduleMocker:mocked(subject)).toBe(subject)
 	end)
 end)

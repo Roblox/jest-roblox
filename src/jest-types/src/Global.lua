@@ -127,7 +127,6 @@ export type GlobalAdditions = TestFrameworkGlobals & {
 	fail: () -> (),
 	pending: () -> (),
 	spyOn: () -> (),
-	spyOnProperty: () -> (),
 }
 
 -- ROBLOX FIXME: should intersect with Omit<typeof globalThis, keyof GlobalAdditions>
