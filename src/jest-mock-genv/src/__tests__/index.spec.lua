@@ -13,13 +13,9 @@
 	* limitations under the License.
 ]]
 --!strict
--- ROBLOX NOTE: no upstream
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
-
-local LuauPolyfill = require(Packages.LuauPolyfill)
-type Object = LuauPolyfill.Object
 
 local exports = require(CurrentModule)
 local JestGlobals = require(Packages.Dev.JestGlobals)
@@ -36,7 +32,7 @@ end)
 
 it("MOCKABLE_GLOBALS has correct structure", function()
 	expect(exports.MOCKABLE_GLOBALS).toEqual(expect.any("table"))
-	local function checkStructureOf(partOfTable: Object)
+	local function checkStructureOf(partOfTable: { [string]: any })
 		for name, value in partOfTable do
 			expect(name).toEqual(expect.any("string"))
 			if typeof(value) == "table" then
@@ -68,7 +64,7 @@ end)
 -- their qualified name and expected type, even if multiple things are
 -- missing at once.
 describe("globalEnv implements all MOCKABLE_GLOBALS", function()
-	local function test(mockableGlobals: Object, globalPath: { string })
+	local function test(mockableGlobals: { [string]: any }, globalPath: { string })
 		for name, mockableGlobal in mockableGlobals do
 			local nestedPath = table.clone(globalPath)
 			table.insert(nestedPath, name)
@@ -76,7 +72,7 @@ describe("globalEnv implements all MOCKABLE_GLOBALS", function()
 
 			if typeof(mockableGlobal) == "function" then
 				it(`unmocked function: {qualifiedName}`, function()
-					local target = jest.globalEnv :: Object
+					local target = jest.globalEnv :: { [string]: any }
 					for _, pathPart in nestedPath do
 						target = target[pathPart]
 					end
@@ -84,7 +80,7 @@ describe("globalEnv implements all MOCKABLE_GLOBALS", function()
 				end)
 			elseif typeof(mockableGlobal) == "table" then
 				it(`mockable library: {qualifiedName}`, function()
-					local target = jest.globalEnv :: Object
+					local target = jest.globalEnv :: { [string]: any }
 					for _, pathPart in nestedPath do
 						target = target[pathPart]
 					end

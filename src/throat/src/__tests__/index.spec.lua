@@ -1,4 +1,3 @@
--- ROBLOX upstream: https://github.com/ForbesLindesay/throat/blob/6.0.1/test/index.js
 --[[
 	Copyright (c) 2013 Forbes Lindesay
 
@@ -22,15 +21,12 @@
 ]]
 local Packages = script.Parent.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
-local Array = LuauPolyfill.Array
-local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
 local Object = LuauPolyfill.Object
 local console = LuauPolyfill.console
 local instanceof = LuauPolyfill.instanceof
 local setTimeout = LuauPolyfill.setTimeout
 local Promise = require(Packages.Promise)
-type Promise<T> = LuauPolyfill.Promise<T>
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local expect = JestGlobals.expect
@@ -40,10 +36,17 @@ local itFIXME = function(description: string, ...: any)
 	JestGlobals.it.todo(description)
 end
 
-local throatModule = require(script.Parent.Parent)
-local throat = throatModule.default
-type ThroatEarlyBound<TResult, TArgs> = throatModule.ThroatEarlyBound<TResult, TArgs>
-type ThroatLateBound<TResult, TArgs> = throatModule.ThroatLateBound<TResult, TArgs>
+local throat = require(script.Parent.Parent)
+type ThroatEarlyBound<TResult, TArgs> = throat.ThroatEarlyBound<TResult, TArgs>
+type ThroatLateBound<TResult, TArgs> = throat.ThroatLateBound<TResult, TArgs>
+local function map<T, U>(arr: { T }, fn: (T, number, { T }) -> U): { U }
+	local result = {}
+	for i, v in arr do
+		table.insert(result, fn(v, i, arr))
+	end
+	return result
+end
+
 local sentA, sentB, sentC = {}, {}, {}
 local function job()
 	local resolve, reject
@@ -53,13 +56,13 @@ local function job()
 	end)
 
 	local executeJob
-	local function _executeJob(...): Promise<any>
+	local function _executeJob(...)
 		local arguments = { ... }
 		if executeJob.isRun then
 			error(Error.new("Job was run multiple times"))
 		end
 		executeJob.isRun = true
-		executeJob.args = Array.slice(arguments)
+		executeJob.args = table.clone(arguments)
 		return promise
 	end
 	executeJob = setmetatable({}, {
@@ -93,7 +96,7 @@ local function worker(max)
 		if concurrent > max then
 			error(Error.new("Extra processes were run in parallel."))
 		end
-		local res = Processed.new(Array.slice(arguments))
+		local res = Processed.new(table.clone(arguments))
 		return Promise.new(function(resolve)
 			setTimeout(function()
 				concurrent -= 1
@@ -213,7 +216,7 @@ end)
 
 describe("throat(n, fn)", function()
 	it("throat(1, fn) acts as a sequential worker", function()
-		return Promise.all(Array.map({ sentA, sentB, sentC }, throat(1, worker(1)) :: ThroatEarlyBound<any, any>))
+		return Promise.all(map({ sentA, sentB, sentC }, throat(1, worker(1)) :: ThroatEarlyBound<any, any>))
 			:andThen(function(res)
 				assert(instanceof(res[1], Processed) and #res[1].val > 1 and res[1].val[1] == sentA)
 				assert(instanceof(res[2], Processed) and #res[2].val > 1 and res[2].val[1] == sentB)
@@ -222,7 +225,7 @@ describe("throat(n, fn)", function()
 			:expect()
 	end)
 	it("throat(2, fn) works on two inputs in parallel", function()
-		return Promise.all(Array.map({ sentA, sentB, sentC }, throat(2, worker(2)) :: ThroatEarlyBound<any, any>))
+		return Promise.all(map({ sentA, sentB, sentC }, throat(2, worker(2)) :: ThroatEarlyBound<any, any>))
 			:andThen(function(res)
 				assert(instanceof(res[1], Processed) and #res[1].val > 1 and res[1].val[1] == sentA)
 				assert(instanceof(res[2], Processed) and #res[2].val > 1 and res[2].val[1] == sentB)
@@ -231,7 +234,7 @@ describe("throat(n, fn)", function()
 			:expect()
 	end)
 	it("throat(3, fn) works on three inputs in parallel", function()
-		return Promise.all(Array.map({ sentA, sentB, sentC }, throat(3, worker(3)) :: ThroatEarlyBound<any, any>))
+		return Promise.all(map({ sentA, sentB, sentC }, throat(3, worker(3)) :: ThroatEarlyBound<any, any>))
 			:andThen(function(res)
 				assert(instanceof(res[1], Processed) and #res[1].val > 1 and res[1].val[1] == sentA)
 				assert(instanceof(res[2], Processed) and #res[2].val > 1 and res[2].val[1] == sentB)
@@ -244,7 +247,7 @@ end)
 describe("throat(fn, n)", function()
 	it("throat(fn, 1) acts as a sequential worker", function()
 		return Promise.all(
-			Array.map({ sentA, sentB, sentC }, throat(worker(1) :: any, 1 :: any) :: ThroatEarlyBound<any, any>)
+			map({ sentA, sentB, sentC }, throat(worker(1) :: any, 1 :: any) :: ThroatEarlyBound<any, any>)
 		)
 			:andThen(function(res)
 				assert(instanceof(res[1], Processed) and #res[1].val > 1 and res[1].val[1] == sentA)
@@ -255,7 +258,7 @@ describe("throat(fn, n)", function()
 	end)
 	it("throat(fn, 2) works on two inputs in parallel", function()
 		return Promise.all(
-			Array.map({ sentA, sentB, sentC }, throat(worker(2) :: any, 2 :: any) :: ThroatEarlyBound<any, any>)
+			map({ sentA, sentB, sentC }, throat(worker(2) :: any, 2 :: any) :: ThroatEarlyBound<any, any>)
 		)
 			:andThen(function(res)
 				assert(instanceof(res[1], Processed) and #res[1].val > 1 and res[1].val[1] == sentA)
@@ -266,7 +269,7 @@ describe("throat(fn, n)", function()
 	end)
 	it("throat(fn, 3) works on three inputs in parallel", function()
 		return Promise.all(
-			Array.map({ sentA, sentB, sentC }, throat(worker(3) :: any, 3 :: any) :: ThroatEarlyBound<any, any>)
+			map({ sentA, sentB, sentC }, throat(worker(3) :: any, 3 :: any) :: ThroatEarlyBound<any, any>)
 		)
 			:andThen(function(res)
 				assert(instanceof(res[1], Processed) and #res[1].val > 1 and res[1].val[1] == sentA)
@@ -376,13 +379,13 @@ local function supportsAsyncStackTraces()
 		end)
 		if not ok then
 			local ex = result
-			return Boolean.toJSBoolean(ex.stack) and string.match(ex.stack, "myOuterFunction")
+			return ex.stack ~= nil and ex.stack ~= "" and string.match(ex.stack, "myOuterFunction") ~= nil
 		end
 		return false
 	end)
 end
 
--- ROBLOX TODO: async stacktrace doesn't seem to be supported by Promise library
+-- TODO: async stacktrace doesn't seem to be supported by Promise library
 itFIXME("stack traces", function()
 	return Promise.resolve()
 		:andThen(function()
@@ -453,7 +456,7 @@ itFIXME("stack traces", function()
 		:expect()
 end)
 
--- ROBLOX TODO: async stacktrace doesn't seem to be supported by Promise library
+-- TODO: async stacktrace doesn't seem to be supported by Promise library
 itFIXME("stack traces - ready provided fn", function()
 	return Promise.resolve()
 		:andThen(function()

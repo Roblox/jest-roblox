@@ -7,12 +7,6 @@
 --  * LICENSE file in the root directory of this source tree.
 --  *
 --  */
-local CurrentModule = script
-local Packages = CurrentModule.Parent
-
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Number = LuauPolyfill.Number
-type Array<T> = LuauPolyfill.Array<T>
 
 -- This diff-sequences package implements the linear space variation in
 -- An O(ND) Difference Algorithm and Its Variations by Eugene W. Myers
@@ -72,13 +66,7 @@ type FoundSubsequence = (
 	number -- caller can assume: 0 <= bCommon && bCommon < bLength
 ) -> ()
 
--- ROBLOX deviation: omitted since Luau doesn't have mixed type arrays
--- Either original functions or wrapped to swap indexes if graph is transposed.
--- export type Callbacks = {
--- 	FoundSubsequence;
--- 	IsCommon;
--- };
-export type Callbacks = Array<any>
+export type Callbacks = { any }
 
 -- Indexes in sequence a of last point of forward or reverse paths in graph.
 -- Myers algorithm indexes by diagonal k which for negative is bad deopt in V8.
@@ -86,7 +74,7 @@ export type Callbacks = Array<any>
 -- and also updates the index arrays in place to cut memory in half.
 -- kF = 2 * iF - d
 -- kR = d - 2 * iR
-type Indexes = Array<number>
+type Indexes = { number }
 
 -- Division of index intervals in sequences a and b at the middle change.
 -- Invariant: intervals do not have common items at the start or end.
@@ -541,7 +529,6 @@ local function divide(
 
 	if baDeltaLength % 2 == 0 then
 		-- The number of changes in paths is 2 * d if length difference is even.
-		-- ROBLOX deviation: lua treats 0 as a true value
 		local dMin = (nChange ~= 0 and nChange or baDeltaLength) / 2
 		local dMax = (aLength + bLength) / 2
 
@@ -722,8 +709,8 @@ local function validateLength(name: string, arg: any): ()
 	if typeof(arg) ~= "number" then
 		error(string.format("%s: %s type %s is not a number", pkg, name, type(arg)))
 	end
-	if not Number.isSafeInteger(arg) then
-		error(string.format("%s: %s type %s is not a safe integer", pkg, name, type(arg)))
+	if arg ~= arg or arg % 1 ~= 0 or arg == math.huge then
+		error(string.format("%s: %s is not an integer", pkg, name))
 	end
 	if arg < 0 then
 		error(string.format("%s: %s type %s is a negative integer", pkg, name, type(arg)))

@@ -1,4 +1,3 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-fake-timers/src/__tests__/modernFakeTimers.test.ts
 -- /**
 --  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 --  *
@@ -25,7 +24,7 @@ afterEach(function()
 	jest.useRealTimers()
 end)
 
--- ROBLOX TODO: the mocked delay and tick aren't in the environment of polyfilled functions
+-- TODO: the mocked delay and tick aren't in the environment of polyfilled functions
 -- unskip and fix when we can figure this out
 describe.skip("FakeTimers", function()
 	describe("construction", function()
@@ -37,8 +36,6 @@ describe.skip("FakeTimers", function()
 			expect(clearTimeout).never.toBeNil()
 		end)
 	end)
-
-	-- ROBLOX deviation: omitted runAllTicks, not implemented
 
 	describe("runAllTimers", function()
 		it("runs all ticks, in order", function()
