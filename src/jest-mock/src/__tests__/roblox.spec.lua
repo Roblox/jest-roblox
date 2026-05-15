@@ -13,16 +13,12 @@
 	* limitations under the License.
 ]]
 --!strict
--- ROBLOX NOTE: no upstream
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-type Object = LuauPolyfill.Object
-
-local exports = require(CurrentModule)
-local ModuleMocker = exports.ModuleMocker
+local parentModule = require(CurrentModule)
+local ModuleMocker = parentModule.ModuleMocker
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local jest = JestGlobals.jest
 local expect = JestGlobals.expect
@@ -252,7 +248,7 @@ end)
 describe("callable table spying", function()
 	local guineaPig
 	local callable
-	local mock: exports.Mock
+	local mock: parentModule.Mock
 	beforeEach(function()
 		callable = setmetatable({
 			red = 1,

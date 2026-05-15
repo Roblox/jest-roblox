@@ -2656,9 +2656,6 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 		-- 	end
 		-- end,
 		-- ROBLOX deviation END
-		runAllTicks = function()
-			return _getFakeTimers():runAllTicks()
-		end,
 		runAllTimers = function()
 			return _getFakeTimers():runAllTimers()
 		end,

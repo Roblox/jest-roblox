@@ -133,5 +133,3 @@ describe("getStackTraceLines - stackDepth", function()
 		expect(lines[2]).toMatch("more lines truncated")
 	end)
 end)
-
-return {}

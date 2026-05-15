@@ -21,9 +21,8 @@ type NodeJS_Process = any
 
 local exports = {}
 
-local throatModule = require(Packages.Throat)
-local throat = throatModule.default
-type ThroatLateBound<TResult, TArgs> = throatModule.ThroatLateBound<TResult, TArgs>
+local throat = require(Packages.Throat)
+type ThroatLateBound<TResult, TArgs> = throat.ThroatLateBound<TResult, TArgs>
 
 local environmentModule = require(Packages.JestEnvironment)
 type JestEnvironment = environmentModule.JestEnvironment

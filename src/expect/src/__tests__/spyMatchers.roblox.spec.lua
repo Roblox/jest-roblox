@@ -34,7 +34,7 @@ local jestMock = require(Packages.Dev.JestMock).ModuleMocker
 local mock
 
 beforeAll(function()
-	mock = jestMock.new()
+	mock = jestMock.new({} :: any)
 	expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
 end)
 

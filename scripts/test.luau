@@ -51,7 +51,10 @@ if configuration == "ocale" then
 end
 
 local runCmd = {
+	"rbx-aged-cli",
+	"run",
 	"robloxdev-cli",
+	"--",
 	"run",
 	"--load.model",
 	"default.project.json",

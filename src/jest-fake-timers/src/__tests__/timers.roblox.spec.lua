@@ -1,4 +1,3 @@
--- ROBLOX NOTE: no upstream
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
 

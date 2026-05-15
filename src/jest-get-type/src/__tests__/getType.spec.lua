@@ -30,18 +30,6 @@ describe(".getType()", function()
 		expect(getType(nil)).toBe("nil")
 	end)
 
-	--[[
-			ROBLOX deviation: test omitted because lua has no primitive undefined type
-			original code:
-			test('undefined', () => expect(getType(undefined)).toBe('undefined'));
-		]]
-
-	--[[
-			ROBLOX deviation: lua makes no distinction between tables, objects, and arrays
-			original code:
-			test('object', () => expect(getType({})).toBe('object'));
-  			test('array', () => expect(getType([])).toBe('array'));
-		]]
 	it("table", function()
 		expect(getType({})).toBe("table")
 	end)
@@ -62,14 +50,12 @@ describe(".getType()", function()
 		expect(getType(true)).toBe("boolean")
 	end)
 
-	-- ROBLOX deviation start: additional symbol tests
 	it("symbol", function()
 		expect(getType(Symbol("test"))).toBe("symbol")
 		expect(getType(Symbol.for_("test"))).toBe("symbol")
 		expect(getType(Symbol.for_("test2"))).toBe("symbol")
 		expect(getType(Symbol())).toBe("symbol")
 	end)
-	-- ROBLOX deviation end
 
 	it("regexp", function()
 		expect(getType(RegExp("abc"))).toBe("regexp")
@@ -83,18 +69,10 @@ describe(".getType()", function()
 		expect(getType(Set.new())).toBe("set")
 	end)
 
-	-- ROBLOX deviation: checking DateTime instead of Date
 	it("DateTime", function()
 		expect(getType(DateTime.now())).toBe("DateTime")
 	end)
 
-	--[[
-			ROBLOX deviation: test omitted because lua has no primitive bigint type
-			original code:
-			test('bigint', () => expect(getType(BigInt(1))).toBe('bigint'));
-		]]
-
-	-- ROBLOX deviation start: additional Luau tests
 	it("error", function()
 		expect(getType(Error("abc"))).toBe("error")
 	end)
@@ -106,5 +84,4 @@ describe(".getType()", function()
 	it("userdata", function()
 		expect(getType(newproxy())).toBe("userdata")
 	end)
-	-- ROBLOX deviation end
 end)

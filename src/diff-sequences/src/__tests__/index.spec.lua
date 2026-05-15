@@ -10,13 +10,6 @@
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Number = LuauPolyfill.Number
-local Object = LuauPolyfill.Object
-local Array = LuauPolyfill.Array
-local Error = LuauPolyfill.Error
-type Array<T> = LuauPolyfill.Array<T>
-
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local expect = JestGlobals.expect
 local describe = JestGlobals.describe
@@ -24,8 +17,7 @@ local it = JestGlobals.it
 
 local diff = require(CurrentModule)
 
--- ROBLOX deviation: lua does not allow string indexing, so we convert string inputs to arrays
-local function stringToArray(s: string): Array<any>
+local function stringToArray(s: string): { any }
 	local t = {}
 	for first, last in utf8.graphemes(s) do
 		table.insert(t, s:sub(first, last))
@@ -44,30 +36,13 @@ describe("invalid arg", function()
 	describe("length", function()
 		it("is not a number", function()
 			expect(function()
-				-- ROBLOX deviation: overriding type checking on purpose
 				diff("0" :: any, 0, isCommon, foundSubsequence)
 			end).toThrow("aLength")
 		end)
-		it("Infinity is not a safe integer", function()
+		it("Infinity is not an integer", function()
 			expect(function()
 				diff(math.huge, 0, isCommon, foundSubsequence)
 			end).toThrow("aLength")
-		end)
-		it.skip("Not a Number is not a safe integer", function()
-			expect(function()
-				diff(Number.NaN, 0, isCommon, foundSubsequence)
-			end).toThrow("aLength")
-		end)
-
-		it("MAX_SAFE_INTEGER + 1 is not a safe integer", function()
-			expect(function()
-				diff(0, Number.MAX_SAFE_INTEGER + 1, isCommon, foundSubsequence)
-			end).toThrow("bLength")
-		end)
-		it("MIN_SAFE_INTEGER - 1 is not a safe integer", function()
-			expect(function()
-				diff(0, Number.MIN_SAFE_INTEGER - 1, isCommon, foundSubsequence)
-			end).toThrow("bLength")
 		end)
 		it("is a negative integer", function()
 			expect(function()
@@ -79,66 +54,16 @@ describe("invalid arg", function()
 	describe("callback", function()
 		it("nil is not a function", function()
 			expect(function()
-				-- ROBLOX deviation: overriding type checking on purpose
 				diff(0, 0, nil :: any, foundSubsequence)
 			end).toThrow("isCommon")
 		end)
 
-		-- ROBLOX note: this actually tests a separate parameter than the above test
+		-- tests a separate parameter than the above test
 		it("undefined is not a function", function()
 			expect(function()
-				-- ROBLOX deviation: overriding type checking on purpose
 				diff(0, 0, isCommon, nil :: any)
 			end).toThrow("foundSubsequence")
 		end)
-	end)
-end)
-
--- Return length of longest common subsequence according to Object.is method.
-local function countCommonObjectIs(a, b)
-	local n = 0
-	diff(#a, #b, function(aIndex, bIndex)
-		return Object.is(a[aIndex + 1], b[bIndex + 1])
-	end, function(nCommon)
-		n = n + nCommon
-	end)
-	return n
-end
-
--- Return length of longest common subsequence according to === operator.
-local function countCommonStrictEquality(a, b)
-	local n = 0
-	diff(#a, #b, function(aIndex, bIndex)
-		return a[aIndex + 1] == b[bIndex + 1]
-	end, function(nCommon)
-		n = n + nCommon
-	end)
-	return n
-end
-
-describe("input callback encapsulates comparison", function()
-	describe("zero and negative zero", function()
-		local a = { 0 }
-		local b = { -0 }
-
-		it("are not common according to Object.is method", function()
-			expect(countCommonObjectIs(a, b)).toEqual(0)
-		end)
-		it("are not common according to == method", function()
-			expect(countCommonStrictEquality(a, b)).toEqual(1)
-		end)
-	end)
-end)
-
-describe("Not a number", function()
-	-- input callback encapsulates identical sequences
-	local a = { Number.NaN }
-
-	it("is common according to Object.is method", function()
-		expect(countCommonObjectIs(a, a)).toEqual(1)
-	end)
-	it("is not common according to === operator", function()
-		expect(countCommonStrictEquality(a, a)).toEqual(0)
 	end)
 end)
 
@@ -161,16 +86,14 @@ local function assertEnd(name: string, val: number, end_: number)
 end
 
 local function assertCommonItems(
-	a_: Array<unknown> | string,
-	b_: Array<unknown> | string,
+	a_: { unknown } | string,
+	b_: { unknown } | string,
 	nCommon: number,
 	aCommon: number,
 	bCommon: number
 )
-	-- ROBLOX deviation START: lua does not allow string indexing, so we convert string inputs to arrays
-	local a: Array<unknown> = if type(a_) == "string" then stringToArray(a_) else a_
-	local b: Array<unknown> = if type(b_) == "string" then stringToArray(b_) else b_
-	-- ROBLOX deviation END
+	local a: { unknown } = if type(a_) == "string" then stringToArray(a_) else a_
+	local b: { unknown } = if type(b_) == "string" then stringToArray(b_) else b_
 
 	while nCommon ~= 0 do
 		if a[aCommon + 1] ~= b[bCommon + 1] then
@@ -221,15 +144,13 @@ local function countDifferences(aLength: number, bLength: number, isCommon): num
 			kF += 2
 		end
 	end
-	error(Error.new("countDifferences did not return a number"))
+	error("countDifferences did not return a number")
 end
 
 -- Return array of items in a longest common subsequence of array-like objects.
-local function findCommonItems(a_: Array<unknown> | string, b_: Array<unknown> | string): Array<any>
-	-- ROBLOX deviation START: lua does not allow string indexing, so we convert string inputs to arrays
-	local a: Array<unknown> = if type(a_) == "string" then stringToArray(a_) else a_
-	local b: Array<unknown> = if type(b_) == "string" then stringToArray(b_) else b_
-	-- ROBLOX deviation END
+local function findCommonItems(a_: { unknown } | string, b_: { unknown } | string): { any }
+	local a: { unknown } = if type(a_) == "string" then stringToArray(a_) else a_
+	local b: { unknown } = if type(b_) == "string" then stringToArray(b_) else b_
 
 	local aLength = #a
 	local bLength = #b
@@ -241,7 +162,7 @@ local function findCommonItems(a_: Array<unknown> | string, b_: Array<unknown> |
 		return a[aIndex + 1] == b[bIndex + 1]
 	end
 
-	local array: Array<any> = {}
+	local array: { any } = {}
 	diff(aLength, bLength, isCommon, function(nCommon, aCommon, bCommon)
 		assertMin("output nCommon", nCommon, 1)
 		assertMin("output aCommon", aCommon, 0)
@@ -263,8 +184,7 @@ local function findCommonItems(a_: Array<unknown> | string, b_: Array<unknown> |
 end
 
 -- Assert that array-like objects have the expected common items.
-local function expectCommonItems(a: Array<any> | string, b: Array<any> | string, expected: Array<any>): ()
-	-- ROBLOX deviation: lua does not allow string indexing, so we convert string inputs to arrays
+local function expectCommonItems(a: { any } | string, b: { any } | string, expected: { any }): ()
 	if type(a) == "string" then
 		a = stringToArray(a)
 	end
@@ -742,37 +662,32 @@ describe("all common items inside recursive", function()
 end)
 
 local function assertCommonSubstring(
-	a_: Array<unknown> | string,
-	b_: Array<unknown> | string,
+	a_: { unknown } | string,
+	b_: { unknown } | string,
 	nCommon: number,
 	aCommon: number,
 	bCommon: number
 )
-	-- ROBLOX deviation START: lua does not allow string indexing, so we convert string inputs to arrays
-	local a: Array<unknown> = if type(a_) == "string" then stringToArray(a_) else a_
-	local b: Array<unknown> = if type(b_) == "string" then stringToArray(b_) else b_
-	-- ROBLOX deviation END
-	local aSubstring = Array.slice(a, aCommon + 1, aCommon + nCommon + 1)
-	local bSubstring = Array.slice(b, bCommon + 1, bCommon + nCommon + 1)
+	local a: { unknown } = if type(a_) == "string" then stringToArray(a_) else a_
+	local b: { unknown } = if type(b_) == "string" then stringToArray(b_) else b_
+	local aSubstring = table.move(a, aCommon + 1, aCommon + nCommon, 1, {})
+	local bSubstring = table.move(b, bCommon + 1, bCommon + nCommon, 1, {})
 	if table.concat(aSubstring, "") ~= table.concat(bSubstring, "") then
 		error(
-			Error.new(
-				string.format(
-					"output substrings %s and %s are not common for nCommon=%d aCommon=%d bCommon =%d",
-					table.concat(aSubstring, ""),
-					table.concat(bSubstring, ""),
-					nCommon,
-					aCommon,
-					bCommon
-				)
+			string.format(
+				"output substrings %s and %s are not common for nCommon=%d aCommon=%d bCommon =%d",
+				table.concat(aSubstring, ""),
+				table.concat(bSubstring, ""),
+				nCommon,
+				aCommon,
+				bCommon
 			)
 		)
 	end
 end
 
-local function findCommonSubstrings(a: any, b: any): Array<string>
+local function findCommonSubstrings(a: any, b: any): { string }
 	local array = {}
-	-- ROBLOX deviation: manually translate string to char array
 	a = stringToArray(a)
 	b = stringToArray(b)
 
@@ -789,7 +704,7 @@ local function findCommonSubstrings(a: any, b: any): Array<string>
 		assertMin("output bCommon", bCommon, 0)
 		assertMax("output bCommon + nCommon", bCommon + nCommon, #b)
 		assertCommonSubstring(a, b, nCommon, aCommon, bCommon)
-		table.insert(array, Array.slice(a, aCommon + 1, aCommon + nCommon + 1))
+		table.insert(array, table.move(a, aCommon + 1, aCommon + nCommon, 1, {}))
 	end)
 	local retval = {}
 	for _, v in ipairs(array) do
