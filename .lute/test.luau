@@ -98,18 +98,6 @@ if configuration == "deferredlua" then
 	table.insert(runCmd, "--virtualInput=true")
 end
 
-if configuration == "loadstring" then
-	table.insert(runCmd, "--load.asRobloxScript")
-	table.insert(runCmd, "--fastFlags.overrides")
-	table.insert(runCmd, "EnableLoadModule=false")
-	table.insert(runCmd, "EngineStylingEnabled2=true")
-	table.insert(runCmd, "EnableInstanceGetStyledAPI=true")
-	table.insert(runCmd, "InstanceGetStyledPublicSecurity=true")
-	-- Enable headless renderer for styling support
-	table.insert(runCmd, "--headlessRenderer=true")
-	table.insert(runCmd, "--virtualInput=true")
-end
-
 if #extraArgs > 0 then
 	table.insert(runCmd, "--")
 	table.move(extraArgs, 1, #extraArgs, #runCmd + 1, runCmd)

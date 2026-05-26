@@ -61,11 +61,15 @@ local function runTest(source: string)
 		end
   ]]):format(source)
 
-	local getTest, error_ = loadstring(content)
+	local moduleScript = Instance.new("ModuleScript")
+	moduleScript.Source = content
 
-	assert(getTest, ("Error while loading code: %s"):format(tostring(error_)))
+	local loadmodule: (ModuleScript) -> (any, string, () -> any) = (debug :: any).loadmodule
+	local moduleFunction, error_ = loadmodule(moduleScript)
 
-	local run = getTest()
+	assert(moduleFunction, ("Error while loading code: %s"):format(tostring(error_)))
+
+	local run = moduleFunction()
 
 	local stdout = run(script)
 
