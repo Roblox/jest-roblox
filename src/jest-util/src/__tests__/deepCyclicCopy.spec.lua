@@ -14,7 +14,7 @@ local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
 local Number = LuauPolyfill.Number
 local Set = LuauPolyfill.Set
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local jest = JestGlobals.jest

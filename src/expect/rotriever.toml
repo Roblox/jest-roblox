@@ -18,6 +18,7 @@ registry_index = "true"
 LuauPolyfill = { workspace = true }
 Promise = { workspace = true }
 RegExp = { workspace = true }
+Symbol = { workspace = true }
 JestGetType = { path = "../jest-get-type" }
 JestMessageUtil = { path = "../jest-message-util" }
 JestUtil = { path = "../jest-util" }

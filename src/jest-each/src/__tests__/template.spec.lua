@@ -12,7 +12,7 @@ local Packages = script.Parent.Parent.Parent
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Dev.Symbol)
 
 local NIL = require(script.Parent.Parent.nilPlaceholder)
 

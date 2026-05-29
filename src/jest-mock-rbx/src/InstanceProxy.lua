@@ -13,7 +13,6 @@
 	* limitations under the License.
 ]]
 --!strict
--- ROBLOX NOTE: no upstream
 
 -- ROBLOX TODO: type checking lie - this should be replaced with something more
 -- representative of the actual spy type when Luau has stable support for
@@ -117,9 +116,7 @@ function ProxyControls.mockMethod(self: ProxyControls_private, name: string, met
 	end
 end
 
-local exports = {}
-
-function exports.new<ClassType>(original: ClassType & Instance): InstanceProxy<ClassType>
+local function new<ClassType>(original: ClassType & Instance): InstanceProxy<ClassType>
 	local controls: ProxyControls_private<ClassType> = setmetatable({
 		_validSelfSet = {},
 		_mockedMethods = {},
@@ -132,4 +129,6 @@ function exports.new<ClassType>(original: ClassType & Instance): InstanceProxy<C
 	}
 end
 
-return exports
+return {
+	new = new,
+}

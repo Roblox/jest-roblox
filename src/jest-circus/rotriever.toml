@@ -19,6 +19,7 @@ LuauPolyfill = { workspace = true }
 Promise = { workspace = true }
 RegExp = { workspace = true }
 ChalkLua = { workspace = true }
+Symbol = { workspace = true }
 JestTypes = { path = "../jest-types" }
 JestMatcherUtils = { path = "../jest-matcher-utils" }
 JestMessageUtil = { path = "../jest-message-util" }

@@ -20,3 +20,4 @@ RegExp = { workspace = true }
 
 [dev_dependencies]
 JestGlobals = { path = "../jest-globals" }
+Symbol = { workspace = true }

@@ -12,9 +12,9 @@ local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
 local Object = LuauPolyfill.Object
-local Symbol = LuauPolyfill.Symbol
 type Array<T> = LuauPolyfill.Array<T>
-type Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
+type Symbol = Symbol.Symbol
 type Record<K, T> = { [K]: T }
 
 local exports = {}

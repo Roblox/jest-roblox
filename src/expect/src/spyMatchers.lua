@@ -15,7 +15,7 @@ local Array = LuauPolyfill.Array
 local Error = LuauPolyfill.Error
 local Number = LuauPolyfill.Number
 local String = LuauPolyfill.String
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local getType = require(Packages.JestGetType).getType
 local isPrimitive = require(Packages.JestGetType).isPrimitive

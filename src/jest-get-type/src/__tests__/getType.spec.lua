@@ -19,9 +19,9 @@ local LuauPolyfill = require(Packages.LuauPolyfill)
 local Error = require(Packages.LuauPolyfill).Error
 local Map = LuauPolyfill.Map
 local Set = LuauPolyfill.Set
-local Symbol = LuauPolyfill.Symbol
 
 local RegExp = require(Packages.RegExp)
+local Symbol = require(Packages.Dev.Symbol)
 
 local getType = require(CurrentModule).getType
 

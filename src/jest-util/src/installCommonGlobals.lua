@@ -15,7 +15,7 @@ return function()
 	local Array = LuauPolyfill.Array
 	local Object = LuauPolyfill.Object
 	local String = LuauPolyfill.String
-	local Symbol = LuauPolyfill.Symbol
+	local Symbol = require(Packages.Symbol)
 
 	local Promise = require(Packages.Promise)
 

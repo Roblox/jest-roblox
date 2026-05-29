@@ -1,9 +1,7 @@
 # jest
 
-Upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/jest
+Upstream: https://github.com/facebook/jest/tree/v28.0.0/packages/jest
 
-This package exports the `Jest` object used in Jest. The main entrypoint to the test framework should be `JestGlobals`. You can find its documentation in the [Jest documentation](https://roblox.github.io/jest-roblox-internal).
+Re-exports the public surface of `jest-core` (`SearchSource`, `TestWatcher`, `createTestScheduler`, `runCLI`). Most users want `JestGlobals` instead — see the [Jest documentation](https://roblox.github.io/jest-roblox-internal).
 
----
-
-### :pencil2: Notes
+The `args` field parses command-line arguments via `ProcessService:GetCommandLineArgs()` for the Roblox CLI flow; upstream's `jest-cli` package is not ported.
