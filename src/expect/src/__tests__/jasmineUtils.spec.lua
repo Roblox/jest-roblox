@@ -23,7 +23,7 @@ local describe = JestGlobals.describe
 local it = JestGlobals.it
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 local Set = LuauPolyfill.Set
 
 local RegExp = require(Packages.RegExp)

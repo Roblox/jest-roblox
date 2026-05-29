@@ -17,6 +17,7 @@ registry_index = "true"
 [dependencies]
 LuauPolyfill = { workspace = true }
 Promise = { workspace = true }
+Symbol = { workspace = true }
 JestTypes = { path = "../jest-types" }
 JestMock = { path = '../jest-mock' }
 Expect = { path = "../expect" }

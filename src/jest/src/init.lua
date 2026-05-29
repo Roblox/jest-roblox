@@ -8,20 +8,13 @@
 
 local Packages = script.Parent
 
-local exports = {}
 local coreModule = require(Packages.JestCore)
-exports.SearchSource = coreModule.SearchSource
-exports.TestWatcher = coreModule.TestWatcher
-exports.createTestScheduler = coreModule.createTestScheduler
--- ROBLOX ROBLOX deviation START: not ported
--- exports.getVersion = coreModule.getVersion
--- ROBLOX deviation END
-exports.runCLI = coreModule.runCLI
--- ROBLOX deviation START: JestCli is not ported
--- exports.run = require(Packages.JestCli).run
--- ROBLOX deviation END
 
--- ROBLOX deviation: args handles arg parsing from ProcessService
-exports.args = require(script["args.roblox"])
-
-return exports
+return {
+	SearchSource = coreModule.SearchSource,
+	TestWatcher = coreModule.TestWatcher,
+	createTestScheduler = coreModule.createTestScheduler,
+	runCLI = coreModule.runCLI,
+	-- args handles arg parsing from ProcessService
+	args = require(script["args.roblox"]),
+}

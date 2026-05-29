@@ -19,7 +19,7 @@ local expect = JestGlobals.expect
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Object = LuauPolyfill.Object
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local alignedAnsiStyleSerializer = require(Packages.Dev.TestUtils).alignedAnsiStyleSerializer
 

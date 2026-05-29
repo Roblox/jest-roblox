@@ -14,12 +14,7 @@ type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 type Config_ProjectConfig = jestTypesModule.Config_ProjectConfig
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
-local Array = LuauPolyfill.Array
 local Object = LuauPolyfill.Object
-local inspect = LuauPolyfill.util.inspect
-local Set = LuauPolyfill.Set
-
-local exports = {}
 
 local DEFAULT_GLOBAL_CONFIG: Config_GlobalConfig = {
 	bail = 0,
@@ -84,9 +79,6 @@ local DEFAULT_GLOBAL_CONFIG: Config_GlobalConfig = {
 local DEFAULT_PROJECT_CONFIG: Config_ProjectConfig = {
 	automock = false,
 	cache = false,
-	-- ROBLOX deviation START: caching not supported
-	-- cacheDirectory = "/test_cache_dir/",
-	-- ROBLOX deviation END
 	clearMocks = false,
 	coveragePathIgnorePatterns = {},
 	cwd = "/test_root_dir/",
@@ -109,9 +101,8 @@ local DEFAULT_PROJECT_CONFIG: Config_ProjectConfig = {
 	moduleNameMapper = {},
 	modulePathIgnorePatterns = {},
 	modulePaths = {},
-	-- ROBLOX deviation: mock data model
 	mockDataModel = false,
-	-- ROBLOX deviation: inject alike types
+	-- inject alike types
 	oldFunctionSpying = true,
 	prettierPath = "prettier",
 	resetMocks = false,
@@ -146,34 +137,33 @@ local DEFAULT_PROJECT_CONFIG: Config_ProjectConfig = {
 	watchPathIgnorePatterns = {},
 }
 
-exports.makeGlobalConfig = function(overrides_: { [string]: any }?): Config_GlobalConfig
-	local overrides = overrides_ or {}
-	local overridesKeys = Set.new(Object.keys(overrides))
-
-	Array.forEach(Object.keys(DEFAULT_GLOBAL_CONFIG), function(key)
-		overridesKeys:delete(key)
-	end)
-
-	if overridesKeys.size > 0 then
-		error("Properties that are not part of GlobalConfig type were passed:" .. inspect(Array.from(overridesKeys)))
+local function merge<T>(defaults: T, overrides: { [string]: any }, name: string): T
+	local unknown: { string } = {}
+	for key in overrides do
+		if (defaults :: any)[key] == nil then
+			table.insert(unknown, tostring(key))
+		end
+	end
+	if #unknown > 0 then
+		error(`Properties that are not part of {name} type were passed: \{ "{table.concat(unknown, '", "')}" }`)
 	end
 
-	return Object.assign({}, DEFAULT_GLOBAL_CONFIG, overrides)
-end
-
-exports.makeProjectConfig = function(overrides: { [string]: any }): Config_ProjectConfig
-	overrides = overrides or {}
-	local overridesKeys = Set.new(Object.keys(overrides))
-
-	Array.forEach(Object.keys(DEFAULT_PROJECT_CONFIG), function(key)
-		overridesKeys:delete(key)
-	end)
-
-	if overridesKeys.size > 0 then
-		error("Properties that are not part of ProjectConfig type were passed:" .. inspect(Array.from(overridesKeys)))
+	local result = table.clone(defaults :: any)
+	for key, value in overrides do
+		result[key] = value
 	end
-
-	return Object.assign({}, DEFAULT_PROJECT_CONFIG, overrides)
+	return (result :: any) :: T
 end
 
-return exports
+local function makeGlobalConfig(overrides: { [string]: any }?): Config_GlobalConfig
+	return merge(DEFAULT_GLOBAL_CONFIG, overrides or {}, "GlobalConfig")
+end
+
+local function makeProjectConfig(overrides: { [string]: any }?): Config_ProjectConfig
+	return merge(DEFAULT_PROJECT_CONFIG, overrides or {}, "ProjectConfig")
+end
+
+return {
+	makeGlobalConfig = makeGlobalConfig,
+	makeProjectConfig = makeProjectConfig,
+}

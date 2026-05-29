@@ -11,8 +11,7 @@ local beforeAll = JestGlobals.beforeAll
 local afterAll = JestGlobals.afterAll
 local afterEach = JestGlobals.afterEach
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local JestConfig = require(Packages.Dev.JestConfig)
 

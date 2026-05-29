@@ -21,6 +21,7 @@ PrettyFormat = { path = "../pretty-format" }
 ChalkLua = { workspace = true }
 LuauPolyfill = { workspace = true }
 RegExp = { workspace = true }
+Symbol = { workspace = true }
 
 [dev_dependencies]
 RobloxShared = { path = "../roblox-shared" }

@@ -5,7 +5,7 @@ local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Error = LuauPolyfill.Error
 local Set = LuauPolyfill.Set
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local JestMockGenv = require(Packages.JestMockGenv)
 type GlobalMocker = JestMockGenv.GlobalMocker

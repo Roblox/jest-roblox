@@ -12,7 +12,7 @@ local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Error = LuauPolyfill.Error
 local Object = LuauPolyfill.Object
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Dev.Symbol)
 
 -- ROBLOX deviation: omitting imports for styles
 local ansiRegex = require(Packages.PrettyFormat).plugins.ConvertAnsi.ansiRegex

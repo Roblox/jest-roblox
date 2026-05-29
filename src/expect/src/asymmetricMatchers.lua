@@ -16,7 +16,7 @@ local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
 local Object = LuauPolyfill.Object
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 local instanceof = LuauPolyfill.instanceof
 
 type Array<T> = LuauPolyfill.Array<T>

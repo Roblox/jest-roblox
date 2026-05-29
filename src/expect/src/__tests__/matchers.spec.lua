@@ -21,7 +21,7 @@ local extends = LuauPolyfill.extends
 local Number = LuauPolyfill.Number
 local Object = LuauPolyfill.Object
 local Set = LuauPolyfill.Set
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local RegExp = require(Packages.RegExp)
 

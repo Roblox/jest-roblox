@@ -20,6 +20,7 @@ Promise = { workspace = true }
 ChalkLua = { workspace = true }
 RegExp = { workspace = true }
 Picomatch = { workspace = true }
+Symbol = { workspace = true }
 JestTypes = { path = "../jest-types" }
 RobloxShared = { path = "../roblox-shared" }
 

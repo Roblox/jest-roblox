@@ -9,8 +9,7 @@
 local CurrentModule = script.Parent
 local SrcModule = CurrentModule.Parent
 local Packages = SrcModule.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local expect = JestGlobals.expect

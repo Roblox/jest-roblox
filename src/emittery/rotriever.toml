@@ -17,6 +17,7 @@ registry_index = "true"
 [dependencies]
 LuauPolyfill = { workspace = true }
 Promise = { workspace = true }
+Symbol = { workspace = true }
 
 [dev_dependencies]
 JestGlobals = { path = "../jest-globals" }

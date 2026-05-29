@@ -10,8 +10,8 @@ local Packages = script.Parent.Parent.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Error = LuauPolyfill.Error
 local setTimeout = LuauPolyfill.setTimeout
-local Symbol = LuauPolyfill.Symbol
 local Promise = require(Packages.Promise)
+local Symbol = require(Packages.Symbol)
 local setImmediate = setTimeout
 local TypeError = Error
 
