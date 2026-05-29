@@ -6,9 +6,6 @@
 -- * LICENSE file in the root directory of this source tree.
 -- */
 
--- ROBLOX deviation: omitted isBuiltInObject and isMap functions because Lua only has one type, the table,
--- for structuring data
-
 local deepCyclicCopyTable, deepCyclicCopyReplaceable
 
 type anyTable = { [any]: any }

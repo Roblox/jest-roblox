@@ -25,3 +25,4 @@ PrettyFormat = { path = "../pretty-format" }
 
 [dev_dependencies]
 JestGlobals = { path = "../jest-globals" }
+Symbol = { workspace = true }

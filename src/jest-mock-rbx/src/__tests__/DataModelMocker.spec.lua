@@ -13,7 +13,6 @@
 	* limitations under the License.
 ]]
 --!strict
--- ROBLOX NOTE: no upstream
 local CurrentPackage = script.Parent.Parent
 local Packages = CurrentPackage.Parent
 

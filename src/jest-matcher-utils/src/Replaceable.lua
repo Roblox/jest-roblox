@@ -6,8 +6,7 @@
 -- * LICENSE file in the root directory of this source tree.
 -- */
 
-local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent
+local Packages = script.Parent.Parent
 local getType = require(Packages.JestGetType).getType
 
 type ReplaceableForEachCallBack = (any, any, any) -> nil
@@ -37,7 +36,7 @@ function Replaceable.isReplaceable(obj1: any, obj2: any): boolean
 end
 
 function Replaceable:forEach(callback: ReplaceableForEachCallBack)
-	for key, value in pairs(self.object) do
+	for key, value in self.object do
 		callback(value, key, self.object)
 	end
 end

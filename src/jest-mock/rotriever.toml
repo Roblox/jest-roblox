@@ -19,6 +19,7 @@ LuauPolyfill = { workspace = true }
 JestMockGenv = { path = "../jest-mock-genv" }
 JestMockRbx = { path = "../jest-mock-rbx" }
 JestTypes = { path = "../jest-types" }
+Symbol = { workspace = true }
 
 [dev_dependencies]
 JestGlobals = { path = "../jest-globals" }

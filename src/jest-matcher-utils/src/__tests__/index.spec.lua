@@ -10,11 +10,7 @@
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
--- ROBLOX deviation START: not used
--- local Array = LuauPolyfill.Array
--- ROBLOX deviation END
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 local RegExp = require(Packages.RegExp)
 

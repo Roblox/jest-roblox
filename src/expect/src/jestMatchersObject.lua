@@ -10,7 +10,7 @@ local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 local Object = LuauPolyfill.Object
 local Error = LuauPolyfill.Error
 type Partial<T> = any

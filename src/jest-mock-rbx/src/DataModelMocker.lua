@@ -13,10 +13,8 @@
 	* limitations under the License.
 ]]
 --!strict
--- ROBLOX NOTE: no upstream
 
-local CurrentModule = script.Parent
-local InstanceProxy = require(CurrentModule.InstanceProxy)
+local InstanceProxy = require(script.Parent.InstanceProxy)
 type InstanceProxy<ClassType = Instance> = InstanceProxy.InstanceProxy<ClassType>
 
 export type DataModelMocker = {
@@ -58,13 +56,13 @@ function DataModelMocker.intoProxy(self: DataModelMocker_private, object: any): 
 	return self._intoProxyMap[object]
 end
 
-local exports = {}
-
-function exports.new(): DataModelMocker
+local function new(): DataModelMocker
 	local mocker: DataModelMocker_private = setmetatable({
 		_intoProxyMap = {},
 	}, DataModelMocker) :: any
 	return mocker
 end
 
-return exports
+return {
+	new = new,
+}

@@ -8,37 +8,28 @@
 --  */
 
 local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
 
 local JestEnvironment = require(Packages.JestEnvironment)
 type Jest = JestEnvironment.Jest
-local importedExpect = require(Packages.Expect)
 
--- ROBLOX deviation START: additional imports
+local importedExpect = require(Packages.Expect)
+type MatcherState = importedExpect.MatcherState
+type ExpectExtended<E, State = MatcherState> = importedExpect.ExpectExtended<E, State>
+
 local jestTypesModule = require(Packages.JestTypes)
 type TestFrameworkGlobals = jestTypesModule.Global_TestFrameworkGlobals
 
-local ExpectModule = require(Packages.Expect)
-type MatcherState = ExpectModule.MatcherState
-type ExpectExtended<E, State = MatcherState> = ExpectModule.ExpectExtended<E, State>
--- ROBLOX deviation END
+type JestGlobals = {
+	jest: Jest,
+	expect: typeof(importedExpect),
+	expectExtended: ExpectExtended<{ [string]: (...any) -> nil }>,
+} & TestFrameworkGlobals
 
-type JestGlobals =
-	{
-		jest: Jest,
-		expect: typeof(importedExpect),
-		expectExtended: ExpectExtended<{ [string]: (...any) -> nil }>,
-	}
-	-- ROBLOX deviation START: using TestFrameworkGlobals instead of declaring variables one by one
-	& TestFrameworkGlobals
--- ROBLOX deviation END
-
-error(Error.new(
-	-- ROBLOX deviation START: aligned message to make sense for jest-roblox
+-- jest-runtime intercepts `require(Packages.JestGlobals)` inside tests and injects
+-- the live globals; reaching this error means the module was imported outside that path.
+error(
 	"Do not import `JestGlobals` outside of the Jest 3 test environment.\n"
 		.. "Tip: Jest 2 uses a different pattern - check your Jest version."
-	-- ROBLOX deviation END
-))
+)
 
 return ({} :: any) :: JestGlobals

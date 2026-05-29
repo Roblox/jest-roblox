@@ -39,11 +39,6 @@ describe("Jest", function()
 			expect(jestModule.createTestScheduler).toBeDefined()
 		end)
 
-		-- ROBLOX NOTE: not ported
-		it.skip("getVersion", function()
-			-- expect(jestModule.getVersion).toBeDefined()
-		end)
-
 		it("runCLI", function()
 			expect(jestModule.runCLI).toBeDefined()
 		end)

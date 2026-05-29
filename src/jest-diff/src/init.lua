@@ -12,7 +12,7 @@ local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Object = LuauPolyfill.Object
 local String = LuauPolyfill.String
-local Symbol = LuauPolyfill.Symbol
+local Symbol = require(Packages.Symbol)
 
 type Record<T, V> = { [T]: V }
 

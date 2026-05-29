@@ -12,8 +12,8 @@ local Error = LuauPolyfill.Error
 local Map = LuauPolyfill.Map
 local Object = LuauPolyfill.Object
 local Set = LuauPolyfill.Set
-local Symbol = LuauPolyfill.Symbol
 local WeakMap = LuauPolyfill.WeakMap
+local Symbol = require(Packages.Symbol)
 local TypeError = Error
 
 local Promise = require(Packages.Promise)
