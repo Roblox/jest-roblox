@@ -14,10 +14,6 @@ local JestGlobals = require(Packages.Dev.JestGlobals)
 local expect = JestGlobals.expect
 local it = JestGlobals.it
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Array = LuauPolyfill.Array
-local Number = LuauPolyfill.Number
-
 local deepCyclicCopyReplaceable = require(CurrentModule.deepCyclicCopyReplaceable)
 
 type anyTable = { [any]: any }
@@ -28,7 +24,8 @@ it("returns the same value for primitive or function values", function()
 	expect(deepCyclicCopyReplaceable(nil)).toBe(nil)
 	expect(deepCyclicCopyReplaceable(true)).toBe(true)
 	expect(deepCyclicCopyReplaceable(42)).toBe(42)
-	expect(Number.isNaN(deepCyclicCopyReplaceable(0 / 0))).toBe(true)
+	local nan = deepCyclicCopyReplaceable(0 / 0)
+	expect(nan ~= nan).toBe(true)
 	expect(deepCyclicCopyReplaceable("foo")).toBe("foo")
 	expect(deepCyclicCopyReplaceable(fn)).toBe(fn)
 end)
@@ -94,7 +91,7 @@ it("copies arrays as array objects", function()
 	local array = { 42 :: any, "foo", "bar", {}, {} }
 
 	expect(deepCyclicCopyReplaceable(array)).toEqual(array)
-	expect(Array.isArray(deepCyclicCopyReplaceable(array))).toBe(true)
+	expect(typeof(deepCyclicCopyReplaceable(array))).toBe("table")
 end)
 
 it("handles cyclic dependencies", function()

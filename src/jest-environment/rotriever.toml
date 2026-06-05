@@ -15,7 +15,6 @@ files = ["*", "!**/__*__/**"]
 registry_index = "true"
 
 [dependencies]
-LuauPolyfill = { workspace = true }
 JestFakeTimers = { path = "../jest-fake-timers" }
 JestMock = { path = "../jest-mock" }
 JestTypes = { path = "../jest-types" }

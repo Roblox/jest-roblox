@@ -20,7 +20,7 @@ local describe = JestGlobals.describe
 local it = JestGlobals.it
 
 local Promise = require(Packages.Dev.Promise)
-local Error = require(Packages.LuauPolyfill).Error
+local Error = require(Packages.JestTypes).Error
 
 local RobloxShared = require(Packages.RobloxShared)
 local pruneDeps = RobloxShared.pruneDeps

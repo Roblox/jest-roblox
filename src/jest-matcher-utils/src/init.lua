@@ -10,8 +10,8 @@
 local CurrentModule = script
 local Packages = CurrentModule.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
+local jestTypesModule = require(Packages.JestTypes)
+local Error = jestTypesModule.Error
 local Symbol = require(Packages.Symbol)
 
 local chalk = require(Packages.ChalkLua)
@@ -177,7 +177,7 @@ local function ensureNoExpected(expected: any, matcherName: string, options: Mat
 		end
 
 		error(
-			Error(
+			Error.new(
 				matcherErrorMessage(
 					matcherHint(matcherString, nil, "", options),
 					"this matcher must not have an expected argument",
@@ -199,7 +199,7 @@ local function ensureActualIsNumber(actual: any, matcherName: string, options: M
 		end
 
 		error(
-			Error(
+			Error.new(
 				matcherErrorMessage(
 					matcherHint(matcherString, nil, nil, options),
 					RECEIVED_COLOR("received") .. " value must be a number",
@@ -221,7 +221,7 @@ local function ensureExpectedIsNumber(expected: any, matcherName: string, option
 		end
 
 		error(
-			Error(
+			Error.new(
 				matcherErrorMessage(
 					matcherHint(matcherString, nil, nil, options),
 					EXPECTED_COLOR("expected") .. " value must be a number",
@@ -247,7 +247,7 @@ local function ensureExpectedIsNonNegativeInteger(expected: any, matcherName: st
 		end
 
 		error(
-			Error(
+			Error.new(
 				matcherErrorMessage(
 					matcherHint(matcherString, nil, nil, options),
 					EXPECTED_COLOR("expected") .. " value must be a non-negative integer",

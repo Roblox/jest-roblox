@@ -22,12 +22,10 @@
 	THE SOFTWARE.
 ]]
 local Packages = script.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
 local Promise = require(Packages.Promise)
-type Promise<T> = LuauPolyfill.Promise<T>
-
-local TypeError = Error
+local typesModule = require(Packages.JestTypes)
+type Promise<T> = typesModule.Promise<T>
+local Error = typesModule.Error
 
 local Delayed = {} :: Delayed
 local Queue: Queue
@@ -122,7 +120,7 @@ local function lateBound<TResult, TArgs>(size: number): ThroatLateBound<TResult,
 		local arguments = { fn :: any, ... }
 
 		if not isCallable(fn) then
-			error(TypeError.new("Expected throat fn to be a function but got " .. tostring(typeof(fn))))
+			error(Error.new("Expected throat fn to be a function but got " .. tostring(typeof(fn))))
 		end
 		local args = {} :: { TArgs }
 		for i = 1, #arguments - 1 do
@@ -142,10 +140,10 @@ local function throat<TResult, TArgs>(
 		size = (temp :: any) :: number
 	end
 	if typeof(size) ~= "number" then
-		error(TypeError.new("Expected throat size to be a number but got " .. tostring(typeof(size))))
+		error(Error.new("Expected throat size to be a number but got " .. tostring(typeof(size))))
 	end
 	if fn ~= nil and not isCallable(fn) then
-		error(TypeError.new("Expected throat fn to be a function but got " .. tostring(typeof(fn))))
+		error(Error.new("Expected throat fn to be a function but got " .. tostring(typeof(fn))))
 	end
 	if fn ~= nil and isCallable(fn) then
 		return earlyBound(bit32.bor(size, 0), fn)

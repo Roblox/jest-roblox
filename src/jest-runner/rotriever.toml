@@ -15,7 +15,6 @@ files = ["*", "!**/__*__/**"]
 registry_index = "true"
 
 [dependencies]
-LuauPolyfill = { workspace = true }
 Promise = { workspace = true }
 ChalkLua = { workspace = true }
 JestTestResult = { path = "../jest-test-result" }
