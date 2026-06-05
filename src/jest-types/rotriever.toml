@@ -15,5 +15,4 @@ files = ["*", "!**/__*__/**"]
 registry_index = "true"
 
 [dependencies]
-LuauPolyfill = { workspace = true }
 RegExp = { workspace = true }

@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 
-local rootWorkspace = script.Parent.Parent
-local LuauPolyfill = require(rootWorkspace.LuauPolyfill)
-type Array<T> = LuauPolyfill.Array<T>
-
 export type Milliseconds = number
 
 export type Status = "passed" | "failed" | "skipped" | "pending" | "todo" | "disabled"
@@ -18,15 +14,15 @@ export type Callsite = { column: number, line: number }
 
 -- this is here to make it possible to avoid huge dependency trees just for types
 export type AssertionResult = {
-	ancestorTitles: Array<string>,
+	ancestorTitles: { string },
 	duration: (Milliseconds | nil)?,
-	failureDetails: Array<any>,
-	failureMessages: Array<string>,
+	failureDetails: { any },
+	failureMessages: { string },
 	fullName: string,
 	invocations: number?,
 	location: (Callsite | nil)?,
 	numPassingAsserts: number,
-	retryReasons: Array<string>?,
+	retryReasons: { string }?,
 	status: Status,
 	title: string,
 }

@@ -9,7 +9,7 @@
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
 
-local Symbol = require(Packages.LuauPolyfill).Symbol
+local Symbol = require(Packages.Symbol)
 
 local printDiffOrStringify = require(CurrentModule).printDiffOrStringify
 -- ROBLOX deviation: omitted INVERTED_COLOR import because it doesn't have an
@@ -23,8 +23,7 @@ local beforeAll = JestGlobals.beforeAll
 
 local alignedAnsiStyleSerializer = require(Packages.Dev.TestUtils).alignedAnsiStyleSerializer
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-type Array<T> = LuauPolyfill.Array<T>
+type Array<T> = { T }
 type Map<X, Y> = { [X]: Y }
 
 beforeAll(function()

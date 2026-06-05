@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  ]]
 local Packages = script.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-type Promise<T> = LuauPolyfill.Promise<T>
 
 export type Context = { [string]: any }
 
@@ -15,6 +13,7 @@ local FakeTimersModule = require(Packages.JestFakeTimers)
 type FakeTimers = FakeTimersModule.FakeTimers
 
 local typesModule = require(Packages.JestTypes)
+type Promise<T> = typesModule.Promise<T>
 type Circus_EventHandler = typesModule.Circus_EventHandler
 type Config_Path = typesModule.Config_Path
 type Config_ProjectConfig = typesModule.Config_ProjectConfig

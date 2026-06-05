@@ -3,13 +3,12 @@
 local CurrentModule = script
 local Packages = CurrentModule.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
-type Error = LuauPolyfill.Error
 local RegExp = require(Packages.RegExp)
 
 local chalk = require(Packages.ChalkLua)
 local jestTypesModule = require(Packages.JestTypes)
+local Error = jestTypesModule.Error
+type Error = jestTypesModule.Error
 type Config_Path = jestTypesModule.Config_Path
 type TestResult_SerializableError = jestTypesModule.TestResult_SerializableError
 type TestResult_AssertionResult = jestTypesModule.TestResult_AssertionResult

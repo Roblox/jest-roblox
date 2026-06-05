@@ -7,9 +7,9 @@
  ]]
 
 local Packages = script.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
-type Error = LuauPolyfill.Error
+local jestTypesModule = require(Packages.JestTypes)
+local Error = jestTypesModule.Error
+type Error = jestTypesModule.Error
 
 local chalk = require(Packages.ChalkLua)
 

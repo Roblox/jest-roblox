@@ -8,16 +8,16 @@
 ]]
 local Packages = script.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
 local Map = LuauPolyfill.Map
 local Object = LuauPolyfill.Object
 local Set = LuauPolyfill.Set
 local WeakMap = LuauPolyfill.WeakMap
 local Symbol = require(Packages.Symbol)
-local TypeError = Error
+local jestTypesModule = require(Packages.JestTypes)
+local Error = jestTypesModule.Error
+type Promise<T> = jestTypesModule.Promise<T>
 
 local Promise = require(Packages.Promise)
-type Promise<T> = LuauPolyfill.Promise<T>
 
 type EventName = string | number
 
@@ -59,16 +59,16 @@ end
 
 local function assertEventName(eventName, allowMetaEvents)
 	if typeof(eventName) ~= "string" and not isSymbol(eventName) and typeof(eventName) ~= "number" then
-		error(TypeError.new("`eventName` must be a string, symbol, or number"))
+		error(Error.new("`eventName` must be a string, symbol, or number"))
 	end
 	if isMetaEvent(eventName) and allowMetaEvents ~= metaEventsAllowed then
-		error(TypeError.new("`eventName` cannot be meta event `listenerAdded` or `listenerRemoved`"))
+		error(Error.new("`eventName` cannot be meta event `listenerAdded` or `listenerRemoved`"))
 	end
 end
 
 local function assertListener(listener)
 	if not isCallable(listener) then
-		error(TypeError.new("listener must be a function"))
+		error(Error.new("listener must be a function"))
 	end
 end
 
