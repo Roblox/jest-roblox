@@ -16,13 +16,12 @@
 
 local Packages = script.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
 local Promise = require(Packages.Promise)
-type Promise<T> = LuauPolyfill.Promise<T>
 
 local JestFakeTimers = require(Packages.JestFakeTimers)
 
 local typesModule = require(Packages.JestTypes)
+type Promise<T> = typesModule.Promise<T>
 type Config_ProjectConfig = typesModule.Config_ProjectConfig
 type Global_Global = typesModule.Global_Global
 

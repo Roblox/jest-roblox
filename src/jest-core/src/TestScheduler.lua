@@ -280,11 +280,7 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 			return Promise.resolve():andThen(function()
 				local config = context.config
 				if not Boolean.toJSBoolean(testRunners[config.runner]) then
-					-- ROBLOX deviation START: use regular require to load TestRunner
-					-- local transformer = createScriptTransformer(config):expect()
-					-- local Runner: TestRunner = transformer:requireAndTranspileModule(config.runner):expect()
-					local Runner: TestRunner = require(Packages.JestRunner).default
-					-- ROBLOX deviation END
+					local Runner: TestRunner = require(Packages.JestRunner)
 					local runner = Runner.new(self._globalConfig, {
 						changedFiles = self._context.changedFiles,
 						sourcesRelatedToTestsInChangedFiles = self._context.sourcesRelatedToTestsInChangedFiles,

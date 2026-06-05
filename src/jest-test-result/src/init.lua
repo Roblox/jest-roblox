@@ -7,7 +7,7 @@
 ]]
 local exports = {}
 
-exports.formatTestResults = require(script.formatTestResults).default
+exports.formatTestResults = require(script.formatTestResults)
 
 local helpersModule = require(script.helpers)
 exports.addResult = helpersModule.addResult
@@ -22,7 +22,6 @@ export type AssertionResult = typesModule.AssertionResult
 export type FailedAssertion = typesModule.FailedAssertion
 export type FormattedTestResults = typesModule.FormattedTestResults
 export type Milliseconds = typesModule.Milliseconds
-export type RuntimeTransformResult = typesModule.RuntimeTransformResult
 export type SerializableError = typesModule.SerializableError
 export type Snapshot = typesModule.Snapshot
 export type SnapshotSummary = typesModule.SnapshotSummary
@@ -32,11 +31,9 @@ export type Test = typesModule.Test
 export type TestContext = typesModule.Context
 export type Context = typesModule.Context
 export type TestEvents = typesModule.TestEvents
--- ROBLOX FIXME: find a way to keep the generic param and it's default value when re-exporting
 export type TestFileEvent = typesModule.TestFileEvent
 export type TestResult = typesModule.TestResult
 export type TestResultsProcessor = typesModule.TestResultsProcessor
 export type TestCaseResult = typesModule.TestCaseResult
-export type V8CoverageResult = typesModule.V8CoverageResult
 
 return exports

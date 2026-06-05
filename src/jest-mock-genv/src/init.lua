@@ -118,8 +118,8 @@ function GlobalMockerClass:_createGlobalEnv(automocks: GlobalAutomocks): GlobalE
 				end
 
 				-- Give $$ names like $$typeof a free pass, because they're used
-				-- internally in some Jest/LuauPolyfill functions, and probably
-				-- aren't a user accidentally misusing `globalEnv`.
+				-- internally in some Jest functions, and probably aren't a user
+				-- accidentally misusing `globalEnv`.
 				if string.sub(name, 1, 2) == "$$" then
 					return nil
 				end

@@ -11,8 +11,7 @@ local jest = JestGlobals.jest
 
 local JestConfig = require(Packages.Dev.JestConfig)
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
+local Error = require(Packages.JestTypes).Error
 
 local parentModule = require(CurrentModule)
 local ModuleMocker = parentModule.ModuleMocker

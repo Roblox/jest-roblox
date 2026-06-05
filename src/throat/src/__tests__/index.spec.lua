@@ -20,13 +20,19 @@
 	THE SOFTWARE.
 ]]
 local Packages = script.Parent.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Error = LuauPolyfill.Error
-local Object = LuauPolyfill.Object
-local console = LuauPolyfill.console
-local instanceof = LuauPolyfill.instanceof
-local setTimeout = LuauPolyfill.setTimeout
+local Error = require(Packages.JestTypes).Error
 local Promise = require(Packages.Promise)
+
+local function instanceof(obj: any, class: any): boolean
+	local mt = getmetatable(obj)
+	while mt do
+		if mt == class then
+			return true
+		end
+		mt = getmetatable(mt)
+	end
+	return false
+end
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local expect = JestGlobals.expect
@@ -98,10 +104,10 @@ local function worker(max)
 		end
 		local res = Processed.new(table.clone(arguments))
 		return Promise.new(function(resolve)
-			setTimeout(function()
+			task.delay(0.1, function()
 				concurrent -= 1
 				resolve(res)
-			end, 100)
+			end)
 		end)
 	end
 	return execute
@@ -364,7 +370,7 @@ local function supportsAsyncStackTraces()
 		local function innerFunction()
 			return Promise.resolve():andThen(function()
 				Promise.new(function(resolve)
-					return setTimeout(resolve, 10)
+					return task.delay(0.01, resolve)
 				end):expect()
 				error(Error.new("whatever"))
 			end)
@@ -390,7 +396,7 @@ itFIXME("stack traces", function()
 	return Promise.resolve()
 		:andThen(function()
 			if not supportsAsyncStackTraces():expect() then
-				console.warn("Async stack traces not supported")
+				warn("Async stack traces not supported")
 				return
 			end
 			local lock = throat(1) :: ThroatLateBound<any, any>
@@ -398,9 +404,11 @@ itFIXME("stack traces", function()
 			local function myInnerFunction()
 				return Promise.resolve():andThen(function()
 					Promise.new(function(resolve)
-						return setTimeout(resolve, 10)
+						return task.delay(0.01, resolve)
 					end):expect()
-					error(Object.assign(Error.new("My Error"), { code = "MY_ERROR" }))
+					local err: any = Error.new("My Error")
+					err.code = "MY_ERROR"
+					error(err)
 				end)
 			end
 			local function myOuterFunction()
@@ -461,15 +469,17 @@ itFIXME("stack traces - ready provided fn", function()
 	return Promise.resolve()
 		:andThen(function()
 			if not (supportsAsyncStackTraces():expect()) then
-				console.warn("Async stack traces not supported")
+				warn("Async stack traces not supported")
 				return
 			end
 			local function myInnerFunction()
 				return Promise.resolve():andThen(function()
 					Promise.new(function(resolve)
-						return setTimeout(resolve, 10)
+						return task.delay(0.01, resolve)
 					end):expect()
-					error(Object.assign(Error.new("My Error"), { code = "MY_ERROR" }))
+					local err: any = Error.new("My Error")
+					err.code = "MY_ERROR"
+					error(err)
 				end)
 			end
 			local lock = throat(1, myInnerFunction) :: ThroatEarlyBound<any, any>

@@ -7,31 +7,12 @@
  ]]
 
 local rootWorkspace = script.Parent.Parent
-local LuauPolyfill = require(rootWorkspace.LuauPolyfill)
-type Array<T> = LuauPolyfill.Array<T>
-type Object = LuauPolyfill.Object
 
 local RegExp = require(rootWorkspace.RegExp)
 type RegExp = RegExp.RegExp
 
-type Record<T, U> = { [T]: U }
-type TemplateStringsArray = Array<string>
-
--- ROBLOX deviation START: Libraries/types not available
--- local chalkModule = require(rootWorkspace.chalk)
--- type ForegroundColor = chalkModule.ForegroundColor
-type ForegroundColor = string
-
--- local istanbul_reportsModule = require(rootWorkspace["istanbul-reports"])
--- type ReportOptions = istanbul_reportsModule.ReportOptions
-type ReportOptions = Object
-
--- local yargsModule = require(rootWorkspace.yargs)
--- type Arguments = yargsModule.Arguments
-type Arguments<T> = T & Object
--- ROBLOX deviation END: Libraries/types not available
-
-type CoverageProvider = "babel" | "v8"
+type ReportOptions = { [string]: any }
+type Arguments<T> = T & { [string]: any }
 
 export type FakeableAPI =
 	"Date"
@@ -75,7 +56,7 @@ export type FakeTimersConfig = { --[[*
    * @defaultValue
    * The default is `[]`, meaning all APIs are faked.
    ]]
-	doNotFake: Array<FakeableAPI>?,
+	doNotFake: { FakeableAPI }?,
 	--[[*
    * Sets current system time to be used by fake timers.
    *
@@ -111,11 +92,9 @@ export type LegacyFakeTimersConfig = { --[[*
 	legacyFakeTimers: true?,
 }
 
--- ROBLOX deviation START: handle TSParenthesizedType, remove Exclude<T> and replace 'Date' with 'DateTime'
 type FakeTimers = GlobalFakeTimersConfig & ((FakeTimersConfig & {
 	now: DateTime?,
 }) | LegacyFakeTimersConfig)
--- ROBLOX deviation STOP
 
 type Timers = "real" | "fake" | "modern" | "legacy"
 
@@ -139,7 +118,7 @@ export type HasteConfig = {
 	--[[* string to a custom implementation of Haste. ]]
 	hasteImplModulePath: string?,
 	--[[* All platforms to target, e.g ['ios', 'android']. ]]
-	platforms: Array<string>?,
+	platforms: { string }?,
 	--[[* Whether to throw on error on module collision. ]]
 	throwOnModuleCollision: boolean?,
 	--[[* Custom HasteMap module ]]
@@ -148,21 +127,17 @@ export type HasteConfig = {
 	retainAllFiles: boolean?,
 }
 
-export type CoverageReporterName = string --[[ ROBLOX TODO: Unhandled node for type: TSTypeOperator ]] --[[ keyof ReportOptions ]]
+export type CoverageReporterName = string
 
--- ROBLOX FIXME: add default generic type <K = CoverageReporterName>
--- ROBLOX TODO: Unhandled node for type: TSConditionalType ]] --[[ K extends CoverageReporterName ? ReportOptions[K] extends never ? never : [K, Partial<ReportOptions[K]>] : never
 export type CoverageReporterWithOptions<K> =
-	Array<string | Object> --[[ [K, Partial<ReportOptions[K]>] ]]
+	{ string | { [string]: any } } --[[ [K, Partial<ReportOptions[K]>] ]]
 	| nil
 
-export type CoverageReporters = Array<CoverageReporterName | CoverageReporterWithOptions<CoverageReporterName>>
+export type CoverageReporters = { CoverageReporterName | CoverageReporterWithOptions<CoverageReporterName> }
 
--- ROBLOX deviation: using a named table for ReporterConfig since we can't type tuples
--- export type ReporterConfig = Array<string | ModuleScript | Record<string, any>>
 export type ReporterConfig = { reporter: string | ModuleScript, options: { [string]: any } }
 
-export type TransformerConfig = Array<string | Record<string, any>>
+export type TransformerConfig = { string | { [string]: any } }
 
 export type ConfigGlobals = {
 	[string]: any,
@@ -174,696 +149,473 @@ export type PrettyFormatOptions = {}
 export type DefaultOptions = {
 	automock: boolean,
 	bail: number,
-	-- ROBLOX deviation START: caching not supported
 	-- cache: boolean,
 	-- cacheDirectory: Path,
-	-- ROBLOX deviation END
-	-- ROBLOX deviation START: not supported
 	-- changedFilesWithAncestor: boolean,
-	-- ROBLOX deviation END
 	ci: boolean,
 	clearMocks: boolean,
-	-- ROBLOX deviation START: not supported
 	-- collectCoverage: boolean,
-	-- coveragePathIgnorePatterns: Array<string>,
-	-- coverageReporters: Array<CoverageReporterName>,
+	-- coveragePathIgnorePatterns: {string},
+	-- coverageReporters: {CoverageReporterName},
 	-- coverageProvider: CoverageProvider,
 	-- detectLeaks: boolean,
 	-- detectOpenHandles: boolean,
 	-- errorOnDeprecated: boolean,
-	-- ROBLOX deviation END
 	expand: boolean,
-	-- ROBLOX deviation START: not supported
-	-- extensionsToTreatAsEsm: Array<Path>,
-	-- forceCoverageMatch: Array<Glob>,
-	-- ROBLOX deviation END
+	-- extensionsToTreatAsEsm: {Path},
+	-- forceCoverageMatch: {Glob},
 	globals: ConfigGlobals,
-	-- ROBLOX deviation START: not supported
 	-- haste: HasteConfig,
-	-- ROBLOX deviation END
 	injectGlobals: boolean,
 	listTests: boolean,
 	maxConcurrency: number,
 	maxWorkers: number | string,
-	-- ROBLOX deviation START: not supported
-	-- moduleDirectories: Array<string>,
-	-- moduleFileExtensions: Array<string>,
-	-- moduleNameMapper: Record<string, string | Array<string>>,
-	-- modulePathIgnorePatterns: Array<string>,
-	-- ROBLOX deviation END
-	-- ROBLOX deviation: mock data model
+	-- moduleDirectories: {string},
+	-- moduleFileExtensions: {string},
+	-- moduleNameMapper: Record<string, string | {string}>,
+	-- modulePathIgnorePatterns: {string},
 	mockDataModel: boolean,
 	noStackTrace: boolean,
 	stackDepth: number,
-	-- ROBLOX deviation START: not supported
 	-- notify: boolean,
 	-- notifyMode: NotifyMode,
-	-- ROBLOX deviation END
-	-- ROBLOX deviation: inject alike types
 	oldFunctionSpying: boolean,
 	passWithNoTests: boolean,
-	-- ROBLOX deviation START: not supported
 	-- prettierPath: string,
-	-- ROBLOX deviation END
 	resetMocks: boolean,
 	resetModules: boolean,
 	restoreMocks: boolean,
-	roots: Array<string>,
+	roots: { string },
 	runTestsByPath: boolean,
 	runner: string,
-	setupFiles: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>,
-	setupFilesAfterEnv: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>,
+	setupFiles: { ModuleScript },
+	setupFilesAfterEnv: { ModuleScript },
 	skipFilter: boolean,
 	slowTestThreshold: number,
-	snapshotSerializers: Array<string>,
+	snapshotSerializers: { string },
 	testEnvironment: string,
-	testEnvironmentOptions: Record<string, any>,
+	testEnvironmentOptions: { [string]: any },
 	testFailureExitCode: string | number,
 	testLocationInResults: boolean,
-	testMatch: Array<string>,
-	testPathIgnorePatterns: Array<string>,
-	testRegex: Array<string>,
-	-- ROBLOX deviation START: not supported
+	testMatch: { string },
+	testPathIgnorePatterns: { string },
+	testRegex: { string },
 	-- testRunner: string,
 	-- testSequencer: string,
 	-- testURL: string,
-	-- ROBLOX deviation END
 	timers: Timers,
-	-- ROBLOX deviation START: not supported
-	-- transformIgnorePatterns: Array<Glob>,
+	-- transformIgnorePatterns: {Glob},
 	-- useStderr: boolean,
 	-- watch: boolean,
-	-- watchPathIgnorePatterns: Array<string>,
+	-- watchPathIgnorePatterns: {string},
 	-- watchman: boolean,
-	-- ROBLOX deviation END
 }
 
 export type DisplayName = {
 	name: string,
-	color: string, --[[ ROBLOX TODO: Unhandled node for type: TSTypeQuery ]] --[[ typeof ForegroundColor ]]
+	color: string,
 }
 
--- ROBLOX deviation: inline Required<Pick<InitialOptions, 'rootDir'>>
 export type InitialOptionsWithRootDir = InitialOptions & { rootDir: Path }
 
--- ROBLOX deviation: inline Pick<InitialOptions & {cwd?: string}, keyof ProjectConfig>
 export type InitialProjectOptions = {
 	automock: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- cache: boolean?,
 	-- cacheDirectory: Path?,
-	-- ROBLOX deviation END
 	clearMocks: boolean?,
-	-- ROBLOX deviation START: not supported
-	-- coveragePathIgnorePatterns: Array<string>?,
+	-- coveragePathIgnorePatterns: {string}?,
 	-- dependencyExtractor: string?,
 	-- detectLeaks: boolean?,
 	-- detectOpenHandles: boolean?,
-	-- ROBLOX deviation END
 	displayName: (string | DisplayName)?,
-	-- ROBLOX deviation START: not supported
-	-- extensionsToTreatAsEsm: Array<Path>?,
-	-- extraGlobals: Array<string>?,
-	-- ROBLOX deviation END
+	-- extensionsToTreatAsEsm: {Path}?,
+	-- extraGlobals: {string}?,
 	filter: Path?,
-	-- ROBLOX deviation START: not supported
-	-- forceCoverageMatch: Array<Glob>?,
+	-- forceCoverageMatch: {Glob}?,
 	-- globalSetup: (string | nil)?,
 	-- globalTeardown: (string | nil)?,
 	-- haste: HasteConfig?,
-	-- ROBLOX deviation END
 	injectGlobals: boolean?,
-	-- ROBLOX deviation START: not supported
-	-- moduleDirectories: Array<string>?,
-	-- moduleFileExtensions: Array<string>?,
-	-- ROBLOX deviation END
+	-- moduleDirectories: {string}?,
+	-- moduleFileExtensions: {string}?,
 	moduleLoader: Path?,
-	-- ROBLOX deviation START: not supported
-	-- moduleNameMapper: { [string]: string | Array<string> }?,
-	-- modulePathIgnorePatterns: Array<string>?,
-	-- modulePaths: Array<string>?,
+	-- moduleNameMapper: { [string]: string | {string} }?,
+	-- modulePathIgnorePatterns: {string}?,
+	-- modulePaths: {string}?,
 	-- prettierPath: (string | nil)?,
-	-- ROBLOX deviation END
 	resetMocks: boolean?,
 	resetModules: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- resolver: (Path | nil)?,
-	-- ROBLOX deviation END
 	restoreMocks: boolean?,
-	-- ROBLOX deviation START: using Instance instead of Path
 	rootDir: Instance?,
-	-- ROBLOX deviation END
-	roots: Array<string>?,
+	roots: { string }?,
 	runner: string?,
-	setupFiles: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>?,
-	setupFilesAfterEnv: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>?,
+	setupFiles: { ModuleScript }?,
+	setupFilesAfterEnv: { ModuleScript }?,
 	skipFilter: boolean?,
 	skipNodeResolution: boolean?,
 	slowTestThreshold: number?,
-	-- ROBLOX deviation START: not supported
 	-- snapshotResolver: Path?,
-	-- ROBLOX deviation END
-	snapshotSerializers: Array<Path>?,
+	snapshotSerializers: { Path }?,
 	snapshotFormat: PrettyFormatOptions?,
 	testEnvironment: string?,
-	testEnvironmentOptions: Record<string, any>?,
+	testEnvironmentOptions: { [string]: any }?,
 	testLocationInResults: boolean?,
-	testMatch: Array<Glob>?,
-	testPathIgnorePatterns: Array<string>?,
-	testRegex: (string | Array<string>)?,
-	-- ROBLOX deviation START: not supported
+	testMatch: { Glob }?,
+	testPathIgnorePatterns: { string }?,
+	testRegex: (string | { string })?,
 	-- testRunner: string?,
 	-- testURL: string?,
-	-- ROBLOX deviation END
 	timers: Timers?,
-	-- ROBLOX deviation START: not supported
 	-- transform: { [string]: Path | TransformerConfig }?,
-	-- transformIgnorePatterns: Array<Glob>?,
-	-- watchPathIgnorePatterns: Array<string>?,
-	-- unmockedModulePathPatterns: Array<string>?,
-	-- ROBLOX deviation END
+	-- transformIgnorePatterns: {Glob}?,
+	-- watchPathIgnorePatterns: {string}?,
+	-- unmockedModulePathPatterns: {string}?,
 } & {
-	-- ROBLOX deviation START: not supported
 	-- cwd: string?
-	-- ROBLOX deviation END
 }
 
--- ROBLOX deviation: replace Partial type making all fields optional
 export type InitialOptions = {
 	automock: boolean?,
 	bail: (boolean | number)?,
-	-- ROBLOX deviation START: not supported
 	-- cache: boolean?,
 	-- cacheDirectory: Path?,
-	-- ROBLOX deviation END
 	ci: boolean?,
 	clearMocks: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- changedFilesWithAncestor: boolean?,
-	-- ROBLOX deviation END
 	changedSince: string?,
-	-- ROBLOX deviation START: not supported
 	-- collectCoverage: boolean?,
-	-- collectCoverageFrom: Array<Glob>?,
+	-- collectCoverageFrom: {Glob}?,
 	-- collectCoverageOnlyFrom: { [string]: boolean }?,
 	-- coverageDirectory: string?,
-	-- coveragePathIgnorePatterns: Array<string>?,
+	-- coveragePathIgnorePatterns: {string}?,
 	-- coverageProvider: CoverageProvider?,
 	-- coverageReporters: CoverageReporters?,
 	-- coverageThreshold: CoverageThreshold?,
 	-- dependencyExtractor: string?,
 	-- detectLeaks: boolean?,
 	-- detectOpenHandles: boolean?,
-	-- ROBLOX deviation END
 	displayName: (string | DisplayName)?,
 	expand: boolean?,
-	-- ROBLOX deviation START: not supported
-	-- extensionsToTreatAsEsm: Array<Path>?,
-	-- extraGlobals: Array<string>?,
-	-- ROBLOX deviation END
+	-- extensionsToTreatAsEsm: {Path}?,
+	-- extraGlobals: {string}?,
 	filter: Path?,
 	findRelatedTests: boolean?,
-	-- ROBLOX deviation START: not supported
-	-- forceCoverageMatch: Array<Glob>?,
+	-- forceCoverageMatch: {Glob}?,
 	-- forceExit: boolean?,
-	-- ROBLOX deviation END
 	json: boolean?,
 	globals: ConfigGlobals?,
-	-- ROBLOX deviation START: not supported
 	-- globalSetup: (string | nil)?,
 	-- globalTeardown: (string | nil)?,
 	-- haste: HasteConfig?,
-	-- ROBLOX deviation END
 	injectGlobals: boolean?,
-	reporters: Array<string | ModuleScript | ReporterConfig>?,
-	-- ROBLOX deviation START: not supported
+	reporters: { string | ModuleScript | ReporterConfig }?,
 	-- logHeapUsage: boolean?,
 	-- lastCommit: boolean?,
-	-- ROBLOX deviation END
 	listTests: boolean?,
 	maxConcurrency: number?,
 	maxWorkers: (number | string)?,
-	-- ROBLOX deviation START: not supported
-	-- moduleDirectories: Array<string>?,
-	-- moduleFileExtensions: Array<string>?,
-	-- ROBLOX deviation END
+	-- moduleDirectories: {string}?,
+	-- moduleFileExtensions: {string}?,
 	moduleLoader: Path?,
-	-- ROBLOX deviation START: not supported
-	-- moduleNameMapper: { [string]: string | Array<string> }?,
-	-- modulePathIgnorePatterns: Array<string>?,
-	-- modulePaths: Array<string>?,
-	-- ROBLOX deviation END
+	-- moduleNameMapper: { [string]: string | {string} }?,
+	-- modulePathIgnorePatterns: {string}?,
+	-- modulePaths: {string}?,
 	id: string?,
-	-- ROBLOX deviation: mock data model
 	mockDataModel: boolean?,
 	noStackTrace: boolean?,
 	stackDepth: number?,
-	-- ROBLOX deviation START: not supported
 	-- notify: boolean?,
 	-- notifyMode: string?,
 	-- onlyChanged: boolean?,
 	-- onlyFailures: boolean?,
-	-- ROBLOX deviation END
 	outputFile: Path?,
-	-- ROBLOX deviation: inject alike types
 	oldFunctionSpying: boolean?,
 	passWithNoTests: boolean?,
 	--[[*
 	* @deprecated Use `transformIgnorePatterns` options instead.
 	]]
-	preprocessorIgnorePatterns: Array<Glob>?,
+	preprocessorIgnorePatterns: { Glob }?,
 	preset: (string | nil)?,
-	-- ROBLOX deviation START: not supported
 	-- prettierPath: (string | nil)?,
-	-- ROBLOX deviation END
-	projects: Array<Glob | InitialProjectOptions>?,
-	-- ROBLOX deviation START: not supported
+	projects: { Glob | InitialProjectOptions }?,
 	-- replname: (string | nil)?,
-	-- ROBLOX deviation END
 	resetMocks: boolean?,
 	resetModules: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- resolver: (Path | nil)?,
-	-- ROBLOX deviation END
 	restoreMocks: boolean?,
-	-- ROBLOX deviation START: using Instance instead of Path
 	rootDir: Instance?,
-	-- ROBLOX deviation END
-	roots: Array<Path>?,
+	roots: { Path }?,
 	runner: string?,
 	runTestsByPath: boolean?,
 	runtime: string?,
-	sandboxInjectedGlobals: Array<string>?,
+	sandboxInjectedGlobals: { string }?,
 	--[[*
   	 * @deprecated Use `transform` options instead.
   	 ]]
 	scriptPreprocessor: string?,
-	setupFiles: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>?,
-	-- ROBLOX deviation START: not supported
+	setupFiles: { ModuleScript }?,
 	-- --[[*
 	-- * @deprecated Use `setupFilesAfterEnv` options instead.
 	-- ]]
 	-- setupTestFrameworkScriptFile: Path?,
-	-- ROBLOX deviation END
-	setupFilesAfterEnv: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>?,
+	setupFilesAfterEnv: { ModuleScript }?,
 	silent: boolean?,
 	skipFilter: boolean?,
 	skipNodeResolution: boolean?,
 	slowTestThreshold: number?,
-	-- ROBLOX deviation START: not supported
 	-- snapshotResolver: Path?,
-	-- ROBLOX deviation END
-	snapshotSerializers: Array<Path>?,
+	snapshotSerializers: { Path }?,
 	snapshotFormat: PrettyFormatOptions?,
-	-- ROBLOX deviation START: not supported
 	-- errorOnDeprecated: boolean?,
-	-- ROBLOX deviation END
 	testEnvironment: string?,
-	testEnvironmentOptions: Record<string, any>?,
+	testEnvironmentOptions: { [string]: any }?,
 	testFailureExitCode: (string | number)?,
 	testLocationInResults: boolean?,
-	testMatch: Array<Glob>?,
+	testMatch: { Glob }?,
 	testNamePattern: string?,
 	--[[*
 	 * @deprecated Use `roots` options instead.
 	 ]]
-	testPathDirs: Array<Path>?,
-	testPathIgnorePatterns: Array<string>?,
-	testRegex: (string | Array<string>)?,
-	-- ROBLOX deviation START: not supported
+	testPathDirs: { Path }?,
+	testPathIgnorePatterns: { string }?,
+	testRegex: (string | { string })?,
 	-- testResultsProcessor: string?,
 	-- testRunner: string?,
 	-- testSequencer: string?,
 	-- testURL: string?,
-	-- ROBLOX deviation END
 	testTimeout: number?,
 	timers: Timers?,
-	-- ROBLOX deviation START: not supported
 	-- transform: { [string]: Path | TransformerConfig }?,
-	-- transformIgnorePatterns: Array<Glob>?,
-	-- watchPathIgnorePatterns: Array<string>?,
-	-- unmockedModulePathPatterns: Array<string>?,
-	-- ROBLOX deviation END
+	-- transformIgnorePatterns: {Glob}?,
+	-- watchPathIgnorePatterns: {string}?,
+	-- unmockedModulePathPatterns: {string}?,
 	updateSnapshot: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- useStderr: boolean?,
-	-- ROBLOX deviation END
 	verbose: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- watch: boolean?,
 	-- watchAll: boolean?,
 	-- watchman: boolean?,
-	-- watchPlugins: Array<string | Array<string | Record<string, any>>>?,
-	-- ROBLOX deviation END
+	-- watchPlugins: {string | {string | { [string]: any }>>?,
 }
 
 export type SnapshotUpdateState = "all" | "new" | "none"
 
-type NotifyMode = "always" | "failure" | "success" | "change" | "success-change" | "failure-change"
-
-export type CoverageThresholdValue = {
-	branches: number?,
-	functions: number?,
-	lines: number?,
-	statements: number?,
-}
-
-type CoverageThreshold = { [string]: CoverageThresholdValue, global: CoverageThresholdValue }
-
 export type GlobalConfig = {
 	bail: number,
 	changedSince: string?,
-	-- ROBLOX deviation START: not supported
 	-- changedFilesWithAncestor: boolean,
 	-- collectCoverage: boolean,
-	-- collectCoverageFrom: Array<Glob>,
+	-- collectCoverageFrom: {Glob},
 	-- collectCoverageOnlyFrom: { [string]: boolean }?,
 	-- coverageDirectory: string,
-	-- coveragePathIgnorePatterns: Array<string>?,
+	-- coveragePathIgnorePatterns: {string}?,
 	-- coverageProvider: CoverageProvider,
 	-- coverageReporters: CoverageReporters,
 	-- coverageThreshold: CoverageThreshold?,
 	-- detectLeaks: boolean,
 	-- detectOpenHandles: boolean,
-	-- ROBLOX deviation END
 	expand: boolean,
 	filter: Path?,
-	-- ROBLOX deviation START: not supported
 	-- findRelatedTests: boolean,
 	-- forceExit: boolean,
-	-- ROBLOX deviation END
 	json: boolean,
-	-- ROBLOX deviation START: not supported
 	-- globalSetup: string?,
 	-- globalTeardown: string?,
 	-- lastCommit: boolean,
 	-- logHeapUsage: boolean,
-	-- ROBLOX deviation END
 	listTests: boolean,
 	maxConcurrency: number,
 	maxWorkers: number,
 	noStackTrace: boolean,
 	stackDepth: number,
-	nonFlagArgs: Array<string>,
-	-- ROBLOX deviation START: not supported
+	nonFlagArgs: { string },
 	-- noSCM: boolean?,
 	-- notify: boolean,
 	-- notifyMode: NotifyMode,
-	-- ROBLOX deviation END
 	outputFile: Path?,
-	-- ROBLOX deviation START: not supported
 	-- onlyChanged: boolean,
 	-- onlyFailures: boolean,
-	-- ROBLOX deviation END
 	passWithNoTests: boolean,
-	-- ROBLOX deviation: using Instance instead of Glob
-	projects: Array<Instance>,
-	-- ROBLOX deviation START: not supported
+	projects: { Instance },
 	-- replname: string?,
-	-- ROBLOX deviation END
-	reporters: Array<string | ModuleScript | ReporterConfig>?,
+	reporters: { string | ModuleScript | ReporterConfig }?,
 	runTestsByPath: boolean,
-	-- ROBLOX deviation START: using Instance instead of Path
 	rootDir: Instance,
-	-- ROBLOX deviation END
 	silent: boolean?,
 	skipFilter: boolean,
 	snapshotFormat: PrettyFormatOptions,
-	-- ROBLOX deviation START: not supported
 	-- errorOnDeprecated: boolean,
-	-- ROBLOX deviation END
 	testFailureExitCode: number,
 	testNamePattern: string?,
 	testPathPattern: string,
-	-- ROBLOX deviation START: not supported
 	-- testResultsProcessor: string?,
 	-- testSequencer: string,
-	-- ROBLOX deviation END
 	testTimeout: number?,
 	updateSnapshot: SnapshotUpdateState,
-	-- ROBLOX deviation START: not supported
 	-- useStderr: boolean,
-	-- ROBLOX deviation END
 	verbose: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- watch: boolean,
 	-- watchAll: boolean,
 	-- watchman: boolean,
-	-- watchPlugins: (Array<{
+	-- watchPlugins: ({{
 	-- 	path: string,
-	-- 	config: Record<string, any>,
+	-- 	config: { [string]: any },
 	-- }> | nil)?,
-	-- ROBLOX deviation END
 }
 export type ProjectConfig = {
 	automock: boolean,
-	-- ROBLOX deviation START: caching not supported
 	-- cache: boolean,
 	-- cacheDirectory: Path,
-	-- ROBLOX deviation END
 	clearMocks: boolean,
-	-- ROBLOX deviation START: not supported
-	-- coveragePathIgnorePatterns: Array<string>,
+	-- coveragePathIgnorePatterns: {string},
 	-- cwd: Path,
 	-- dependencyExtractor: string?,
 	-- detectLeaks: boolean,
 	-- detectOpenHandles: boolean,
-	-- ROBLOX deviation END
 	displayName: DisplayName?,
-	-- ROBLOX deviation START: not supported
 	-- errorOnDeprecated: boolean,
-	-- extensionsToTreatAsEsm: Array<Path>,
+	-- extensionsToTreatAsEsm: {Path},
 	fakeTimers: FakeTimers,
-	-- extraGlobals: Array<string>, -- ROBLOX deviation: Array<keyof typeof globalThis>;
-	-- ROBLOX deviation END
-	filter: Path?,
-	-- ROBLOX deviation START: not supported
-	-- forceCoverageMatch: Array<Glob>,
+	-- extraGlobals: {string},	filter: Path?,
+	-- forceCoverageMatch: {Glob},
 	-- globalSetup: string?,
 	-- globalTeardown: string?,
 	-- globals: ConfigGlobals,
 	-- haste: HasteConfig,
-	-- ROBLOX deviation END
 	id: string,
 	injectGlobals: boolean,
-	-- ROBLOX deviation START: not supported
-	-- moduleDirectories: Array<string>,
-	-- moduleFileExtensions: Array<string>,
+	-- moduleDirectories: {string},
+	-- moduleFileExtensions: {string},
 	-- moduleLoader: Path?,
-	-- moduleNameMapper: Array<Array<string>>,
-	-- modulePathIgnorePatterns: Array<string>,
-	-- modulePaths: Array<string>?,
+	-- moduleNameMapper: {{string}>,
+	-- modulePathIgnorePatterns: {string},
+	-- modulePaths: {string}?,
 	-- prettierPath: string,
-	-- ROBLOX deviation END
-	-- ROBLOX deviation: mock data model
 	mockDataModel: boolean,
-	-- ROBLOX deviation: inject alike types
 	oldFunctionSpying: boolean,
 	resetMocks: boolean,
 	resetModules: boolean,
-	-- ROBLOX deviation START: not supported
 	-- resolver: Path?,
-	-- ROBLOX deviation END
 	restoreMocks: boolean,
-	-- ROBLOX deviation START: using Instance instead of Path
 	rootDir: Instance,
-	-- ROBLOX deviation END
-	roots: Array<Path>,
+	roots: { Path },
 	runner: string,
 	runtime: string?,
-	sandboxInjectedGlobals: Array<ProjectConfig>,
-	setupFiles: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>,
-	setupFilesAfterEnv: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of Path
-		ModuleScript
-		-- ROBLOX deviation END
-	>,
+	sandboxInjectedGlobals: { ProjectConfig },
+	setupFiles: { ModuleScript },
+	setupFilesAfterEnv: { ModuleScript },
 	skipFilter: boolean,
-	-- ROBLOX deviation START: not supported
 	-- skipNodeResolution: boolean?,
-	-- ROBLOX deviation END
 	slowTestThreshold: number,
-	-- ROBLOX deviation START: not supported
 	-- snapshotResolver: Path?,
-	-- ROBLOX deviation END
-	snapshotSerializers: Array<Path>,
+	snapshotSerializers: { Path },
 	snapshotFormat: PrettyFormatOptions,
 	testEnvironment: string,
-	testEnvironmentOptions: Record<string, any>,
-	testMatch: Array<Glob>,
+	testEnvironmentOptions: { [string]: any },
+	testMatch: { Glob },
 	testLocationInResults: boolean,
-	testPathIgnorePatterns: Array<string>,
-	testRegex: Array<string | RegExp>,
-	-- ROBLOX deviation START: not supported
+	testPathIgnorePatterns: { string },
+	testRegex: { string | RegExp },
 	-- testRunner: string,
 	-- testURL: string,
-	-- ROBLOX deviation END
 	timers: Timers,
-	-- ROBLOX deviation START: not supported
-	-- transform: Array<Array<string | Path | Record<string, any>>>,
-	-- transformIgnorePatterns: Array<Glob>,
-	-- watchPathIgnorePatterns: Array<string>,
-	-- unmockedModulePathPatterns: Array<string>?,
-	-- ROBLOX deviation END
+	-- transform: {{string | Path | { [string]: any }>>,
+	-- transformIgnorePatterns: {Glob},
+	-- watchPathIgnorePatterns: {string},
+	-- unmockedModulePathPatterns: {string}?,
 }
--- ROBLOX deviation: replace Partial type making all fields optional
 export type Argv = Arguments<{
 	all: boolean?,
 	automock: boolean?,
 	bail: (boolean | number)?,
-	-- ROBLOX deviation START: not supported
 	-- cache: boolean?,
 	-- cacheDirectory: string?,
 	-- changedFilesWithAncestor: boolean?,
-	-- ROBLOX deviation END
 	changedSince: string?,
 	ci: boolean?,
 	clearCache: boolean?,
 	clearMocks: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- collectCoverage: boolean?,
 	-- collectCoverageFrom: string?,
-	-- collectCoverageOnlyFrom: Array<string>?,
-	-- ROBLOX deviation END
+	-- collectCoverageOnlyFrom: {string}?,
 	color: boolean?,
 	colors: boolean?,
 	config: string?,
 	coverage: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- coverageDirectory: string?,
-	-- coveragePathIgnorePatterns: Array<string>?,
-	-- coverageReporters: Array<string>?,
+	-- coveragePathIgnorePatterns: {string}?,
+	-- coverageReporters: {string}?,
 	-- coverageThreshold: string?,
-	-- ROBLOX deviation END
 	debug: boolean?,
 	env: string?,
 	expand: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- findRelatedTests: boolean?,
 	-- forceExit: boolean?,
-	-- ROBLOX deviation END
 	globals: string?,
-	-- ROBLOX deviation START: not supported
 	-- globalSetup: (string | nil)?,
 	-- globalTeardown: (string | nil)?,
 	-- haste: string?,
-	-- ROBLOX deviation END
 	init: boolean?,
 	injectGlobals: boolean?,
 	json: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- lastCommit: boolean?,
 	-- logHeapUsage: boolean?,
-	-- ROBLOX deviation END
 	maxWorkers: (number | string)?,
-	-- ROBLOX deviation START: not supported
-	-- moduleDirectories: Array<string>?,
-	-- moduleFileExtensions: Array<string>?,
+	-- moduleDirectories: {string}?,
+	-- moduleFileExtensions: {string}?,
 	-- moduleNameMapper: string?,
-	-- modulePathIgnorePatterns: Array<string>?,
-	-- modulePaths: Array<string>?,
-	-- ROBLOX deviation END
+	-- modulePathIgnorePatterns: {string}?,
+	-- modulePaths: {string}?,
 	noStackTrace: boolean?,
 	stackDepth: number?,
-	-- ROBLOX deviation START: not supported
 	-- notify: boolean?,
 	-- notifyMode: string?,
 	-- onlyChanged: boolean?,
 	-- onlyFailures: boolean?,
-	-- ROBLOX deviation END
 	outputFile: string?,
 	preset: (string | nil)?,
-	projects: Array<string>?,
-	-- ROBLOX deviation START: not supported
+	projects: { string }?,
 	-- prettierPath: (string | nil)?,
-	-- ROBLOX deviation END
-	reporters: Array<string | ModuleScript | ReporterConfig>?,
+	reporters: { string | ModuleScript | ReporterConfig }?,
 	resetMocks: boolean?,
 	resetModules: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- resolver: (string | nil)?,
-	-- ROBLOX deviation END
 	restoreMocks: boolean?,
-	-- ROBLOX deviation START: using Instance instead of string
 	rootDir: Instance?,
-	-- ROBLOX deviation END
-	roots: Array<string>?,
+	roots: { string }?,
 	runInBand: boolean?,
-	selectProjects: Array<string>?,
-	setupFiles: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of string
-		ModuleScript
-		-- ROBLOX deviation END
-	>?,
-	setupFilesAfterEnv: Array<
-		-- ROBLOX deviation START: using ModuleScript instead of string
-		ModuleScript
-		-- ROBLOX deviation END
-	>?,
+	selectProjects: { string }?,
+	setupFiles: { ModuleScript }?,
+	setupFilesAfterEnv: { ModuleScript }?,
 	showConfig: boolean?,
 	silent: boolean?,
-	snapshotSerializers: Array<string>?,
+	snapshotSerializers: { string }?,
 	testEnvironment: string?,
 	testEnvironmentOptions: string?,
 	testFailureExitCode: (string | nil)?,
-	testMatch: Array<string>?,
+	testMatch: { string }?,
 	testNamePattern: string?,
-	testPathIgnorePatterns: Array<string>?,
-	testPathPattern: Array<string>?,
-	testRegex: string | Array<string>?,
-	-- ROBLOX deviation START: not supported
+	testPathIgnorePatterns: { string }?,
+	testPathPattern: { string }?,
+	testRegex: string | { string }?,
 	-- testResultsProcessor: string?,
 	-- testRunner: string?,
 	-- testSequencer: string?,
 	-- testURL: string?,
-	-- ROBLOX deviation END
 	testTimeout: (number | nil)?,
 	timers: string?,
-	-- ROBLOX deviation START: not supported
 	-- transform: string?,
-	-- transformIgnorePatterns: Array<string>?,
-	-- unmockedModulePathPatterns: (Array<string> | nil)?,
-	-- ROBLOX deviation END
+	-- transformIgnorePatterns: {string}?,
+	-- unmockedModulePathPatterns: ({string} | nil)?,
 	updateSnapshot: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- useStderr: boolean?,
-	-- ROBLOX deviation END
 	verbose: boolean?,
 	version: boolean?,
-	-- ROBLOX deviation START: not supported
 	-- watch: boolean?,
 	-- watchAll: boolean?,
 	-- watchman: boolean?,
-	-- watchPathIgnorePatterns: Array<string>?,
-	-- ROBLOX deviation END
+	-- watchPathIgnorePatterns: {string}?,
 }>
 
 return {}

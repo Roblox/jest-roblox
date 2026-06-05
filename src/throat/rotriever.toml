@@ -15,7 +15,7 @@ files = ["*", "!**/__*__/**"]
 registry_index = "true"
 
 [dependencies]
-LuauPolyfill = { workspace = true }
+JestTypes = { path = "../jest-types" }
 Promise = { workspace = true }
 
 [dev_dependencies]

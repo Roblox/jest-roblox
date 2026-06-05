@@ -336,9 +336,7 @@ type Runtime_private = { --
 	-- _mockRegistry: Map<string, any>,
 	-- _isolatedMockRegistry: Map<string, any> | nil,
 	_mockRegistry: Map<ModuleScript, any>,
-	-- ROBLOX deviation START: add cache of loaded module functions to a test runner
-	_loadedModuleFns: Map<ModuleScript, { any }> | nil,
-	-- ROBLOX deviation END
+	_loadedModuleFns: { [ModuleScript]: { any } }?,
 	_isolatedMockRegistry: Map<ModuleScript, any> | nil,
 	-- ROBLOX deviation END
 	-- ROBLOX deviation START: skipped
@@ -527,7 +525,7 @@ type Runtime_statics = {
 	-- 	coverageOptions: ShouldInstrumentOptions,
 	-- 	testPath: Config_Path
 	-- ) -> Runtime,
-	new: (loadedModuleFns: Map<ModuleScript, any>?) -> Runtime,
+	new: (config: Config_ProjectConfig, loadedModuleFns: { [ModuleScript]: { any } }?) -> Runtime,
 	-- ROBLOX deviation END
 }
 
@@ -547,7 +545,7 @@ local Runtime_private = Runtime :: Runtime_private & Runtime_statics;
 -- 	coverageOptions: ShouldInstrumentOptions,
 -- 	testPath: Config_Path
 -- ): Runtime
-function Runtime.new(config: Config_ProjectConfig, loadedModuleFns: Map<ModuleScript, { any }>?): Runtime
+function Runtime.new(config: Config_ProjectConfig, loadedModuleFns: { [ModuleScript]: { any } }?): Runtime
 	-- ROBLOX deviation START: cast to private type to access methods properly
 	-- local self = setmetatable({}, Runtime)
 	local self = (setmetatable({}, Runtime) :: any) :: Runtime_private
@@ -1872,8 +1870,8 @@ function Runtime_private:_execModule(
 
 	local modulePath = localModule.filename
 
-	if self._loadedModuleFns and self._loadedModuleFns:has(modulePath) then
-		local loadedModule = self._loadedModuleFns:get(modulePath) :: { any }
+	if self._loadedModuleFns and self._loadedModuleFns[modulePath] then
+		local loadedModule = self._loadedModuleFns[modulePath] :: { any }
 		moduleFunction = loadedModule[1]
 		defaultEnvironment = loadedModule[2]
 	else
@@ -1885,7 +1883,6 @@ function Runtime_private:_execModule(
 		else
 			moduleFunction = loadstring(modulePath.Source, modulePath:GetFullName())
 		end
-		-- ROBLOX NOTE: we are not using assert() as it throws a bare string and we need to throw an Error object
 		if moduleFunction == nil then
 			error(Error.new(errorMessage))
 		end
@@ -1894,7 +1891,7 @@ function Runtime_private:_execModule(
 		defaultEnvironment = getfenv(moduleFunction)
 
 		if self._loadedModuleFns then
-			self._loadedModuleFns:set(modulePath, { moduleFunction, defaultEnvironment, cleanupFn })
+			self._loadedModuleFns[modulePath] = { moduleFunction, defaultEnvironment, cleanupFn }
 		else
 			if cleanupFn ~= nil then
 				table.insert(self._cleanupFns, cleanupFn)

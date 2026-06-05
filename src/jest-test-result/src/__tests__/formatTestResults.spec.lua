@@ -14,7 +14,7 @@ local expect = JestGlobals.expect
 local describe = JestGlobals.describe
 local it = JestGlobals.it
 
-local formatTestResults = require(CurrentModule.formatTestResults).default
+local formatTestResults = require(CurrentModule.formatTestResults)
 
 local types = require(CurrentModule.types)
 type AggregatedResult = types.AggregatedResult

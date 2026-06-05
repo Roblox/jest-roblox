@@ -7,12 +7,6 @@
  ]]
 
 local CurrentModule = script.Parent
-local Packages = CurrentModule.Parent
-
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Array = LuauPolyfill.Array
-local Boolean = LuauPolyfill.Boolean
-local Object = LuauPolyfill.Object
 
 local types = require(CurrentModule.types)
 type AggregatedResult = types.AggregatedResult
@@ -31,7 +25,10 @@ local function formatTestResult(
 	codeCoverageFormatter: CodeCoverageFormatter?,
 	reporter: CodeCoverageReporter?
 ): FormattedTestResult
-	local assertionResults = Array.map(testResult.testResults, formatTestAssertion)
+	local assertionResults = {}
+	for _, result in testResult.testResults do
+		table.insert(assertionResults, formatTestAssertion(result))
+	end
 	if testResult.testExecError ~= nil then
 		local now = DateTime.now().UnixTimestampMillis
 		return {
@@ -57,7 +54,7 @@ local function formatTestResult(
 			message = if testResult.failureMessage ~= nil then testResult.failureMessage else "",
 			name = testResult.testFilePath,
 			startTime = testResult.perfStats.start,
-			status = if Boolean.toJSBoolean(allTestsPassed) then "passed" else "failed",
+			status = if allTestsPassed then "passed" else "failed",
 			summary = "",
 		}
 	end
@@ -84,12 +81,13 @@ local function formatTestResults(
 	codeCoverageFormatter: CodeCoverageFormatter?,
 	reporter: CodeCoverageReporter?
 ): FormattedTestResults
-	local testResults = Array.map(results.testResults, function(testResult)
-		return formatTestResult(testResult, codeCoverageFormatter, reporter)
-	end)
-	return Object.assign({}, results, { testResults = testResults })
+	local testResults = {}
+	for _, testResult in results.testResults do
+		table.insert(testResults, formatTestResult(testResult, codeCoverageFormatter, reporter))
+	end
+	local formatted: any = table.clone(results)
+	formatted.testResults = testResults
+	return formatted
 end
 
-return {
-	default = formatTestResults,
-}
+return formatTestResults

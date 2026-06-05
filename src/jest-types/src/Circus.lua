@@ -7,24 +7,18 @@
  ]]
 
 local rootWorkspace = script.Parent.Parent
-local LuauPolyfill = require(rootWorkspace.LuauPolyfill)
-type Array<T> = LuauPolyfill.Array<T>
-type Error = LuauPolyfill.Error
-type Object = LuauPolyfill.Object
-type Promise<T> = LuauPolyfill.Promise<T>
 
 local RegExp = require(rootWorkspace.RegExp)
 type RegExp = RegExp.RegExp
 
--- ROBLOX FIXME: can't express void when defined outside of a function type
+local PromiseModule = require(script.Parent.Promise)
+type Promise<T> = PromiseModule.Promise<T>
+local ErrorModule = require(script.Parent.Error)
+type Error = ErrorModule.Error
+type Process = { [string]: any }
 type void = nil
 
 local GlobalModule = require(script.Parent.Global)
-
--- ROBLOX deviation START: NodeJS.Process not available
--- type Process = NodeJS.Process
-type Process = Object
--- ROBLOX deviation END
 
 export type DoneFn = GlobalModule.DoneFn
 export type BlockFn = GlobalModule.BlockFn
@@ -51,8 +45,7 @@ export type Hook = {
 	timeout: number | nil,
 }
 
--- ROBLOX deviation: combined both possible function signatures into one so that it's considered callable by Luau analyze
-export type EventHandler = (self: any, event: AsyncEvent | SyncEvent, state: State) -> ...Promise<void>
+export type EventHandler = (self: any, event: AsyncEvent | SyncEvent, state: State) -> ...Promise<nil>
 
 export type Event = SyncEvent | AsyncEvent
 
@@ -167,22 +160,22 @@ export type MatcherResults = { actual: any, expected: any, name: string, pass: b
 export type TestStatus = "skip" | "done" | "todo"
 export type TestResult = {
 	duration: (number | nil)?,
-	errors: Array<FormattedError>,
-	errorsDetailed: Array<MatcherResults | any>,
+	errors: { FormattedError },
+	errorsDetailed: { MatcherResults | any },
 	invocations: number,
 	status: TestStatus,
 	location: ({ column: number, line: number } | nil)?,
-	retryReasons: Array<FormattedError>,
-	testPath: Array<TestName | BlockName>,
+	retryReasons: { FormattedError },
+	testPath: { TestName | BlockName },
 }
 
-export type RunResult = { unhandledErrors: Array<FormattedError>, testResults: TestResults }
+export type RunResult = { unhandledErrors: { FormattedError }, testResults: TestResults }
 
-export type TestResults = Array<TestResult>
+export type TestResults = { TestResult }
 
 export type GlobalErrorHandlers = {
-	uncaughtException: Array<(exception: Exception) -> ()>,
-	unhandledRejection: Array<(exception: Exception, promise: Promise<any>) -> ()>,
+	uncaughtException: { (exception: Exception) -> () },
+	unhandledRejection: { (exception: Exception, promise: Promise<any>) -> () },
 }
 
 export type State = {
@@ -199,28 +192,28 @@ export type State = {
 	rootDescribeBlock: DescribeBlock,
 	testNamePattern: (RegExp | nil)?,
 	testTimeout: number,
-	unhandledErrors: Array<Exception>,
+	unhandledErrors: { Exception },
 	includeTestLocationInResult: boolean,
 }
 
 export type DescribeBlock = {
 	type: "describeBlock",
-	children: Array<DescribeBlock | TestEntry>,
-	hooks: Array<Hook>,
+	children: { DescribeBlock | TestEntry },
+	hooks: { Hook },
 	mode: BlockMode,
 	name: BlockName,
 	parent: DescribeBlock?,
 	--[[* @deprecated Please get from `children` array instead ]]
-	tests: Array<TestEntry>,
+	tests: { TestEntry },
 }
 
-export type TestError = Exception | Array<Exception | nil> -- the error from the test, as well as a backup error for async
+export type TestError = Exception | { Exception | nil } -- the error from the test, as well as a backup error for async
 
 export type TestEntry = {
 	type: "test",
 	asyncError: Exception, -- Used if the test failure contains no usable stack trace
-	errors: Array<TestError>,
-	retryReasons: Array<TestError>,
+	errors: { TestError },
+	retryReasons: { TestError },
 	fn: TestFn,
 	invocations: number,
 	mode: TestMode,
