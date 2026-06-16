@@ -26,7 +26,6 @@ JestMessageUtil = { path = "../jest-message-util" }
 JestRuntime = { path = "../jest-runtime" }
 JestCircus = { path = "../jest-circus" }
 Throat = { path = "../throat" }
-Emittery = { path = "../emittery" }
 RobloxShared = { path = "../roblox-shared" }
 
 [dev_dependencies]
