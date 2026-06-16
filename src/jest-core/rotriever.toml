@@ -31,7 +31,6 @@ JestMessageUtil = { path = "../jest-message-util" }
 JestSnapshot = { path = "../jest-snapshot" }
 PrettyFormat = { path = "../pretty-format" }
 RobloxShared = { path = "../roblox-shared" }
-Emittery = { path = "../emittery" }
 
 [dev_dependencies]
 JestGlobals = { path = "../jest-globals" }

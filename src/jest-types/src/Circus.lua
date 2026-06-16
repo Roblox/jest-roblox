@@ -91,7 +91,6 @@ export type AsyncEvent = {
 	name: "setup",
 	testNamePattern: string?,
 	runtimeGlobals: JestGlobals,
-	parentProcess: Process,
 } | {
 	name: "include_test_location_in_result",
 } | {

@@ -307,65 +307,17 @@ function TestScheduler:scheduleTests(tests: Array<Test>, watcher: TestWatcher): 
 						serial = runInBand or Boolean.toJSBoolean(testRunner.isSerial),
 					}
 
-					--[[*
-					 * Test runners with event emitters are still not supported
-					 * for third party test runners.
-					]]
-					if testRunner.__PRIVATE_UNSTABLE_API_supportsEventEmitters__ then
-						local unsubscribes = {
-							testRunner:on("test-file-start", function(ref)
-								local test = ref[1]
-								return onTestFileStart(test)
-							end),
-							testRunner:on("test-file-success", function(ref)
-								local test, testResult = table.unpack(ref, 1, 2)
-								return onResult(test, testResult)
-							end),
-							testRunner:on("test-file-failure", function(ref)
-								local test, error_ = table.unpack(ref, 1, 2)
-								return onFailure(test, error_)
-							end),
-							testRunner:on("test-case-result", function(ref)
-								local testPath, testCaseResult = table.unpack(ref, 1, 2)
-								local test: Test = {
-									context = context,
-									path = testPath,
-									script = nil :: any, -- TODO: remove when we clean up Test type
-								}
-								self._dispatcher:onTestCaseResult(test, testCaseResult)
-							end),
-						}
-
-						testRunner
-							:runTests(
-								-- ROBLOX FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
-								tests :: Array<any>,
-								watcher,
-								nil,
-								nil,
-								nil,
-								testRunnerOptions
-							)
-							:expect()
-
-						Array.forEach(unsubscribes, function(sub)
-							return sub()
-						end)
-					else
-						testRunner
-							:runTests(
-								-- ROBLOX FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
-								tests :: Array<any>,
-								watcher,
-								onTestFileStart,
-								-- ROBLOX FIXME Luau: Type '(Test, TestResult) -> Promise<nil>' could not be converted into '((Test, TestResult) -> Promise<nil>)?'
-								onResult :: Function,
-								-- ROBLOX FIXME Luau: Type '(Test, SerializableError) -> Promise<nil>' could not be converted into '((Test, SerializableError) -> Promise<nil>)?'
-								onFailure :: Function,
-								testRunnerOptions
-							)
-							:expect()
-					end
+					testRunner
+						:runTests(
+							-- ROBLOX FIXME Luau: Type 'Array<Test>' from 'JestRoblox/_Workspace/JestCore/JestCore/TestScheduler' could not be converted into 'Array<Test>' from 'JestRoblox/_Workspace/JestRunner/JestRunner'
+							tests :: Array<any>,
+							watcher,
+							onTestFileStart,
+							onResult :: Function,
+							onFailure :: Function,
+							testRunnerOptions
+						)
+						:expect()
 					-- ROBLOX deviation START: add cache of loaded module functions to a test runner
 					-- test runner should call clean up functions when it is done
 					testRunner:cleanup()
@@ -486,7 +438,7 @@ function TestScheduler:_bailIfNeeded(
 	return Promise.resolve():andThen(function()
 		if self._globalConfig.bail ~= 0 and aggregatedResults.numFailedTests >= self._globalConfig.bail then
 			if watcher:isWatchMode() then
-				watcher:setState({ interrupted = true }):expect()
+				watcher:setState({ interrupted = true })
 				return
 			end
 

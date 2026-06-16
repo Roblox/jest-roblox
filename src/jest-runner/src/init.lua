@@ -11,24 +11,17 @@ local Packages = script.Parent
 
 local Promise = require(Packages.Promise)
 
-local emitteryModule = require(Packages.Emittery)
-local Emittery = emitteryModule.default
-type Emittery = emitteryModule.Emittery
-type Emittery_UnsubscribeFn = emitteryModule.Emittery_UnsubscribeFn
-
 local throat = require(Packages.Throat)
 type ThroatLateBound<TResult, TArgs> = throat.ThroatLateBound<TResult, TArgs>
 local test_resultModule = require(Packages.JestTestResult)
 export type Test = test_resultModule.Test
 export type TestEvents = test_resultModule.TestEvents
-export type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
 local jestTypesModule = require(Packages.JestTypes)
 type Promise<T> = jestTypesModule.Promise<T>
 type Config_GlobalConfig = jestTypesModule.Config_GlobalConfig
 local Error = jestTypesModule.Error
 type Error = jestTypesModule.Error
-local deepCyclicCopy = require(Packages.JestUtil).deepCyclicCopy
 local runTest = require(script.runTest)
 
 local typesModule = require(script.types)
@@ -44,7 +37,6 @@ local CancelRun
 export type TestRunner = {
 	new: (globalConfig: Config_GlobalConfig, context: TestRunnerContext?) -> TestRunner,
 
-	__PRIVATE_UNSTABLE_API_supportsEventEmitters__: boolean,
 	isSerial: boolean,
 	runTests: (
 		self: TestRunner,
@@ -55,17 +47,11 @@ export type TestRunner = {
 		onFailure: OnTestFailure | nil,
 		options: TestRunnerOptions
 	) -> Promise<nil>,
-	on: <Name>(
-		self: TestRunner,
-		eventName: Name,
-		listener: (eventData: any) -> ...any
-	) -> Emittery_UnsubscribeFn,
 
 	_globalConfig: Config_GlobalConfig,
 	_context: TestRunnerContext,
 	_loadedModuleFns: any,
 	cleanup: (self: TestRunner) -> (),
-	eventEmitter: Emittery,
 	_createInBandTestRun: (
 		self: TestRunner,
 		tests: { Test },
@@ -89,8 +75,6 @@ local TestRunner = {} :: TestRunner;
 
 function TestRunner.new(globalConfig: Config_GlobalConfig, context: TestRunnerContext?): TestRunner
 	local self = setmetatable({}, TestRunner)
-	self.eventEmitter = Emittery.new()
-	self.__PRIVATE_UNSTABLE_API_supportsEventEmitters__ = true
 	self._globalConfig = globalConfig
 	self._context = context or {}
 	self._loadedModuleFns = {}
@@ -132,52 +116,31 @@ function TestRunner:_createInBandTestRun(
 							if watcher:isInterrupted() then
 								error(CancelRun.new())
 							end
-							local sendMessageToJest
 
 							if onStart ~= nil then
 								onStart(test):expect()
-								return runTest(
-									test.script,
-									self._globalConfig,
-									test.context.config,
-									nil,
-									self._context,
-									nil,
-									self._loadedModuleFns
-								)
-							else
-								sendMessageToJest = function(eventName: string, args)
-									return self.eventEmitter:emit(
-										eventName,
-										deepCyclicCopy(args, { keepPrototype = false })
-									)
-								end
-								self.eventEmitter:emit("test-file-start", { test }):expect()
-								return runTest(
-									test.script,
-									self._globalConfig,
-									test.context.config,
-									nil,
-									self._context,
-									sendMessageToJest,
-									self._loadedModuleFns
-								)
 							end
+							return runTest(
+								test.script,
+								self._globalConfig,
+								test.context.config,
+								nil,
+								self._context,
+								self._loadedModuleFns
+							)
 						end)
 					end)
 					:andThen(function(result: TestResult)
 						if onResult ~= nil then
 							return onResult(test, result)
-						else
-							return self.eventEmitter:emit("test-file-success", { test :: any, result })
 						end
+						return Promise.resolve()
 					end)
 					:catch(function(err)
 						if onFailure ~= nil then
 							return onFailure(test, err)
-						else
-							return self.eventEmitter:emit("test-file-failure", { test :: any, err })
 						end
+						return Promise.resolve()
 					end)
 			end)
 		end
@@ -196,10 +159,6 @@ function TestRunner:_createParallelTestRun(
 		warn("Parallel tests run not implemented yet\nRunning tests in band instead")
 		return self:_createInBandTestRun(tests, watcher, onStart, onResult, onFailure)
 	end)
-end
-
-function TestRunner:on<Name>(eventName: Name, listener: (eventData: any) -> () | any): Emittery_UnsubscribeFn
-	return self.eventEmitter:on(eventName, listener)
 end
 
 function TestRunner:cleanup()

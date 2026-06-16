@@ -15,10 +15,6 @@ type Array<T> = LuauPolyfill.Array<T>
 type Promise<T> = LuauPolyfill.Promise<T>
 local Promise = require(Packages.Promise)
 
--- ROBLOX FIXME START: added types and objects that do not exist in Luau
-type NodeJS_Process = any
--- ROBLOX FIXME END
-
 local exports = {}
 
 local throat = require(Packages.Throat)
@@ -29,7 +25,6 @@ type JestEnvironment = environmentModule.JestEnvironment
 local test_resultModule = require(Packages.JestTestResult)
 type AssertionResult = test_resultModule.AssertionResult
 type Status = test_resultModule.Status
-type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
 local createEmptyTestResult = test_resultModule.createEmptyTestResult
 local typesModule = require(Packages.JestTypes)
@@ -67,20 +62,12 @@ local ROOT_DESCRIBE_BLOCK_NAME = stateModule.ROOT_DESCRIBE_BLOCK_NAME
 local addEventHandler = stateModule.addEventHandler
 local dispatch = stateModule.dispatch
 local getRunnerState = stateModule.getState
-local testCaseReportHandler = require(script.Parent.Parent.testCaseReportHandler).default
 local getTestID = require(script.Parent.Parent.utils).getTestID
 local jestExpectModule = require(script.Parent.jestExpect)
 local createExpect = jestExpectModule.default
 type Expect = jestExpectModule.Expect
 
-type Process = NodeJS_Process
-
 type JestGlobals = Global_TestFrameworkGlobals & { expect: Expect, expectExtended: any }
-
--- ROBLOX deviation START: additional deps
-local RobloxShared = require(Packages.RobloxShared)
-local getRelativePath = RobloxShared.getRelativePath
--- ROBLOX deviation END
 
 -- ROBLOX deviation START: predeclare variables
 local handleSnapshotStateAfterRetry
@@ -99,20 +86,11 @@ local function initialize(
 		-- ROBLOX deviation START: use ModuleScript instead of string
 		testPath: ModuleScript,
 		-- ROBLOX deviation END
-		parentProcess: Process,
-		sendMessageToJest: TestFileEvent?,
 		setGlobalsForRuntime: (globals: JestGlobals) -> (),
 	}
 ): Promise<{ globals: Global_TestFrameworkGlobals, snapshotState: SnapshotStateType }>
-	local config, environment, globalConfig, localRequire, parentProcess, sendMessageToJest, setGlobalsForRuntime, testPath =
-		ref.config,
-		ref.environment,
-		ref.globalConfig,
-		ref.localRequire,
-		ref.parentProcess,
-		ref.sendMessageToJest,
-		ref.setGlobalsForRuntime,
-		ref.testPath
+	local config, environment, globalConfig, localRequire, setGlobalsForRuntime, testPath =
+		ref.config, ref.environment, ref.globalConfig, ref.localRequire, ref.setGlobalsForRuntime, ref.testPath
 
 	return Promise.resolve():andThen(function()
 		if globalConfig.testTimeout ~= nil and globalConfig.testTimeout > 0 then
@@ -202,7 +180,6 @@ local function initialize(
 
 		dispatch({
 			name = "setup",
-			parentProcess = parentProcess,
 			runtimeGlobals = runtimeGlobals,
 			testNamePattern = globalConfig.testNamePattern,
 		}):expect()
@@ -250,9 +227,6 @@ local function initialize(
 		setState({ snapshotState = snapshotState, testPath = testPath })
 
 		addEventHandler(handleSnapshotStateAfterRetry(snapshotState))
-		if sendMessageToJest ~= nil then
-			addEventHandler(testCaseReportHandler(getRelativePath(testPath), sendMessageToJest))
-		end
 
 		-- Return it back to the outer scope (test runner outside the VM).
 		return { globals = globalsObject, snapshotState = snapshotState }

@@ -9,13 +9,11 @@
 
 local Packages = script.Parent.Parent
 
-type Emittery<T> = any
 local environmentModule = require(Packages.JestEnvironment)
 type JestEnvironment = environmentModule.JestEnvironment
 local test_resultModule = require(Packages.JestTestResult)
 type SerializableError = test_resultModule.SerializableError
 type Test = test_resultModule.Test
-type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
 local typesModule = require(Packages.JestTypes)
 type Promise<T> = typesModule.Promise<T>
@@ -32,8 +30,7 @@ export type TestFramework = (
 	config: Config_ProjectConfig,
 	environment: JestEnvironment,
 	runtime: RuntimeType,
-	testPath: ModuleScript,
-	sendMessageToJest: TestFileEvent?
+	testPath: ModuleScript
 ) -> Promise<TestResult>
 
 export type TestRunnerOptions = { serial: boolean }
@@ -43,9 +40,8 @@ export type TestRunnerContext = {
 	changedFiles: any?,
 	sourcesRelatedToTestsInChangedFiles: any?,
 }
--- TODO: Should live in `@jest/core` or `jest-watcher`
 type WatcherState = { interrupted: boolean }
-export type TestWatcher = Emittery<{ change: WatcherState }> & {
+export type TestWatcher = {
 	state: WatcherState,
 	setState: (self: TestWatcher, state: WatcherState) -> (),
 	isInterrupted: (self: TestWatcher) -> boolean,

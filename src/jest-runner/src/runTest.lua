@@ -28,7 +28,6 @@ local getConsoleOutput = consoleModule.getConsoleOutput
 local environmentModule = require(Packages.JestEnvironment)
 type JestEnvironment = environmentModule.JestEnvironment
 local test_resultModule = require(Packages.JestTestResult)
-type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
 local jestTypesModule = require(Packages.JestTypes)
 type Promise<T> = jestTypesModule.Promise<T>
@@ -65,7 +64,6 @@ local function runTestInternal(
 	projectConfig: Config_ProjectConfig,
 	resolver: any,
 	context: TestRunnerContext,
-	sendMessageToJest: TestFileEvent?,
 	loadedModuleFns: { [ModuleScript]: { any } }
 ): Promise<TestResult>
 	return Promise.resolve():andThen(function()
@@ -124,8 +122,7 @@ local function runTestInternal(
 			local result: TestResult
 
 			local ok_, result_ = pcall(function()
-				result =
-					testFramework(globalConfig, projectConfig, environment, runtime, path, sendMessageToJest):expect()
+				result = testFramework(globalConfig, projectConfig, environment, runtime, path):expect()
 			end)
 			if not ok_ then
 				local err = result_
@@ -179,12 +176,10 @@ local function runTest(
 	config: Config_ProjectConfig,
 	resolver: any,
 	context: TestRunnerContext,
-	sendMessageToJest: TestFileEvent?,
 	loadedModuleFns: { [ModuleScript]: { any } }
 ): Promise<TestResult>
 	return Promise.resolve():andThen(function()
-		local result =
-			runTestInternal(path, globalConfig, config, resolver, context, sendMessageToJest, loadedModuleFns):expect()
+		local result = runTestInternal(path, globalConfig, config, resolver, context, loadedModuleFns):expect()
 		result.leaks = false
 		return result
 	end)
