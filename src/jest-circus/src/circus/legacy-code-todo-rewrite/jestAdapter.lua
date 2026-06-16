@@ -16,7 +16,6 @@ local Promise = require(Packages.Promise)
 local environmentModule = require(Packages.JestEnvironment)
 type JestEnvironment = environmentModule.JestEnvironment
 local test_resultModule = require(Packages.JestTestResult)
-type TestFileEvent = test_resultModule.TestFileEvent
 type TestResult = test_resultModule.TestResult
 local typesModule = require(Packages.JestTypes)
 type Config_GlobalConfig = typesModule.Config_GlobalConfig
@@ -40,8 +39,7 @@ local function jestAdapter(
 	environment: JestEnvironment,
 	runtime: Runtime,
 	-- ROBLOX deviation: accept ModuleScript instead of string
-	testPath: ModuleScript,
-	sendMessageToJest: TestFileEvent?
+	testPath: ModuleScript
 ): Promise<TestResult>
 	return Promise.resolve():andThen(function()
 		local ref = runtime:requireInternalModule(FRAMEWORK_INITIALIZER)
@@ -54,9 +52,6 @@ local function jestAdapter(
 			localRequire = function(...)
 				return runtime:requireModule(...)
 			end,
-			-- ROBLOX TODO: do we need this?
-			-- parentProcess = process,
-			sendMessageToJest = sendMessageToJest,
 			setGlobalsForRuntime = function(...)
 				runtime:setGlobalsForRuntime(...)
 			end,
