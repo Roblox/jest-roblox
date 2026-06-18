@@ -1,4 +1,4 @@
--- ROBLOX upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-circus/src/run.ts
+-- ROBLOX upstream: https://github.com/jestjs/jest/blob/v30.0.0/packages/jest-circus/src/run.ts
 
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -25,7 +25,10 @@ type Circus_TestContext = typesModule.Circus_TestContext
 local stateModule = require(script.Parent.state)
 local dispatch = stateModule.dispatch
 local getState = stateModule.getState
-local RETRY_TIMES = require(script.Parent.types).RETRY_TIMES
+local typesModule = require(script.Parent.types)
+local RETRY_TIMES = typesModule.RETRY_TIMES
+local WAIT_BEFORE_RETRY = typesModule.WAIT_BEFORE_RETRY
+local RETRY_IMMEDIATELY = typesModule.RETRY_IMMEDIATELY
 local utilsModule = require(script.Parent.utils)
 local callAsyncCircusFn = utilsModule.callAsyncCircusFn
 local getAllHooksForDescribe = utilsModule.getAllHooksForDescribe
@@ -75,32 +78,51 @@ function _runTestsForDescribeBlock(describeBlock: Circus_DescribeBlock)
 		-- Tests that fail and are retried we run after other tests
 		local ref_ = tonumber(_G[RETRY_TIMES], 10)
 		local retryTimes = if ref_ ~= nil then ref_ else 0
+		local waitBeforeRetry = tonumber(_G[WAIT_BEFORE_RETRY], 10) or 0
+		local retryImmediately = _G[RETRY_IMMEDIATELY] or false
 		local deferredRetryTests = {}
+
+		local function rerunTest(test: Circus_TestEntry)
+			local numRetriesAvailable = retryTimes
+			while numRetriesAvailable > 0 and #test.errors > 0 do
+				dispatch({ name = "test_retry", test = test }):expect()
+				if waitBeforeRetry > 0 then
+					Promise.new(function(resolve)
+						task.delay(waitBeforeRetry / 1000, resolve)
+					end):expect()
+				end
+				_runTest(test, isSkipped):expect()
+				numRetriesAvailable -= 1
+			end
+		end
+
+		local function handleRetry(test: Circus_TestEntry, hasErrorsBeforeTestRun: boolean, hasRetryTimes: boolean)
+			if #test.errors == 0 or hasErrorsBeforeTestRun or not hasRetryTimes then
+				return
+			end
+
+			if not retryImmediately then
+				table.insert(deferredRetryTests, test)
+				return
+			end
+
+			rerunTest(test)
+		end
 
 		for _, child in ipairs(describeBlock.children) do
 			if child.type == "describeBlock" then
 				_runTestsForDescribeBlock(child):expect()
 			elseif child.type == "test" then
 				local hasErrorsBeforeTestRun = #child.errors > 0
+				local hasRetryTimes = retryTimes > 0
 				_runTest(child, isSkipped):expect()
-
-				if hasErrorsBeforeTestRun == false and retryTimes > 0 and #child.errors > 0 then
-					table.insert(deferredRetryTests, child)
-				end
+				handleRetry(child, hasErrorsBeforeTestRun, hasRetryTimes)
 			end
 		end
 
 		-- Re-run failed tests n-times if configured
 		for _, test in ipairs(deferredRetryTests) do
-			local numRetriesAvailable = retryTimes
-
-			while numRetriesAvailable > 0 and #test.errors > 0 do
-				-- Clear errors so retries occur
-				dispatch({ name = "test_retry", test = test }):expect()
-
-				_runTest(test, isSkipped):expect()
-				numRetriesAvailable -= 1
-			end
+			rerunTest(test)
 		end
 
 		if not isSkipped then

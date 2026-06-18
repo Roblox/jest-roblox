@@ -20,6 +20,9 @@ type JestRuntime = JestRuntime.Runtime
 type Jest = JestRuntime.Jest
 
 local RETRY_TIMES = Symbol.for_("RETRY_TIMES")
+local LOG_ERRORS_BEFORE_RETRY = Symbol.for_("LOG_ERRORS_BEFORE_RETRY")
+local WAIT_BEFORE_RETRY = Symbol.for_("WAIT_BEFORE_RETRY")
+local RETRY_IMMEDIATELY = Symbol.for_("RETRY_IMMEDIATELY")
 
 local _runtime: JestRuntime?
 
@@ -39,6 +42,9 @@ end)
 
 afterEach(function()
 	_G[RETRY_TIMES] = nil
+	_G[LOG_ERRORS_BEFORE_RETRY] = nil
+	_G[WAIT_BEFORE_RETRY] = nil
+	_G[RETRY_IMMEDIATELY] = nil
 end)
 
 describe("jest.retryTimes", function()
@@ -92,5 +98,76 @@ describe("jest.retryTimes", function()
 		runtime:teardown()
 
 		expect(_G[RETRY_TIMES]).toBeNil()
+	end)
+end)
+
+describe("jest.retryTimes options", function()
+	it("stores logErrorsBeforeRetry in _G", function()
+		local jestObject = (getRuntime() :: any)._jestObject
+		jestObject.retryTimes(2, { logErrorsBeforeRetry = true })
+
+		expect(_G[LOG_ERRORS_BEFORE_RETRY]).toBe(true)
+	end)
+
+	it("stores waitBeforeRetry in _G", function()
+		local jestObject = (getRuntime() :: any)._jestObject
+		jestObject.retryTimes(2, { waitBeforeRetry = 1000 })
+
+		expect(_G[WAIT_BEFORE_RETRY]).toBe(1000)
+	end)
+
+	it("stores retryImmediately in _G", function()
+		local jestObject = (getRuntime() :: any)._jestObject
+		jestObject.retryTimes(2, { retryImmediately = true })
+
+		expect(_G[RETRY_IMMEDIATELY]).toBe(true)
+	end)
+
+	it("stores multiple options simultaneously", function()
+		local jestObject = (getRuntime() :: any)._jestObject
+		jestObject.retryTimes(3, {
+			logErrorsBeforeRetry = true,
+			waitBeforeRetry = 500,
+			retryImmediately = true,
+		})
+
+		expect(_G[RETRY_TIMES]).toBe(3)
+		expect(_G[LOG_ERRORS_BEFORE_RETRY]).toBe(true)
+		expect(_G[WAIT_BEFORE_RETRY]).toBe(500)
+		expect(_G[RETRY_IMMEDIATELY]).toBe(true)
+	end)
+
+	it("clears options when called without options", function()
+		local jestObject = (getRuntime() :: any)._jestObject
+		jestObject.retryTimes(3, {
+			logErrorsBeforeRetry = true,
+			waitBeforeRetry = 500,
+			retryImmediately = true,
+		})
+
+		jestObject.retryTimes(1)
+
+		expect(_G[RETRY_TIMES]).toBe(1)
+		expect(_G[LOG_ERRORS_BEFORE_RETRY]).toBeNil()
+		expect(_G[WAIT_BEFORE_RETRY]).toBeNil()
+		expect(_G[RETRY_IMMEDIATELY]).toBeNil()
+	end)
+
+	it("clears all options on teardown", function()
+		local runtime = JestRuntime.new(JestConfig.projectDefaults)
+		local jestObject = (runtime :: any)._jestObject
+
+		jestObject.retryTimes(2, {
+			logErrorsBeforeRetry = true,
+			waitBeforeRetry = 1000,
+			retryImmediately = true,
+		})
+
+		runtime:teardown()
+
+		expect(_G[RETRY_TIMES]).toBeNil()
+		expect(_G[LOG_ERRORS_BEFORE_RETRY]).toBeNil()
+		expect(_G[WAIT_BEFORE_RETRY]).toBeNil()
+		expect(_G[RETRY_IMMEDIATELY]).toBeNil()
 	end)
 end)

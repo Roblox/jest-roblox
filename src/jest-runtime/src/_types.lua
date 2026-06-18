@@ -12,6 +12,12 @@ type ModuleMocker = moduleMockerModule.ModuleMocker
 
 export type MockFactory = () -> ...unknown
 
+export type RetryTimesOptions = {
+	logErrorsBeforeRetry: boolean?,
+	waitBeforeRetry: number?,
+	retryImmediately: boolean?,
+}
+
 export type Jest = {
 	-- autoMockOn: () -> Jest,
 	-- autoMockOff: () -> Jest,
@@ -33,7 +39,7 @@ export type Jest = {
 	runOnlyPendingTimers: () -> (),
 	-- setMock: (scriptInstance: ModuleScript, mock: unknown, options: { virtual: boolean? }?) -> Jest,
 	setSystemTime: (now: (number | DateTime)?) -> (),
-	retryTimes: (numTestRetries: number) -> Jest,
+	retryTimes: (numTestRetries: number, options: RetryTimesOptions?) -> Jest,
 	setTimeout: any,
 }
 

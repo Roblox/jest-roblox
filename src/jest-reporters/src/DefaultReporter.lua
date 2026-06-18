@@ -292,7 +292,7 @@ function DefaultReporter:printTestFileHeader(
 		if testRetryReasons and #testRetryReasons > 0 then
 			self:log(
 				("%s %s"):format(
-					tostring(chalk.reset.inverse.bold:yellow(" LOGGING RETRY ERRORS ")),
+					chalk.reset(chalk.inverse(chalk.bold(chalk.yellow(" LOGGING RETRY ERRORS ")))),
 					chalk.bold(testResult.fullName)
 				)
 			)
@@ -308,7 +308,7 @@ function DefaultReporter:printTestFileHeader(
 				message = indentAllLines(message)
 				self:log(
 					("%s\n"):format(
-						tostring(chalk.reset.inverse.bold:blueBright((" RETRY %s "):format(tostring(index + 1))))
+						chalk.reset(chalk.inverse(chalk.bold(chalk.blueBright((" RETRY %s "):format(tostring(index))))))
 					)
 				)
 				self:log(("%s\n%s\n"):format(tostring(message), tostring(stack)))
