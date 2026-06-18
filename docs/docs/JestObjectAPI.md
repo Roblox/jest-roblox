@@ -317,7 +317,7 @@ When mocking time, `DateTime.now()` will also be mocked. If you for some reason 
 
 `jest.getEngineFrameTime` gets the frame time by which timers are processed.
 
-## Mock Globals
+## Misc
 
 ### `jest.globalEnv`
 ![Roblox only](/img/roblox-only.svg)
@@ -351,5 +351,55 @@ Most notably, Jest Roblox does not support mocking these globals:
 - `game:GetService()` and other Instance methods (an API for this is being investigated)
 - the `require()` function (use [`jest.mock()`](jest-object) instead)
 - task scheduling functions (use [Timer Mocks](timer-mocks) instead)
+
+:::
+
+### `jest.retryTimes(numRetries, options?)`
+
+Runs failed tests n-times until they pass or until the max number of retries is exhausted.
+
+```lua
+jest.retryTimes(3)
+
+test('will fail', function()
+	expect(true).toBe(false)
+end)
+```
+
+If `logErrorsBeforeRetry` option is enabled, error(s) that caused the test to fail will be logged to the console.
+
+```lua
+jest.retryTimes(3, { logErrorsBeforeRetry = true })
+
+test('will fail', function()
+	expect(true).toBe(false)
+end)
+```
+
+`waitBeforeRetry` is the number of milliseconds to wait before retrying.
+
+```lua
+jest.retryTimes(3, { waitBeforeRetry = 1000 })
+
+test('will fail', function()
+	expect(true).toBe(false)
+end)
+```
+
+`retryImmediately` option is used to retry the failed test immediately after the failure. If this option is not specified, the tests are retried after Jest is finished running all other tests in the file.
+
+```lua
+jest.retryTimes(3, { retryImmediately = true })
+
+test('will fail', function()
+	expect(true).toBe(false)
+end)
+```
+
+Returns the `jest` object for chaining.
+
+:::caution
+
+`jest.retryTimes()` must be declared at the top level of a test file or in a `describe` block.
 
 :::

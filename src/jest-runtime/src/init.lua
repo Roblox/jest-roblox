@@ -46,6 +46,7 @@ local TypeError = Error
 local _typesModule = require(script._types)
 export type Jest = _typesModule.Jest
 type MockFactory = _typesModule.MockFactory
+type RetryTimesOptions = _typesModule.RetryTimesOptions
 local resolveInstancePath = require(script.resolveInstancePath)
 
 local jestExpectModule = require(Packages.Expect)
@@ -137,6 +138,9 @@ type ModuleRegistry = Map<ModuleScript, InitialModule | Module>
 -- 	& { JEST_RESOLVE_OUTSIDE_VM_OPTION: (true)? }
 -- local testTimeoutSymbol = Symbol:for_("TEST_TIMEOUT_SYMBOL")
 local retryTimesSymbol = Symbol.for_("RETRY_TIMES")
+local logErrorsBeforeRetrySymbol = Symbol.for_("LOG_ERRORS_BEFORE_RETRY")
+local waitBeforeRetrySymbol = Symbol.for_("WAIT_BEFORE_RETRY")
+local retryImmediatelySymbol = Symbol.for_("RETRY_IMMEDIATELY")
 -- local NODE_MODULES = tostring(path.sep) .. "node_modules" .. tostring(path.sep)
 -- local function getModuleNameMapper(config: Config_ProjectConfig)
 -- 	if
@@ -1634,6 +1638,9 @@ function Runtime_private:teardown(): ()
 	-- ROBLOX deviation START: circus reads retryTimes from shared _G, so clear it
 	-- during runtime teardown to keep jest.retryTimes() scoped to one test file.
 	_G[retryTimesSymbol] = nil
+	_G[logErrorsBeforeRetrySymbol] = nil
+	_G[waitBeforeRetrySymbol] = nil
+	_G[retryImmediatelySymbol] = nil
 	-- ROBLOX deviation END
 
 	-- ROBLOX deviation: mocking globals
@@ -2554,8 +2561,11 @@ function Runtime_private:_createJestObjectFor(from: ModuleScript): Jest
 	-- 	end
 	-- 	return jestObject
 	-- end
-	local function retryTimes(numTestRetries: number)
+	local function retryTimes(numTestRetries: number, options: RetryTimesOptions?)
 		_G[retryTimesSymbol] = numTestRetries
+		_G[logErrorsBeforeRetrySymbol] = if options then options.logErrorsBeforeRetry else nil
+		_G[waitBeforeRetrySymbol] = if options then options.waitBeforeRetry else nil
+		_G[retryImmediatelySymbol] = if options then options.retryImmediately else nil
 		return jestObject
 	end
 	-- ROBLOX deviation END
