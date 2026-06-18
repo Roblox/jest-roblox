@@ -1,6 +1,6 @@
 # Jest Roblox Changelog
 
-## Unreleased Changes
+## 3.19.0 (2026-06-18)
 
 * :sparkles: Add `jest.retryTimes` ([#485](https://github.com/Roblox/jest-roblox-internal/pull/485))
 
