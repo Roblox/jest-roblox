@@ -130,3 +130,143 @@ test("only retries tests that failed, not passing ones", function()
 	expect(countOccurrences(stdout, "test_fn_success: always fails")).toBe(0)
 	expect(stdout).toContain("unhandledErrors: 0")
 end)
+
+test("retryImmediately retries inline before other tests run", function()
+	local stdout = runTest([[
+		local LuauPolyfill = require(script_.Parent.Parent.Parent.Parent.LuauPolyfill)
+		local Symbol = LuauPolyfill.Symbol
+		local RETRY_TIMES = Symbol.for_("RETRY_TIMES")
+		local RETRY_IMMEDIATELY = Symbol.for_("RETRY_IMMEDIATELY")
+
+		_G[RETRY_TIMES] = 2
+		_G[RETRY_IMMEDIATELY] = true
+
+		local order = {}
+
+		describe("immediate retry", function()
+			afterAll(function()
+				console.log("order:", table.concat(order, ","))
+			end)
+
+			local attempts = 0
+			test("fails then passes", function()
+				attempts = attempts + 1
+				table.insert(order, "A" .. attempts)
+				if attempts < 3 then
+					error(Error.new("not yet"))
+				end
+			end)
+
+			test("second test", function()
+				table.insert(order, "B")
+			end)
+		end)
+	]]).stdout
+
+	-- With retryImmediately, the retry of "fails then passes" should happen
+	-- before "second test" runs (A1,A2,A3 then B)
+	expect(stdout).toContain("order: A1,A2,A3,B")
+	expect(stdout).toContain("unhandledErrors: 0")
+end)
+
+test("deferred retry runs after other tests (default behavior)", function()
+	local stdout = runTest([[
+		local LuauPolyfill = require(script_.Parent.Parent.Parent.Parent.LuauPolyfill)
+		local Symbol = LuauPolyfill.Symbol
+		local RETRY_TIMES = Symbol.for_("RETRY_TIMES")
+
+		_G[RETRY_TIMES] = 2
+
+		local order = {}
+
+		describe("deferred retry", function()
+			afterAll(function()
+				console.log("order:", table.concat(order, ","))
+			end)
+
+			local attempts = 0
+			test("fails then passes", function()
+				attempts = attempts + 1
+				table.insert(order, "A" .. attempts)
+				if attempts < 3 then
+					error(Error.new("not yet"))
+				end
+			end)
+
+			test("second test", function()
+				table.insert(order, "B")
+			end)
+		end)
+	]]).stdout
+
+	-- Without retryImmediately, "second test" runs before retries (A1,B,A2,A3)
+	expect(stdout).toContain("order: A1,B,A2,A3")
+	expect(stdout).toContain("unhandledErrors: 0")
+end)
+
+test("logErrorsBeforeRetry populates retryReasons", function()
+	local stdout = runTest([[
+		local LuauPolyfill = require(script_.Parent.Parent.Parent.Parent.LuauPolyfill)
+		local Symbol = LuauPolyfill.Symbol
+		local RETRY_TIMES = Symbol.for_("RETRY_TIMES")
+		local LOG_ERRORS_BEFORE_RETRY = Symbol.for_("LOG_ERRORS_BEFORE_RETRY")
+
+		_G[RETRY_TIMES] = 2
+		_G[LOG_ERRORS_BEFORE_RETRY] = true
+
+		local attempts = 0
+
+		describe("logErrors", function()
+			test("fails then passes", function()
+				attempts = attempts + 1
+				if attempts < 3 then
+					error(Error.new("attempt " .. attempts .. " failed"))
+				end
+			end)
+		end)
+	]]).stdout
+
+	expect(countOccurrences(stdout, "test_retry: fails then passes")).toBe(2)
+	expect(countOccurrences(stdout, "test_fn_success: fails then passes")).toBe(1)
+	expect(stdout).toContain("unhandledErrors: 0")
+end)
+
+test("combined options work together", function()
+	local stdout = runTest([[
+		local LuauPolyfill = require(script_.Parent.Parent.Parent.Parent.LuauPolyfill)
+		local Symbol = LuauPolyfill.Symbol
+		local RETRY_TIMES = Symbol.for_("RETRY_TIMES")
+		local RETRY_IMMEDIATELY = Symbol.for_("RETRY_IMMEDIATELY")
+		local LOG_ERRORS_BEFORE_RETRY = Symbol.for_("LOG_ERRORS_BEFORE_RETRY")
+
+		_G[RETRY_TIMES] = 2
+		_G[RETRY_IMMEDIATELY] = true
+		_G[LOG_ERRORS_BEFORE_RETRY] = true
+
+		local order = {}
+		local attempts = 0
+
+		describe("combined", function()
+			afterAll(function()
+				console.log("order:", table.concat(order, ","))
+			end)
+
+			test("fails then passes", function()
+				attempts = attempts + 1
+				table.insert(order, "A" .. attempts)
+				if attempts < 2 then
+					error(Error.new("attempt " .. attempts))
+				end
+			end)
+
+			test("second", function()
+				table.insert(order, "B")
+			end)
+		end)
+	]]).stdout
+
+	-- retryImmediately: retry happens before second test
+	expect(stdout).toContain("order: A1,A2,B")
+	expect(countOccurrences(stdout, "test_retry: fails then passes")).toBe(1)
+	expect(stdout).toContain("unhandledErrors: 0")
+end)

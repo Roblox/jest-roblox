@@ -2,6 +2,8 @@
 
 ## Unreleased Changes
 
+* :sparkles: Add `jest.retryTimes` ([#485](https://github.com/Roblox/jest-roblox-internal/pull/485))
+
 ## 3.18.0 (2026-06-16)
 * :broom: Several large and rewrites to rewrite transpiled code, remove LuauPolyfill as a dependency and remove unused codepaths and modules. Switched over to the independent Symbol library instead of LuauPolyfill's Symbol. ([#475](https://github.com/Roblox/jest-roblox-internal/pull/475)) ([#480](https://github.com/Roblox/jest-roblox-internal/pull/480)) ([#481](https://github.com/Roblox/jest-roblox-internal/pull/481))
 * :broom: Removing `emittery` as a dependency and switching to direct callbacks in `jest-runner` and `jest-core`, which should result in a speedup for test runs. ([#482](https://github.com/Roblox/jest-roblox-internal/pull/482_))
