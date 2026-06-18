@@ -27,12 +27,13 @@ export type DoneFn = (reason: (string | Error)?) -> ()
 export type DoneTakingTestFn = (this: TestContext | nil, done: DoneFn) -> ValidTestReturnValues
 export type PromiseReturningTestFn = (this: TestContext | nil) -> TestReturnValue
 export type GeneratorReturningTestFn = (this: TestContext | nil) -> TestReturnValueGenerator
+export type VoidTestFn = (this: TestContext | nil) -> ()
 
 type Fn = (...any) -> ...any
 export type NameLike = number | Fn
 export type TestName = string
 export type TestNameLike = TestName | NameLike
-export type TestFn = PromiseReturningTestFn | GeneratorReturningTestFn | DoneTakingTestFn
+export type TestFn = PromiseReturningTestFn | GeneratorReturningTestFn | DoneTakingTestFn | VoidTestFn
 export type ConcurrentTestFn = () -> TestReturnValuePromise
 export type BlockFn = () -> ()
 export type BlockName = string
