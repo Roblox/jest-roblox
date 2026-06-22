@@ -9,6 +9,7 @@ local Packages = CurrentModule.Parent
 
 local moduleMockerModule = require(Packages.JestMock)
 type ModuleMocker = moduleMockerModule.ModuleMocker
+type ModuleMockerFnReturn = ModuleMocker["fn"] extends (...any) -> infer R ? R : any
 
 export type MockFactory = () -> ...unknown
 
@@ -31,7 +32,7 @@ export type Jest = {
 	useRealTimers: () -> Jest,
 	resetModules: () -> Jest,
 	isolateModules: (fn: () -> ()) -> Jest,
-	fn: () -> ModuleMocker,
+	fn: (...any) -> ModuleMockerFnReturn,
 	-- genMockFromModule: (scriptInstance: ModuleScript) -> any,
 	getRealSystemTime: () -> DateTime,
 	getTimerCount: () -> number,
