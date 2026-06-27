@@ -124,16 +124,25 @@ local function typeEquality(a: any, b: any): boolean | nil
 		return false
 	end
 
-	if not getmetatable(a) and not getmetatable(b) then
+	local metaA = getmetatable(a)
+	local metaB = getmetatable(b)
+
+	-- Skip non-table metatables (e.g. Roblox Luau strings return
+	-- "The metatable is locked" instead of nil from getmetatable)
+	if typeof(metaA) ~= "table" and typeof(metaB) ~= "table" then
+		return nil
+	end
+
+	if not metaA and not metaB then
 		return nil
 	end
 
 	if
-		getmetatable(a)
-		and getmetatable(b)
-		and getmetatable(a).__index
-		and getmetatable(b).__index
-		and getmetatable(a).__index == getmetatable(b).__index
+		metaA
+		and metaB
+		and metaA.__index
+		and metaB.__index
+		and metaA.__index == metaB.__index
 	then
 		return nil
 	end
