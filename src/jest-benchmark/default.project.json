@@ -1,5 +1,5 @@
 {
-    "name": "JestBenchmark",
+    "name": "jest-benchmark",
     "tree": {
         "$path": "src"
     }

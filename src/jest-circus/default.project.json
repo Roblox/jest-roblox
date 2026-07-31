@@ -1,5 +1,5 @@
 {
-    "name": "JestCircus",
+    "name": "jest-circus",
     "tree": {
         "$path": "src"
     }

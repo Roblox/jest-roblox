@@ -1,0 +1,39 @@
+[package]
+name = "roblox/jest-core"
+description = "A Luau testing framework based on Jest. See roblox/jest-globals for the entry point."
+version = "3.20.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Roblox/jest-roblox"
+
+exclude = [
+	"rotriever.toml",
+	"**/__tests__/**",
+	"**/__snapshots__/**",
+	"**/__mocks__/**",
+]
+
+[dependencies]
+LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
+Promise = "roblox/promise@^3.5.1"
+ChalkLua = "roblox/chalk-lua@^0.3.0"
+RegExp = "roblox/regexp@^0.2.2"
+JestConfig = "roblox/jest-config@^3.20.0"
+JestConsole = "roblox/jest-console@^3.20.0"
+JestTestResult = "roblox/jest-test-result@^3.20.0"
+JestTypes = "roblox/jest-types@^3.20.0"
+JestRuntime = "roblox/jest-runtime@^3.20.0"
+JestRunner = "roblox/jest-runner@^3.20.0"
+JestReporters = "roblox/jest-reporters@^3.20.0"
+JestUtil = "roblox/jest-util@^3.20.0"
+JestMessageUtil = "roblox/jest-message-util@^3.20.0"
+JestSnapshot = "roblox/jest-snapshot@^3.20.0"
+PrettyFormat = "roblox/pretty-format@^3.20.0"
+RobloxShared = "roblox/roblox-shared@^3.20.0"
+
+[dev-dependencies]
+JestGlobals = "roblox/jest-globals@^3.20.0"
+JestSnapshotSerializerRaw = "roblox/jest-snapshot-serializer-raw@^3.20.0"
+TestUtils = "roblox/test-utils@^3.20.0"

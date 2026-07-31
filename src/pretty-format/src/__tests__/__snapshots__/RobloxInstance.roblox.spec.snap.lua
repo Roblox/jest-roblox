@@ -1,4 +1,4 @@
--- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox-internal/snapshot-testing
+-- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox/snapshot-testing
 local exports = {}
 exports[ [=[Instance collapses circular references in properties 1]=] ] = [=[
 

@@ -17,7 +17,7 @@
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
-local Workspace = Packages.Parent
+local Workspace = game:GetService("ReplicatedStorage"):FindFirstChild("Packages")
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local it = JestGlobals.it
@@ -36,9 +36,12 @@ local alignedAnsiStyleSerializer = require(Packages.Dev.TestUtils).alignedAnsiSt
 local jestExpect = require(CurrentModule)
 
 describe("Lua toThrowMatcher tests", function()
+	-- normalizeStackTraces reparenting issue — see toThrowMatchers.spec.lua for details.
+	local dynamicRequire: (Instance) -> any = require :: any
+
 	beforeAll(function()
 		expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
-		expect.addSnapshotSerializer(require(Workspace.normalizeStackTraces))
+		expect.addSnapshotSerializer(dynamicRequire(Workspace.normalizeStackTraces))
 	end)
 
 	local CustomError = extends(Error, "CustomError", function(self, message)

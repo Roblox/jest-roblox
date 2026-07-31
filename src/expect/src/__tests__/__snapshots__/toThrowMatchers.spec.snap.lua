@@ -1,4 +1,4 @@
--- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox-internal/snapshot-testing
+-- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox/snapshot-testing
 local exports = {}
 exports[ [=[toThrow asymmetric any-Class fail isNot false 1]=] ] = [=[
 
@@ -113,7 +113,7 @@ Expected constructor: <g>Err2</>
 
 Received value: <r>"nil"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:218
+      Expect.__tests__.toThrowMatchers.spec:228
 ]=]
 
 exports[ [=[toThrow error class threw, but class should not match (error subclass) 1]=] ] = [=[
@@ -187,7 +187,7 @@ exports[ [=[toThrow expected is undefined threw, but should not have (non-error 
 
 Thrown value: <r>"nil"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:558
+      Expect.__tests__.toThrowMatchers.spec:568
 ]=]
 
 exports[ [=[toThrow invalid actual 1]=] ] = [=[
@@ -265,7 +265,7 @@ exports[ [=[toThrow regexp threw, but message did not match (non-error falsey) 1
 Expected pattern: <g>/^[123456789]\d*/</>
 Received value:   <r>"0"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:152
+      Expect.__tests__.toThrowMatchers.spec:162
 ]=]
 
 exports[ [=[toThrow regexp threw, but message should not match (error) 1]=] ] = [=[
@@ -285,7 +285,7 @@ exports[ [=[toThrow regexp threw, but message should not match (non-error truthy
 Expected pattern: never <g>/^[123456789]\d*/</>
 Received value:         <r>"404"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:170
+      Expect.__tests__.toThrowMatchers.spec:180
 ]=]
 
 exports[ [=[toThrow substring did not throw at all 1]=] ] = [=[
@@ -314,7 +314,7 @@ exports[ [=[toThrow substring threw, but message did not match (non-error falsey
 Expected substring: <g>"Server Error"</>
 Received value:     <r>""</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:92
+      Expect.__tests__.toThrowMatchers.spec:102
 ]=]
 
 exports[ [=[toThrow substring threw, but message should not match (error) 1]=] ] = [=[
@@ -334,7 +334,7 @@ exports[ [=[toThrow substring threw, but message should not match (non-error tru
 Expected substring: never <g>"Server Error"</>
 Received value:           <r>"Internal Server Error"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:114
+      Expect.__tests__.toThrowMatchers.spec:124
 ]=]
 
 exports[ [=[toThrowError asymmetric any-Class fail isNot false 1]=] ] = [=[
@@ -450,7 +450,7 @@ Expected constructor: <g>Err2</>
 
 Received value: <r>"nil"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:218
+      Expect.__tests__.toThrowMatchers.spec:228
 ]=]
 
 exports[ [=[toThrowError error class threw, but class should not match (error subclass) 1]=] ] = [=[
@@ -524,7 +524,7 @@ exports[ [=[toThrowError expected is undefined threw, but should not have (non-e
 
 Thrown value: <r>"nil"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:558
+      Expect.__tests__.toThrowMatchers.spec:568
 ]=]
 
 exports[ [=[toThrowError invalid actual 1]=] ] = [=[
@@ -603,7 +603,7 @@ exports[ [=[toThrowError regexp threw, but message did not match (non-error fals
 Expected pattern: <g>/^[123456789]\d*/</>
 Received value:   <r>"0"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:152
+      Expect.__tests__.toThrowMatchers.spec:162
 ]=]
 
 exports[ [=[toThrowError regexp threw, but message should not match (error) 1]=] ] = [=[
@@ -623,7 +623,7 @@ exports[ [=[toThrowError regexp threw, but message should not match (non-error t
 Expected pattern: never <g>/^[123456789]\d*/</>
 Received value:         <r>"404"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:170
+      Expect.__tests__.toThrowMatchers.spec:180
 ]=]
 
 exports[ [=[toThrowError substring did not throw at all 1]=] ] = [=[
@@ -652,7 +652,7 @@ exports[ [=[toThrowError substring threw, but message did not match (non-error f
 Expected substring: <g>"Server Error"</>
 Received value:     <r>""</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:92
+      Expect.__tests__.toThrowMatchers.spec:102
 ]=]
 
 exports[ [=[toThrowError substring threw, but message should not match (error) 1]=] ] = [=[
@@ -672,7 +672,7 @@ exports[ [=[toThrowError substring threw, but message should not match (non-erro
 Expected substring: never <g>"Server Error"</>
 Received value:           <r>"Internal Server Error"</>
 
-      _Workspace.Expect.Expect.__tests__.toThrowMatchers.spec:114
+      Expect.__tests__.toThrowMatchers.spec:124
 ]=]
 
 return exports

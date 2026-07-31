@@ -1,5 +1,5 @@
 {
-    "name": "JestGlobals",
+    "name": "jest-globals",
     "tree": {
         "$path": "src"
     }

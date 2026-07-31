@@ -1,5 +1,5 @@
 {
-    "name": "DiffSequences",
+    "name": "diff-sequences",
     "tree": {
         "$path": "src"
     }

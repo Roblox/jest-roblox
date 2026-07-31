@@ -109,7 +109,7 @@ end
 -- ROBLOX deviation END
 
 function resolveConfigPathByTraversing(
-	pathToResolve: Instance,
+	pathToResolve: Instance?,
 	initialPath: Config_Path | Instance,
 	-- ROBLOX deviation: using Instance instead of Config_Path
 	cwd: Instance,

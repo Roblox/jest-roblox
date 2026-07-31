@@ -1,5 +1,5 @@
 {
-    "name": "JestDiff",
+    "name": "jest-diff",
     "tree": {
         "$path": "src"
     }

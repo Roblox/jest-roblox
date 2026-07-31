@@ -1,4 +1,4 @@
--- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox-internal/snapshot-testing
+-- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox/snapshot-testing
 local exports = {}
 exports[ [=[Instance matchers .toMatchInstance does not match properties of instance 1]=] ] = [=[
 
@@ -766,10 +766,10 @@ Error message: <r>"<d>expect(</><r>received</><r><d>).</>toBe<d>(</><g>expected<
       Error: <d>expect(</><r>received</><d>).</>toBe<d>(</><g>expected</><d>) -- Object.is equality</>
       Expected: <g>2</>
       Received: <r>4</>
-      _Workspace.Expect.Expect.__tests__.matchers.roblox.spec:186
-      _Workspace.Expect.Expect.__tests__.matchers.roblox.spec:175
-      _Workspace.Expect.Expect.__tests__.matchers.roblox.spec:174
-      _Workspace.Expect.Expect.__tests__.matchers.roblox.spec:185
+      Expect.__tests__.matchers.roblox.spec:189
+      Expect.__tests__.matchers.roblox.spec:178
+      Expect.__tests__.matchers.roblox.spec:177
+      Expect.__tests__.matchers.roblox.spec:188
 ]=]
 
 exports[ [=[tests stack traces for calls within pcalls with Error polyfill 1]=] ] = [=[
@@ -778,12 +778,12 @@ exports[ [=[tests stack traces for calls within pcalls with Error polyfill 1]=] 
 
 Thrown value: <r>"attempt to concatenate string with table"</>
 
-      _Index.LuauPolyfill.LuauPolyfill.Error.Error.global:82 function __recalculateStacktrace
-      _Index.LuauPolyfill.LuauPolyfill.Error.Error.global:74 function __captureStackTrace
-      _Index.LuauPolyfill.LuauPolyfill.Error.Error.global:41 function __createError
-      _Index.LuauPolyfill.LuauPolyfill.Error.Error.global:90 function __call
-      _Workspace.Expect.Expect.__tests__.matchers.roblox.spec:197
-      _Workspace.Expect.Expect.__tests__.matchers.roblox.spec:204
+      LuauPolyfill.Error.Error.global function __recalculateStacktrace
+      LuauPolyfill.Error.Error.global function __captureStackTrace
+      LuauPolyfill.Error.Error.global function __createError
+      LuauPolyfill.Error.Error.global function __call
+      Expect.__tests__.matchers.roblox.spec:200
+      Expect.__tests__.matchers.roblox.spec:207
 ]=]
 
 return exports

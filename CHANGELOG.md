@@ -1,5 +1,9 @@
 # Jest Roblox Changelog
 
+## 3.20.0 (2026-07-30)
+
+* :package: Jest Roblox is now published to Wally as 34 packages under the `roblox/*` scope, alongside the existing Creator Store and Rotriever releases.
+
 ## 3.19.0 (2026-06-18)
 
 * :sparkles: Add `jest.retryTimes` ([#485](https://github.com/Roblox/jest-roblox-internal/pull/485))

@@ -1,0 +1,24 @@
+[package]
+name = "roblox/jest-globals"
+description = "Entry point for the Jest Roblox testing framework — exposes describe, it, expect, jest, beforeEach, and other globals."
+version = "3.20.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Roblox/jest-roblox"
+
+exclude = [
+	"rotriever.toml",
+	"**/__tests__/**",
+	"**/__snapshots__/**",
+	"**/__mocks__/**",
+]
+
+[dependencies]
+LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
+Expect = "roblox/expect@^3.20.0"
+JestEnvironment = "roblox/jest-environment@^3.20.0"
+JestTypes = "roblox/jest-types@^3.20.0"
+
+[dev-dependencies]

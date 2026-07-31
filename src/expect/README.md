@@ -2,7 +2,7 @@
 
 Upstream: https://github.com/facebook/jest/tree/v27.4.7/packages/expect
 
-This package exports the `expect` function used in Jest. You can find its documentation in the [Jest documentation](https://roblox.github.io/jest-roblox-internal).
+This package exports the `expect` function used in Jest. You can find its documentation in the [Jest documentation](https://roblox.github.io/jest-roblox).
 
 ---
 

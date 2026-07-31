@@ -15,7 +15,7 @@
 ]]
 -- ROBLOX NOTE: no upstream
 
-local Packages = script:FindFirstAncestor("JestBenchmark").Parent
+local Packages = script.Parent.Parent
 local Object = require(Packages.LuauPolyfill).Object
 
 local reporterModule = require(script.Parent.reporters.Reporter)

@@ -8,7 +8,6 @@
 
 local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent.Parent
-local LuauPolyfill = require(Packages.LuauPolyfill)
 local Symbol = require(Packages.Symbol)
 
 local exports = {}

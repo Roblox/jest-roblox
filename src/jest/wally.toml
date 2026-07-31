@@ -1,0 +1,22 @@
+[package]
+name = "roblox/jest"
+description = "A Luau testing framework based on Jest. See roblox/jest-globals for the entry point."
+version = "3.20.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Roblox/jest-roblox"
+
+exclude = [
+	"rotriever.toml",
+	"**/__tests__/**",
+	"**/__snapshots__/**",
+	"**/__mocks__/**",
+]
+
+[dependencies]
+JestCore = "roblox/jest-core@^3.20.0"
+
+[dev-dependencies]
+JestGlobals = "roblox/jest-globals@^3.20.0"

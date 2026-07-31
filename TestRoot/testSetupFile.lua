@@ -9,9 +9,9 @@
 -- jest.setTimeout(70000)
 type Function = (...any) -> ...any
 
-local JestGlobals = require(script.Parent.JestGlobals.JestGlobals)
+local JestGlobals = require(script.Parent.JestGlobals)
 local jestExpect = JestGlobals.expect
 
-local ConvertAnsi = require(script.Parent.Parent.PrettyFormat).plugins.ConvertAnsi
+local ConvertAnsi = require(script.Parent.PrettyFormat).plugins.ConvertAnsi
 
 jestExpect.addSnapshotSerializer(ConvertAnsi)

@@ -1,0 +1,39 @@
+name: Analyze
+
+# Uses `pull_request` (not `pull_request_target`) so the workflow runs with
+# the *fork's* GITHUB_TOKEN, has no repo secrets in scope, and doesn't need
+# reviewer approval.
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: analyze-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Static analysis
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install foreman
+        uses: Roblox/setup-foreman@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allow-external-github-orgs: true
+
+      - name: Run static analysis
+        shell: bash
+        run: lute run analyze

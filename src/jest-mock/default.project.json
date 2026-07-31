@@ -1,5 +1,5 @@
 {
-    "name": "JestMock",
+    "name": "jest-mock",
     "tree": {
         "$path": "src"
     }

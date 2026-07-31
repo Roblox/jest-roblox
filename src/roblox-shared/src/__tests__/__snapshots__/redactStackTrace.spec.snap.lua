@@ -1,4 +1,4 @@
--- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox-internal/snapshot-testing
+-- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox/snapshot-testing
 local exports = {}
 exports[ [=[stack traces should stay the same in snapshots 1]=] ] = [=[
 

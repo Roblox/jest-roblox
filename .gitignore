@@ -1,7 +1,9 @@
 # Rotriever files
 rotriever.lock
 Packages/*
-!Packages/.robloxrc
+
+# Wally files (libraries don't commit lockfiles)
+wally.lock
 
 # Test places and build artifacts
 /*.rbxlx

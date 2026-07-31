@@ -1,0 +1,21 @@
+[package]
+name = "roblox/path"
+description = "A set of path utilities."
+version = "3.20.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Roblox/jest-roblox"
+
+exclude = [
+	"rotriever.toml",
+	"**/__tests__/**",
+	"**/__snapshots__/**",
+	"**/__mocks__/**",
+]
+
+[dependencies]
+
+[dev-dependencies]
+JestGlobals = "roblox/jest-globals@^3.20.0"

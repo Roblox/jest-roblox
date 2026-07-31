@@ -207,7 +207,7 @@ end
 function CustomConsole.timeEnd(self: CustomConsolePrivate, label_: string?)
 	local label: string = if label_ ~= nil then label_ else "default"
 	local startTime = self._timers[label]
-	if Boolean.toJSBoolean(startTime) then
+	if startTime ~= nil then
 		local endTime = DateTime.now()
 		local time = endTime.UnixTimestampMillis - startTime.UnixTimestampMillis
 		self:_log("time", format("%s: %s", label, formatTime(time)))
@@ -218,7 +218,7 @@ end
 function CustomConsole.timeLog(self: CustomConsolePrivate, label_: string?, ...: any)
 	local label: string = if label_ ~= nil then label_ else "default"
 	local startTime = self._timers[label]
-	if Boolean.toJSBoolean(startTime) then
+	if startTime ~= nil then
 		local endTime = DateTime.now()
 		local time = endTime.UnixTimestampMillis - startTime.UnixTimestampMillis
 		self:_log("time", format("%s: %s", label, formatTime(time), ...))

@@ -1,0 +1,32 @@
+[package]
+name = "roblox/jest-runtime"
+description = "A Luau testing framework based on Jest. See roblox/jest-globals for the entry point."
+version = "3.20.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Roblox/jest-roblox"
+
+exclude = [
+	"rotriever.toml",
+	"**/__tests__/**",
+	"**/__snapshots__/**",
+	"**/__mocks__/**",
+]
+
+[dependencies]
+LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
+Promise = "roblox/promise@^3.5.1"
+Symbol = "roblox/symbol@^1.0.0"
+JestTypes = "roblox/jest-types@^3.20.0"
+JestMock = "roblox/jest-mock@^3.20.0"
+Expect = "roblox/expect@^3.20.0"
+JestFakeTimers = "roblox/jest-fake-timers@^3.20.0"
+JestSnapshot = "roblox/jest-snapshot@^3.20.0"
+JestMockGenv = "roblox/jest-mock-genv@^3.20.0"
+
+[dev-dependencies]
+JestEnvironmentLuau = "roblox/jest-environment-luau@^3.20.0"
+JestGlobals = "roblox/jest-globals@^3.20.0"
+JestConfig = "roblox/jest-config@^3.20.0"

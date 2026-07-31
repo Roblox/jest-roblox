@@ -20,7 +20,7 @@ export type LogEntry = { message: LogMessage, origin: string, type: LogType }
 
 export type LogCounters = { [string]: number }
 
-export type LogTimers = { [string]: DateTime }
+export type LogTimers = { [string]: DateTime? }
 
 export type LogType =
 	"assert"

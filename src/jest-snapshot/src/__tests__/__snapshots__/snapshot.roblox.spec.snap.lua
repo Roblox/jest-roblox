@@ -1,10 +1,10 @@
--- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox-internal/snapshot-testing
+-- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox/snapshot-testing
 local exports = {}
 exports[ [=[custom snapshot matchers: toMatchTrimmedSnapshot 1]=] ] = [=[
 "extra long"]=]
 
 exports[ [=[native lua errors 1]=] ] = [=[
-"_Workspace.JestSnapshot.JestSnapshot.__tests__.snapshot.roblox.spec:35: oops"]=]
+"JestSnapshot.__tests__.snapshot.roblox.spec:35: oops"]=]
 
 exports[ [=[test with newlines
 in the name

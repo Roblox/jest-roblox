@@ -229,7 +229,7 @@ reporters = {
 
 #### Custom Reporters
 
-Custom reporters module must export a class that takes `globalConfig`, `reporterOptions` and `reporterContext` as constructor arguments in a `.new` method and implements at least the `onRunComplete()` method (for the full list of methods and argument types see the `Reporter` interface in [jest-reporters/src/types.lua](https://github.com/Roblox/jest-roblox-internal/blob/master/src/jest-reporters/src/types.lua)).
+Custom reporters module must export a class that takes `globalConfig`, `reporterOptions` and `reporterContext` as constructor arguments in a `.new` method and implements at least the `onRunComplete()` method (for the full list of methods and argument types see the `Reporter` interface in [jest-reporters/src/types.lua](https://github.com/Roblox/jest-roblox/blob/master/src/jest-reporters/src/types.lua)).
 
 ```lua title="CustomReporter.lua"
 local CustomReporter = {}
@@ -252,7 +252,7 @@ end
 
 -- Optionally, reporters can force Jest to exit with non zero code by returning
 -- a LuauPolyfill `Error` from `getLastError()` method.
--- https://roblox.github.io/jest-roblox-internal/expect#error
+-- https://roblox.github.io/jest-roblox/expect#error
 function CustomReporter:getLastError()
 	if self._shouldFail then
 		return Error.new("Custom reporter error!")

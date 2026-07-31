@@ -76,3 +76,24 @@ it("should leave non-stack-frame lines unchanged", function()
 		LoadedCode.JestRoblox._Workspace.JestCircus.JestCircus.circusModule:789
 	]=])
 end)
+
+it("should prune wally-installed dep frames while keeping consumer app frames", function()
+	-- In a Wally consumer project, every jest-* package (and its transitive
+	-- deps) lives under Packages/_Index/roblox_<pkg>@<ver>/, so its stack
+	-- frames all contain "_Index.". Consumer application code lives outside
+	-- Packages/ (e.g. under ServerScriptService) and has no "_Index." in its
+	-- path. The _Index. heuristic that pruneDeps uses therefore does the
+	-- right thing in the Wally world too, without any format-specific logic.
+	local stack = [=[
+		game.ServerScriptService.MyApp.MyModule:42
+		Packages._Index.roblox_expect@3.19.0.expect.src.matchers:100
+		Packages._Index.roblox_jest-globals@3.19.0.jest-globals.src.init:50
+		Packages._Index.roblox_luau-polyfill@1.2.5.luau-polyfill.src.Object:15
+		game.ServerScriptService.MyApp.MyModule:38
+	]=]
+
+	expect(pruneDeps(stack)).toEqual([=[
+		game.ServerScriptService.MyApp.MyModule:42
+		game.ServerScriptService.MyApp.MyModule:38
+	]=])
+end)

@@ -327,7 +327,7 @@ local function runJest(ref: {
 		if not hasTests then
 			local noTestsFound = getNoTestsFoundMessage(testRunData, globalConfig)
 
-			local exitWith0 = noTestsFound.exitWith0
+			local _exitWith0 = noTestsFound.exitWith0
 			local noTestsFoundMessage = noTestsFound.message
 
 			if

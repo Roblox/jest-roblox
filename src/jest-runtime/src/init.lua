@@ -1,4 +1,7 @@
 --!nonstrict
+--!nolint DeprecatedApi
+-- ^ Intentional: jest's runtime uses getfenv/setfenv to install mocked
+-- globals into module environments for now.
 -- ROBLOX upstream: https://github.com/facebook/jest/blob/v28.0.0/packages/jest-runtime/src/index.ts
 --[[*
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
@@ -1994,7 +1997,6 @@ function Runtime_private:_execModule(
 	local function setupAutomocks(automocks: Object, sourceEnv: any, saveInto: any)
 		for name, automock in automocks do
 			if automock._isGlobalAutomockFn then
-				local original = sourceEnv[name]
 				-- Disguise the mock callable table as a function on the
 				-- outside, so it retains the same behaviour when observed in
 				-- various ways by almost all code (except debug library stuff)

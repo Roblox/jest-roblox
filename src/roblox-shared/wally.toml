@@ -1,0 +1,27 @@
+[package]
+name = "roblox/roblox-shared"
+description = "A Luau testing framework based on Jest. See roblox/jest-globals for the entry point."
+version = "3.20.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Roblox/jest-roblox"
+
+exclude = [
+	"rotriever.toml",
+	"**/__tests__/**",
+	"**/__snapshots__/**",
+	"**/__mocks__/**",
+]
+
+[dependencies]
+JestGetType = "roblox/jest-get-type@^3.20.0"
+LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
+JestMock = "roblox/jest-mock@^3.20.0"
+
+[dev-dependencies]
+JestGlobals = "roblox/jest-globals@^3.20.0"
+JestConfig = "roblox/jest-config@^3.20.0"
+React = "roblox/react@^17"
+ReactRoblox = "roblox/react-roblox@^17"

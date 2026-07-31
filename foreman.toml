@@ -1,8 +1,9 @@
 [tools]
-rotrieve = { source = "roblox/rotriever", version = "=0.5.21" }
-selene = { source = "Roblox/Kampfkarren-selene", version = "0.30.0" }
-stylua = { source = "Roblox/JohnnyMorganz-StyLua", version = "=0.18.1" }
-rbx-aged-cli = { source = "roblox/rbx-aged-tool", version = "5.10.0" }
-rojo = { source = "Roblox/rojo-rbx-rojo", version = "=7.3.0" }
-lute = { source = "luau-lang/lute", version = "1.0.0" }
-rocale-cli = { source = "Roblox/rocale-cli", version = "0.1.1" }
+luau-lsp = { source = "JohnnyMorganz/luau-lsp", version = "=1.68.1" }
+lute = { source = "luau-lang/lute", version = "=1.0.1-nightly.20260710" }
+rocale-cli = { source = "Roblox/rocale-cli", version = "=0.1.1" }
+rojo = { source = "rojo-rbx/rojo", version = "=7.3.0" }
+selene = { source = "Kampfkarren/selene", version = "=0.30.0" }
+stylua = { source = "JohnnyMorganz/StyLua", version = "=0.18.1" }
+wally = { source = "UpliftGames/wally", version = "=0.3.2" }
+wally-package-types = { source = "JohnnyMorganz/wally-package-types", version = "=1.6.2" }

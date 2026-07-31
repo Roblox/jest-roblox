@@ -11,7 +11,6 @@
 local CurrentModule = script.Parent
 local Packages = CurrentModule.Parent
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
 local Symbol = require(Packages.Symbol)
 
 local Types = require(CurrentModule.types)

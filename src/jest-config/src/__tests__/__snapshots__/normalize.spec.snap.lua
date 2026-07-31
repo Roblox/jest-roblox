@@ -1,4 +1,4 @@
--- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox-internal/snapshot-testing
+-- Jest Roblox Snapshot v1, http://roblox.github.io/jest-roblox/snapshot-testing
 local exports = {}
 exports[ [=[displayName should throw an error when displayName is is an empty object 1]=] ] = [=[
 
@@ -13,7 +13,7 @@ exports[ [=[displayName should throw an error when displayName is is an empty ob
 <red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -30,7 +30,7 @@ exports[ [=[displayName should throw an error when displayName is missing color 
 <red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -47,7 +47,7 @@ exports[ [=[displayName should throw an error when displayName is missing name 1
 <red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -64,7 +64,7 @@ exports[ [=[displayName should throw an error when displayName is using invalid 
 <red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -81,7 +81,7 @@ exports[ [=[reporters throws an error if first value in the tuple is not a strin
 <red>    <green><bold>{\"reporter\":123}</></><red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -98,7 +98,7 @@ exports[ [=[reporters throws an error if second value in the tuple is not an obj
 <red>    <green><bold>{\"options\":true,\"reporter\":\"some-reporter\"}</></><red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -115,7 +115,7 @@ exports[ [=[reporters throws an error if second value is missing in the tuple 1]
 <red>    <green><bold>{\"reporter\":\"some-reporter\"}</></><red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -129,7 +129,7 @@ exports[ [=[reporters throws an error if value is neither string nor array 1]=] 
 <red>    <red><bold>number</></><red></>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -140,7 +140,7 @@ exports[ [=[rootDir throws error when rootDir is string 1]=] ] = [=[
 <red>  Directory <bold>rootDir</> in the <bold>rootDir</> option was not found.</>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -151,7 +151,7 @@ exports[ [=[rootDir throws error when rootDir is table 1]=] ] = [=[
 <red>  Directory <bold>TABLE</> in the <bold>rootDir</> option was not found.</>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -162,7 +162,7 @@ exports[ [=[rootDir throws if the options is missing a rootDir property 1]=] ] =
 <red>  Configuration option <bold>rootDir</> must be specified.</>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -173,7 +173,7 @@ exports[ [=[testMatch throws if testRegex and testMatch are both specified 1]=] 
 <red>  Configuration options <bold>testMatch</> and <bold>testRegex</> cannot be used together.</>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 
@@ -190,7 +190,7 @@ exports[ [=[testTimeout should throw an error if timeout is a negative number 1]
 <red>  Option \"<bold>testTimeout</>\" must be a natural number.</>
 <red></>
 <red>  <bold>Configuration Documentation:</></>
-<red>  https://roblox.github.io/jest-roblox-internal/configuration</>
+<red>  https://roblox.github.io/jest-roblox/configuration</>
 <red></>"
 ]=]
 

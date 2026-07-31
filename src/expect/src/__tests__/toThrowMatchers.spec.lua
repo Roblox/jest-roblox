@@ -9,7 +9,11 @@
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
-local Workspace = Packages.Parent
+-- Under Rotriever's nested layout, TestRoot content (normalizeStackTraces,
+-- etc.) reparents into a `_Workspace` folder one level above Packages. Under
+-- the flat Wally-aligned layout, testRunner.luau reparents TestRoot content
+-- directly into Packages, so the equivalent reference is Packages itself.
+local Workspace = game:GetService("ReplicatedStorage"):FindFirstChild("Packages")
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local describe = JestGlobals.describe
@@ -28,9 +32,15 @@ local RegExp = require(Packages.RegExp)
 
 local alignedAnsiStyleSerializer = require(Packages.Dev.TestUtils).alignedAnsiStyleSerializer
 
+-- `normalizeStackTraces` is a test-only helper that `run-tests.luau`
+-- reparents under `game.ReplicatedStorage` at test-runtime. luau-lsp
+-- resolves requires at sourcemap-time, before the reparenting, so any
+-- direct `require(Workspace.normalizeStackTraces)` errors.
+local dynamicRequire: (Instance) -> any = require :: any
+
 beforeAll(function()
 	expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
-	expect.addSnapshotSerializer(require(Workspace.normalizeStackTraces))
+	expect.addSnapshotSerializer(dynamicRequire(Workspace.normalizeStackTraces))
 end)
 
 local CustomError = extends(Error, "CustomError", function(self, message)
