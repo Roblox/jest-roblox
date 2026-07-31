@@ -1,0 +1,13 @@
+# If present, use rotriever.toml to vendor to an asset ID as a Roblox Package.
+[rbx_creator_store]
+publish_to = true
+asset_id = 16031830738
+
+# If present, use wally.toml in the repo to publish.
+[wally]
+publish_to = true
+members = ["src/*"]
+
+# If present, use rotriever.toml in the repo to publish.
+[rotriever]
+publish_to = true

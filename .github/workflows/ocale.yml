@@ -1,0 +1,42 @@
+name: OCALE Tests
+
+on:
+  pull_request_target:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ocale-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ocale:
+    name: OCALE tests
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    environment: Public CI
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install foreman
+        uses: Roblox/setup-foreman@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allow-external-github-orgs: true
+
+      - name: Run tests (ocale)
+        shell: bash
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+          ROBLOX_UNIVERSE_ID: ${{ secrets.ROBLOX_UNIVERSE_ID }}
+          ROBLOX_PLACE_ID: ${{ secrets.ROBLOX_PLACE_ID }}
+        run: lute run test ocale

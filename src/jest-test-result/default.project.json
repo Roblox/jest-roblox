@@ -1,5 +1,5 @@
 {
-    "name": "JestTestResult",
+    "name": "jest-test-result",
     "tree": {
         "$path": "src"
     }

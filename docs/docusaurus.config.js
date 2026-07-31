@@ -6,9 +6,9 @@ module.exports = {
   title: 'Jest Roblox',
   tagline: 'Lovely Luau Testing',
   url: 'https://roblox.github.io',
-  baseUrl: '/jest-roblox-internal/',
+  baseUrl: '/jest-roblox/',
   organizationName: 'roblox',
-  projectName: 'jest-roblox-internal',
+  projectName: 'jest-roblox',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.svg',
@@ -31,7 +31,7 @@ module.exports = {
           position: 'right',
         },
         {
-          href: 'https://github.com/Roblox/jest-roblox-internal',
+          href: 'https://github.com/Roblox/jest-roblox',
           label: 'GitHub',
           position: 'right',
         },
@@ -55,7 +55,7 @@ module.exports = {
           routeBasePath: '/',
           // Please change this to your repo.
           // editUrl:
-          //   'https://github.com/Roblox/jest-roblox-internal/edit/master/docs/',
+          //   'https://github.com/Roblox/jest-roblox/edit/master/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

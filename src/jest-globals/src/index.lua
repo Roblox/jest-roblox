@@ -25,7 +25,7 @@ type JestGlobals = {
 	expectExtended: ExpectExtended<{ [string]: (...any) -> nil }>,
 } & TestFrameworkGlobals
 
--- jest-runtime intercepts `require(Packages.JestGlobals)` inside tests and injects
+-- jest-runtime intercepts `require(Packages.Dev.JestGlobals)` inside tests and injects
 -- the live globals; reaching this error means the module was imported outside that path.
 error(
 	"Do not import `JestGlobals` outside of the Jest 3 test environment.\n"

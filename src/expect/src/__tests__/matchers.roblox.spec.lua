@@ -16,7 +16,7 @@
 
 local CurrentModule = script.Parent.Parent
 local Packages = CurrentModule.Parent
-local Workspace = Packages.Parent
+local Workspace = game:GetService("ReplicatedStorage"):FindFirstChild("Packages")
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local describe = JestGlobals.describe
@@ -43,9 +43,12 @@ function CustomClass.new()
 end
 
 local screenGui
+-- normalizeStackTraces reparenting issue — see toThrowMatchers.spec.lua for details.
+local dynamicRequire: (Instance) -> any = require :: any
+
 beforeAll(function()
 	expect.addSnapshotSerializer(alignedAnsiStyleSerializer)
-	expect.addSnapshotSerializer(require(Workspace.normalizeStackTraces))
+	expect.addSnapshotSerializer(dynamicRequire(Workspace.normalizeStackTraces))
 
 	screenGui = Instance.new("ScreenGui")
 	screenGui.Name = "Root"

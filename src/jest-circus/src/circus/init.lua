@@ -229,8 +229,8 @@ local test: Global_It = (function()
 		end,
 	})
 
-	function bindFailing(mode: Circus_TestMode)
-		function failing(testName: Circus_TestNameLike, fn: Circus_TestFn?, timeout: number?)
+	local function bindFailing(mode: Circus_TestMode)
+		local function failing(testName: Circus_TestNameLike, fn: Circus_TestFn?, timeout: number?)
 			return _addTest(testName, mode, fn, failing, timeout, true)
 		end
 		return failing

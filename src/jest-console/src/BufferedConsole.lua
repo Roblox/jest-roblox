@@ -205,7 +205,7 @@ end
 function BufferedConsole.timeEnd(self: BufferedConsolePrivate, label_: string?)
 	local label: string = if label_ ~= nil then label_ else "default"
 	local startTime = self._timers[label]
-	if Boolean.toJSBoolean(startTime) then
+	if startTime ~= nil then
 		local endTime = DateTime.now()
 		local time = endTime.UnixTimestampMillis - startTime.UnixTimestampMillis
 		self:_log("time", format("%s: %s", label, formatTime(time)))
@@ -216,7 +216,7 @@ end
 function BufferedConsole.timeLog(self: BufferedConsolePrivate, label_: string?, ...: any)
 	local label: string = if label_ ~= nil then label_ else "default"
 	local startTime = self._timers[label]
-	if Boolean.toJSBoolean(startTime) then
+	if startTime ~= nil then
 		local endTime = DateTime.now()
 		local time = endTime.UnixTimestampMillis - startTime.UnixTimestampMillis
 		self:_log("time", format("%s: %s", label, formatTime(time), ...))

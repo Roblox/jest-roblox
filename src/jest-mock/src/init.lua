@@ -350,10 +350,6 @@ function ModuleMockerClass:spyOn<M>(object: { [any]: any } | Instance, methodNam
 			error(Error.new(`Can't spy on {object.Name}:{methodName}() because it is not mockable.`))
 		end
 
-		-- `object` could be a spy, so for safety, disallow using it in favour
-		-- of the more specific `instanceProxy` from here on out.
-		local object = nil
-
 		if mocksOnObject[methodName] == nil then
 			local methodName: string = methodName :: any
 

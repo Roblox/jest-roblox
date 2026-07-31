@@ -27,7 +27,6 @@ local Object = LuauPolyfill.Object
 local CurrentModuleExpect = require(CurrentModule.expect)
 local equals = CurrentModuleExpect.equals
 local isObjectWithKeys = CurrentModuleExpect.isObjectWithKeys
-local hasPropertyInObject = CurrentModuleExpect.hasPropertyInObject
 local isAsymmetric = CurrentModuleExpect.isAsymmetric
 
 local exports = {}

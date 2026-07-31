@@ -1,9 +1,56 @@
 {
-  "name": "JestRoblox",
-  "tree": {
-    "$path": "Packages",
-    "_Workspace": {
-      "$path": "TestRoot"
-    }
-  }
+	"name": "JestRoblox",
+	"tree": {
+		"$className": "DataModel",
+		"ServerScriptService": {
+			"$properties": {
+				"LoadStringEnabled": true
+			}
+		},
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Packages": {
+				"$path": "Packages",
+				"Dev": { "$path": "DevLinks" },
+				"TestRoot": {
+					"$path": "TestRoot"
+				},
+				"TestRunner": { "$path": "scripts/lib/testRunner.luau" },
+				"DiffSequences": { "$path": "src/diff-sequences/src" },
+				"Expect": { "$path": "src/expect/src" },
+				"Jest": { "$path": "src/jest/src" },
+				"JestBenchmark": { "$path": "src/jest-benchmark/src" },
+				"JestCircus": { "$path": "src/jest-circus/src" },
+				"JestConfig": { "$path": "src/jest-config/src" },
+				"JestConsole": { "$path": "src/jest-console/src" },
+				"JestCore": { "$path": "src/jest-core/src" },
+				"JestDiff": { "$path": "src/jest-diff/src" },
+				"JestEach": { "$path": "src/jest-each/src" },
+				"JestEnvironment": { "$path": "src/jest-environment/src" },
+				"JestEnvironmentLuau": { "$path": "src/jest-environment-luau/src" },
+				"JestFakeTimers": { "$path": "src/jest-fake-timers/src" },
+				"JestGetType": { "$path": "src/jest-get-type/src" },
+				"JestGlobals": { "$path": "src/jest-globals/src" },
+				"JestMatcherUtils": { "$path": "src/jest-matcher-utils/src" },
+				"JestMessageUtil": { "$path": "src/jest-message-util/src" },
+				"JestMock": { "$path": "src/jest-mock/src" },
+				"JestMockGenv": { "$path": "src/jest-mock-genv/src" },
+				"JestMockRbx": { "$path": "src/jest-mock-rbx/src" },
+				"JestReporters": { "$path": "src/jest-reporters/src" },
+				"JestRunner": { "$path": "src/jest-runner/src" },
+				"JestRuntime": { "$path": "src/jest-runtime/src" },
+				"JestSnapshot": { "$path": "src/jest-snapshot/src" },
+				"JestSnapshotSerializerRaw": { "$path": "src/jest-snapshot-serializer-raw/src" },
+				"JestTestResult": { "$path": "src/jest-test-result/src" },
+				"JestTypes": { "$path": "src/jest-types/src" },
+				"JestUtil": { "$path": "src/jest-util/src" },
+				"JestValidate": { "$path": "src/jest-validate/src" },
+				"Path": { "$path": "src/path/src" },
+				"PrettyFormat": { "$path": "src/pretty-format/src" },
+				"RobloxShared": { "$path": "src/roblox-shared/src" },
+				"TestUtils": { "$path": "src/test-utils/src" },
+				"Throat": { "$path": "src/throat/src" }
+			}
+		}
+	}
 }

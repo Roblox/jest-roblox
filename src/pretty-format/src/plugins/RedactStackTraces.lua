@@ -20,11 +20,6 @@ local Packages = CurrentModule.Parent
 local JestGetType = require(Packages.JestGetType)
 local getType = JestGetType.getType
 
-local LuauPolyfill = require(Packages.LuauPolyfill)
-local Object = LuauPolyfill.Object
-local Array = LuauPolyfill.Array
-local instanceof = LuauPolyfill.instanceof
-
 local redactStackTrace = require(Packages.RobloxShared).redactStackTrace
 
 local Types = require(CurrentModule.Types)

@@ -1,5 +1,5 @@
 {
-    "name": "JestReporters",
+    "name": "jest-reporters",
     "tree": {
         "$path": "src"
     }

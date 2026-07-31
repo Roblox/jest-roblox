@@ -2,24 +2,29 @@
 members = ["src/*"]
 authors = ["Raymond Ng <rng@roblox.com>", "Daniel Fox <dfox@roblox.com>", "#jest-roblox"]
 description = "A Luau testing framework based on Jest. See JestGlobals for the entry point."
-repository = "https://github.com/Roblox/jest-roblox-internal"
-homepage = "https://roblox.github.io/jest-roblox-internal"
-documentation = "https://roblox.github.io/jest-roblox-internal"
+repository = "https://github.com/Roblox/jest-roblox"
+homepage = "https://roblox.github.io/jest-roblox"
+documentation = "https://roblox.github.io/jest-roblox"
 keywords = ["jest", "unit_testing"]
-version = "3.19.0"
+version = "3.20.0"
 license = "MIT"
 
 [config]
 registry_index = true
+# Workspace members are linked as standard Rojo project files rather than .rbxp:
+# robloxdev-cli's embedded Rojo reads both, but the standalone Rojo that
+# rocale-cli bundles only understands .project.json, and silently builds an
+# empty Folder for .rbxp links.
+path_mode = "rojo"
 
 [workspace.dependencies]
 ChalkLua = "0.3.0"
 LuauPolyfill = "1"
 Symbol = "1.0.0"
 RegExp = "0.2.2"
-Promise = "3.3.0"
+Promise = "3.5.2"
 React = "17.0.1"
 ReactIs = "17.0.1"
 ReactRoblox = "17.0.1"
-ReactTestRenderer = "17.0.1"
-Picomatch = "0.4.0"
+ReactTestRenderer = "17.3.9"
+Picomatch = "0.4.2"

@@ -13,9 +13,6 @@
 	* limitations under the License.
 ]]
 
-local CurrentModule = script
-local Packages = CurrentModule.Parent
-
 local GlobalMockerClass = {}
 
 export type GlobalAutomockFn = {

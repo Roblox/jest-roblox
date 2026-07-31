@@ -5,64 +5,16 @@
 	* You may obtain a copy of the License at
 	*
 	*     https://opensource.org/licenses/MIT
-	*
-	* Unless required by applicable law or agreed to in writing, software
-	* distributed under the License is distributed on an "AS IS" BASIS,
-	* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	* See the License for the specific language governing permissions and
-	* limitations under the License.
 ]]
 
--- Enable React testing globals (must be set before React is required)
-_G.__DEV__ = true
-_G.__ROACT_17_MOCK_SCHEDULER__ = true
-_G.__ROACT_17_INLINE_ACT__ = true
-
+-- Thin entry point uploaded via `rocale-cli --script`, and the same script the
+-- local robloxdev-cli flows run. Runner logic lives in Packages.TestRunner
+-- (rojo-mounted from scripts/lib/testRunner.luau); pass `--update-snapshots`
+-- to regenerate snapshots rather than verify them.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Packages = ReplicatedStorage:FindFirstChild("Packages")
+	or script.Parent:FindFirstChild("JestRoblox")
+assert(Packages, "Could not find Packages tree — check the project file")
 
-local Workspace
-
-if ReplicatedStorage:FindFirstChild("Packages") then
-	Workspace = ReplicatedStorage.Packages._Workspace
-	-- rojo doesn't combine folders in the DM with the same name
-	for _, child in ipairs(ReplicatedStorage.Packages.TestRoot:GetChildren()) do
-		child.Parent = Workspace
-	end
-else
-	Workspace = script.Parent.JestRoblox._Workspace
-end
-
-local Jest = require(Workspace.Jest.Jest)
-local runCLI = Jest.runCLI
-local args = Jest.args
-
-local processServiceExists, ProcessService = pcall(function()
-	return game:GetService("ProcessService")
-end)
-
-local status, result = runCLI(Workspace, {
-	verbose = args.verbose,
-	ci = args.ci,
-	updateSnapshot = args.updateSnapshot,
-	testPathPattern = args.testPathPattern,
-	testNamePattern = args.testNamePattern,
-	reporters = if args.githubActions then { "default", "github-actions" } else nil,
-}, { Workspace }):awaitStatus()
-
-if status == "Rejected" then
-	print(result)
-end
-
-if status == "Resolved" and result.results.success then
-	if processServiceExists then
-		ProcessService:ExitAsync(0)
-	end
-else
-	if processServiceExists then
-		ProcessService:ExitAsync(1)
-	else
-		error("Tests failed")
-	end
-end
-
-return nil
+local TestRunner = require(Packages.TestRunner)
+return TestRunner()

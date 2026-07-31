@@ -1,0 +1,27 @@
+# Workspace scaffold. Not published; exists so `wally install` at the repo
+# root populates Packages/ for the public analyze workflow and the
+# `rojo build default.project.json -o check.rbxm` sanity gate.
+
+[package]
+name = "roblox/workspace"
+version = "0.0.0"
+license = "MIT"
+authors = ["Roblox <no-reply@roblox.com>"]
+realm = "shared"
+registry = "https://github.com/UpliftGames/wally-index"
+private = true
+
+[place]
+shared-packages = "game.ReplicatedStorage.Packages"
+
+[dependencies]
+ChalkLua = "roblox/chalk-lua@^0.3.0"
+LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
+Symbol = "roblox/symbol@^1.0.0"
+RegExp = "roblox/regexp@^0.2.2"
+Promise = "roblox/promise@^3.5.1"
+React = "roblox/react@^17.3.9"
+ReactIs = "roblox/react-is@^17.3.9"
+ReactRoblox = "roblox/react-roblox@^17.3.9"
+ReactTestRenderer = "roblox/react-test-renderer@^17.3.9"
+Picomatch = "roblox/picomatch@^0.4.1"

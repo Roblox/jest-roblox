@@ -1,0 +1,19 @@
+{
+	"name": "JestRoblox",
+	"tree": {
+		"$className": "DataModel",
+		"ServerScriptService": {
+			"$properties": {
+				"LoadStringEnabled": true
+			}
+		},
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Packages": {
+				"$path": "Packages",
+				"TestRoot": { "$path": "TestRoot" },
+				"TestRunner": { "$path": "scripts/lib/testRunner.luau" }
+			}
+		}
+	}
+}

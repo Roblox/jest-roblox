@@ -11,8 +11,6 @@ local Packages = CurrentModule.Parent
 
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
-local Boolean = LuauPolyfill.Boolean
-local Set = LuauPolyfill.Set
 type Array<T> = LuauPolyfill.Array<T>
 type Set<T> = LuauPolyfill.Set<T>
 

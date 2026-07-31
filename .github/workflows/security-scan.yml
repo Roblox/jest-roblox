@@ -6,12 +6,15 @@ on:
         branches:
         - master
 
+permissions:
+  contents: read
+
 jobs:
     security:
         name: OSS Security SAST
         uses: Roblox/security-workflows/.github/workflows/oss-security-sast.yaml@main
         with:
-            skip-ossf: true
+            skip-ossf: false
         secrets:
             GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_KEY }}
             ROBLOX_SEMGREP_GHC_POC_APP_TOKEN: ${{ secrets.ROBLOX_SEMGREP_GHC_POC_APP_TOKEN }}

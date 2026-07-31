@@ -23,7 +23,7 @@ local getType = require(Packages.JestGetType).getType
 
 local jestMock = require(Packages.JestMock).ModuleMocker
 
-local realDelay = delay
+local realDelay = task.delay
 local realTick = tick
 local realTime = time
 local realDateTime = DateTime

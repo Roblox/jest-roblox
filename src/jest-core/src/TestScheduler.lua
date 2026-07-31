@@ -374,7 +374,7 @@ end
 function TestScheduler:_setupReporters()
 	return Promise.resolve():andThen(function()
 		local ref = self._globalConfig
-		local coverage, notify, verbose = false, false, ref.verbose
+		local _coverage, _notify, verbose = false, false, ref.verbose
 		local reporters
 		-- ROBLOX deviation: ReporterConfig is a named table since we can't type tuples
 		if ref.reporters ~= nil then
@@ -417,7 +417,7 @@ end
 
 function TestScheduler:_addCustomReporter(reporter: ModuleScript, options: Record<string, any>)
 	return Promise.resolve():andThen(function()
-		local ok, result, hasReturned = xpcall(function()
+		local _ok, _result, _hasReturned = xpcall(function()
 			local reporterConstructor: ReporterConstructor = require(reporter) :: any
 			self:addReporter(reporterConstructor.new(self._globalConfig, options, self._context :: ReporterContext))
 		end, function(error_)

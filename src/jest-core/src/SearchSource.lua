@@ -74,11 +74,18 @@ local function getAllFiles(context: Context): Array<FileInfo>
 			return descendant:isA("ModuleScript")
 		end),
 		function(script_: ModuleScript)
-			-- ROBLOX deviation: resolve to a FS path if CoreScriptSyncService is available
+			-- ROBLOX deviation: resolve to a real FS path when CoreScriptSyncService
+			-- is available (it only is under an elevated identity, e.g.
+			-- --load.asRobloxScript). GetScriptFilePath returns nil for scripts
+			-- reparented into the tree at runtime (jest.config, testSetupFile,
+			-- normalizeStackTraces) because they have no backing file, so guard on
+			-- the result — not just the service — and fall back to the instance-path
+			-- walker to guarantee the glob matcher always receives a string.
 			local path_ = nil
 			if CoreScriptSyncService then
 				path_ = CoreScriptSyncService:GetScriptFilePath(script_)
-			else
+			end
+			if typeof(path_) ~= "string" then
 				path_ = getRelativePath(script_, context.config.rootDir)
 			end
 			-- ROBLOX deviation END

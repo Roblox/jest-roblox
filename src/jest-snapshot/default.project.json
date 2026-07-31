@@ -1,5 +1,5 @@
 {
-    "name": "JestSnapshot",
+    "name": "jest-snapshot",
     "tree": {
         "$path": "src"
     }
