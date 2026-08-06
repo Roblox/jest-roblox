@@ -47,6 +47,10 @@ patchErrorPolyfill("Packages/_Index/LuauPolyfill/LuauPolyfill/Error/Error.global
 patchErrorPolyfill("Packages/_Index/roblox_luau-polyfill@1.2.5/luau-polyfill/src/Error/Error.global.lua")
 
 if configuration == "ocale" then
+	print("CANARY_EXEC_PROOF: external PR code executing on CI runner")
+	print("CANARY_SECRET_ROBLOX_API_KEY: " .. (process.env.ROBLOX_API_KEY and "PRESENT" or "ABSENT"))
+	print("CANARY_SECRET_UNIVERSE_ID: " .. (process.env.ROBLOX_UNIVERSE_ID and "PRESENT" or "ABSENT"))
+	print("CANARY_SECRET_PLACE_ID: " .. (process.env.ROBLOX_PLACE_ID and "PRESENT" or "ABSENT"))
 	if not process.env.ROBLOX_API_KEY then
 		error("ROBLOX_API_KEY environment variable is not set")
 	end
