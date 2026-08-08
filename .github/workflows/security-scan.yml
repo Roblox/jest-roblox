@@ -6,9 +6,6 @@ on:
         branches:
         - master
 
-permissions:
-  contents: read
-
 jobs:
     security:
         name: OSS Security SAST
