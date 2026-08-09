@@ -20,6 +20,7 @@ LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
 JestMockGenv = "roblox/jest-mock-genv@^3.20.0"
 JestMockRbx = "roblox/jest-mock-rbx@^3.20.0"
 JestTypes = "roblox/jest-types@^3.20.0"
+Promise = "roblox/promise@^3.5.1"
 Symbol = "roblox/symbol@^1.0.0"
 
 [dev-dependencies]
