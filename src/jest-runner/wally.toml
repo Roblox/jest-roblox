@@ -1,7 +1,7 @@
 [package]
 name = "roblox/jest-runner"
 description = "A Luau testing framework based on Jest. See roblox/jest-globals for the entry point."
-version = "3.20.0"
+version = "3.20.1"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"

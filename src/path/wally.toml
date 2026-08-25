@@ -1,7 +1,7 @@
 [package]
 name = "roblox/path"
 description = "A set of path utilities."
-version = "3.20.0"
+version = "3.20.1"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"

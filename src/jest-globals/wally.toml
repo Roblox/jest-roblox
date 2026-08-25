@@ -1,7 +1,7 @@
 [package]
 name = "roblox/jest-globals"
 description = "Entry point for the Jest Roblox testing framework — exposes describe, it, expect, jest, beforeEach, and other globals."
-version = "3.20.0"
+version = "3.20.1"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"

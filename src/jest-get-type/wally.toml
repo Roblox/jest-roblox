@@ -1,7 +1,7 @@
 [package]
 name = "roblox/jest-get-type"
 description = "A utility function to get the type of a value, including Luau and Roblox types."
-version = "3.20.0"
+version = "3.20.1"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"
@@ -17,7 +17,7 @@ exclude = [
 
 [dependencies]
 LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
-RegExp = "roblox/regexp@^0.2.2"
+RegExp = "roblox/regexp@^0.3.0"
 
 [dev-dependencies]
 JestGlobals = "roblox/jest-globals@^3.20.0"

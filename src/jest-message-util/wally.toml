@@ -1,7 +1,7 @@
 [package]
 name = "roblox/jest-message-util"
 description = "A Luau testing framework based on Jest. See roblox/jest-globals for the entry point."
-version = "3.20.0"
+version = "3.20.1"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"
@@ -17,7 +17,7 @@ exclude = [
 
 [dependencies]
 ChalkLua = "roblox/chalk-lua@^0.3.0"
-RegExp = "roblox/regexp@^0.2.2"
+RegExp = "roblox/regexp@^0.3.0"
 JestTypes = "roblox/jest-types@^3.20.0"
 PrettyFormat = "roblox/pretty-format@^3.20.0"
 RobloxShared = "roblox/roblox-shared@^3.20.0"

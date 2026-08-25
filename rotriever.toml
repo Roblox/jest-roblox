@@ -6,7 +6,7 @@ repository = "https://github.com/Roblox/jest-roblox"
 homepage = "https://roblox.github.io/jest-roblox"
 documentation = "https://roblox.github.io/jest-roblox"
 keywords = ["jest", "unit_testing"]
-version = "3.20.0"
+version = "3.20.1"
 license = "MIT"
 
 [config]
@@ -21,7 +21,7 @@ path_mode = "rojo"
 ChalkLua = "0.3.0"
 LuauPolyfill = "1"
 Symbol = "1.0.0"
-RegExp = "0.2.2"
+RegExp = "0.3.0"
 Promise = "3.5.2"
 React = "17.0.1"
 ReactIs = "17.0.1"
