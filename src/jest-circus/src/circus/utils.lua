@@ -12,6 +12,7 @@ local LuauPolyfill = require(Packages.LuauPolyfill)
 local Array = LuauPolyfill.Array
 local Boolean = LuauPolyfill.Boolean
 local Error = LuauPolyfill.Error
+local String = LuauPolyfill.String
 type Array<T> = LuauPolyfill.Array<T>
 type Error = LuauPolyfill.Error
 type Promise<T> = LuauPolyfill.Promise<T>
@@ -29,6 +30,29 @@ local invariant
 -- ROBLOX deviation START: add additional imports
 local RegExp = require(Packages.RegExp)
 -- ROBLOX deviation END
+
+-- ROBLOX DEVIATION: upstream resolves jest-each's directory on disk. Here a frame's
+-- source is the chunk name of the script it runs in, so the jest-each frames are
+-- recognised by the chunk name of the one jest-each function a test file calls.
+local jestEachBindSource: string = debug.info(require(Packages.JestEach).bind, "s")
+
+type ParsedLine = { file: string, line: number, column: number, functionName: string? }
+
+-- ROBLOX DEVIATION: stands in for `stack-utils`' `parseLine`. A Luau frame is
+-- `source:line function name` or `source:line`, and carries no column.
+local function parseLine(stackLine: string?): ParsedLine?
+	if stackLine == nil then
+		return nil
+	end
+	local file, line, functionName = string.match(stackLine, "^(.-):(%d+) function (.+)$")
+	if file == nil then
+		file, line = string.match(stackLine, "^(.-):(%d+)$")
+	end
+	if file == nil then
+		return nil
+	end
+	return { file = file, line = tonumber(line) :: number, column = 0, functionName = functionName }
+end
 
 -- ROBLOX deviation START: add function to extract bare string message from stacktrace line
 local function separateMessageFromStack(content: string): { message: string, stack: string }
@@ -446,7 +470,7 @@ end
 exports.makeRunResult = makeRunResult
 
 local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
-	local _includeTestLocationInResult = getState().includeTestLocationInResult
+	local includeTestLocationInResult = getState().includeTestLocationInResult
 	local testPath = {}
 	local parent: Circus_TestEntry | Circus_DescribeBlock | nil = test
 
@@ -466,27 +490,30 @@ local function makeSingleTestResult(test: Circus_TestEntry): Circus_TestResult
 	until parent == nil
 
 	local location = nil
-	-- ROBLOX TODO START: uncomment when implemented relevant pieces of stackUtils
-	-- if includeTestLocationInResult then
-	-- 	local stackLines = String.split(test.asyncError.stack, "\n")
-	-- 	local stackLine = stackLines[2]
-	-- 	local parsedLine = stackUtils:parseLine(stackLine)
-	-- 	if parsedLine ~= nil and parsedLine.file ~= nil and String.startsWith(parsedLine.file, jestEachBuildDir) then
-	-- 		local stackLine = stackLines[5]
-	-- 		parsedLine = stackUtils:parseLine(stackLine)
-	-- 	end
-	-- 	if
-	-- 		Boolean.toJSBoolean(parsedLine)
-	-- 		and typeof(parsedLine.column) == "number"
-	-- 		and typeof(parsedLine.line) == "number"
-	-- 	then
-	-- 		location = {
-	-- 			column = parsedLine.column,
-	-- 			line = parsedLine.line,
-	-- 		}
-	-- 	end
-	-- end
-	-- ROBLOX TODO END
+	if includeTestLocationInResult then
+		local stackLines = String.split(test.asyncError.stack, "\n")
+		local stackLine = stackLines[2]
+		local parsedLine = parseLine(stackLine)
+		if parsedLine ~= nil and parsedLine.file == jestEachBindSource then
+			-- ROBLOX DEVIATION: upstream takes the fixed frame `stackLines[5]`. The Luau
+			-- depth between jest-each's inner callback and the test file is not fixed
+			-- (`Array.forEach` and `pcall` sit in between), so take the frame after the
+			-- one for `eachBind`, the jest-each function the test file called.
+			local eachBindIndex = Array.findIndex(stackLines, function(line)
+				local frame = parseLine(line)
+				return frame ~= nil and frame.file == jestEachBindSource and frame.functionName == "eachBind"
+			end)
+			parsedLine = if eachBindIndex ~= -1 then parseLine(stackLines[eachBindIndex + 1]) else nil
+		end
+		-- ROBLOX DEVIATION: Luau frames carry no column, so `parsedLine.column` is
+		-- always 0 and only the line gates the result.
+		if parsedLine ~= nil and typeof(parsedLine.line) == "number" then
+			location = {
+				column = parsedLine.column,
+				line = parsedLine.line,
+			}
+		end
+	end
 
 	local errorsDetailed = Array.map(test.errors, _getError)
 
