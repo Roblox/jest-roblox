@@ -26,8 +26,4 @@ This command generates static content into the `build` directory and can be serv
 
 ## Deployment
 
-```console
-GIT_USER=<GH_USERNAME> GIT_PASS=<GH_PERSONAL_ACCESS_TOKEN> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Pushes to `master` that change `docs/` are published to https://roblox.github.io/jest-roblox/ by `.github/workflows/docs.yml`. Use **Actions → Deploy Docs → Run workflow** for a manual deploy.
