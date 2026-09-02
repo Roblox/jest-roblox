@@ -236,7 +236,10 @@ local test: Global_It = (function()
 		return failing
 	end
 
-	test.todo = function(testName: Circus_TestName, ...: any): ()
+	-- ROBLOX DEVIATION: declared with `function test.todo` rather than assigned, so the
+	-- function carries a debug name. `captureStackTrace` trims the callsite's frames by
+	-- name, and an anonymous callsite leaves the stack untrimmed.
+	function test.todo(testName: Circus_TestName, ...: any): ()
 		local rest = { ... }
 		if #rest > 0 or typeof(testName) ~= "string" then
 			error(ErrorWithStack.new("Todo must be called with only a description.", test.todo))

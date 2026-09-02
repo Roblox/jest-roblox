@@ -55,9 +55,11 @@ local function runTest(source: string)
 
 			local run = require(script_.Parent.Parent.run).default
 
-			run();
+			-- ROBLOX DEVIATION: the run result is returned beside stdout so a test can
+			-- assert on `makeRunResult` output, which upstream reads from a JSON reporter.
+			local result = run():expect()
 
-			return getStdout()
+			return getStdout(), result
 		end
   ]]):format(source)
 
@@ -71,10 +73,11 @@ local function runTest(source: string)
 
 	local run = moduleFunction()
 
-	local stdout = run(script)
+	local stdout, result = run(script)
 
 	return {
 		stdout = stdout,
+		result = result,
 	}
 end
 exports.runTest = runTest

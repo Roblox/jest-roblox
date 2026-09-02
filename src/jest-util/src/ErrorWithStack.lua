@@ -32,7 +32,16 @@ function ErrorWithStack.new(
 
 	local self = setmetatable(Error.new(message), ErrorWithStack)
 	if Error.captureStackTrace then
-		Error.captureStackTrace((self :: any) :: ErrorWithStack, callsite)
+		-- ROBLOX DEVIATION: `test`, `describe` and their `.only`/`.skip` variants are
+		-- callable tables, but `captureStackTrace` only trims the frames above a
+		-- function. The frame the VM pushes for a callable table is its `__call`
+		-- metamethod, so that is the function to trim through.
+		local callsiteFn = callsite
+		if typeof(callsite :: any) == "table" then
+			local metatable = getmetatable(callsite :: any)
+			callsiteFn = if metatable ~= nil then metatable.__call else nil
+		end
+		Error.captureStackTrace((self :: any) :: ErrorWithStack, callsiteFn)
 	end
 	Error["stackTraceLimit"] = originalStackLimit
 	return (self :: any) :: ErrorWithStack
