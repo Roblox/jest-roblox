@@ -75,7 +75,12 @@ Jest.runCLI(root, {
 }, { root }):awaitStatus()
 ```
 
-To filter by path from the command line, pass `--testPathPattern=skippity` to your runner and forward `Jest.args.testPathPattern` to `runCLI`. See the [CLI](cli) page for an example of passing arguments through.
+<details>
+<summary>Internal command-line runner</summary>
+
+When running through `roblox-cli`, pass `--testPathPattern=skippity` and forward `Jest.args.testPathPattern` to `runCLI`. See the [CLI](cli) page for an example.
+
+</details>
 
 ## Running tests by test name
 

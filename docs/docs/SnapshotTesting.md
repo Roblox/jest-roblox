@@ -4,6 +4,10 @@ title: Snapshot Testing
 ---
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/snapshot-testing)
 
+:::warning
+Jest on `rocale-cli` does not support snapshot testing at this time.
+:::
+
 Snapshot tests are a very useful tool whenever you want to make sure your UI does not change unexpectedly.
 
 A typical snapshot test case renders a UI component, takes a snapshot, then compares it to a reference snapshot file stored alongside the test. The test will fail if the two snapshots do not match: either the change is unexpected, or the reference snapshot needs to be updated to the new version of the UI component.
@@ -75,33 +79,45 @@ Snapshot name: `describe table 1`
 
 Since we just updated our component, it's reasonable to expect changes in the snapshot for this component. Our snapshot test case is failing because the snapshot for our updated component no longer matches the snapshot artifact for this test case.
 
-To resolve this, we will need to update our snapshot artifacts. You can call `runCLI` with an option that will tell it to re-generate snapshots:
+To resolve this, we will need to update our snapshot artifacts. Snapshot updates require the internal `roblox-cli` runner because writing snapshot files requires elevated filesystem access.
+
+When working in the Jest Roblox repository, run:
+
+```bash
+lute run test update-snapshots
+```
+
+For another internal repository, pass the snapshot option through its `roblox-cli` entrypoint:
 
 ```lua
 local args = Jest.args
 
 runCLI(Project, {
-	updateSnapshot = args.updateSnapshot or args["update-snapshots"],
+	updateSnapshot = args.updateSnapshot,
 	testPathPattern = args.testPathPattern,
+	testNamePattern = args.testNamePattern,
 }, { Project }):awaitStatus()
 ```
 
-See the [CLI](cli) page for documentation on passing `args`.
+The runner also needs these flags to write snapshots:
 
-If your runner restricts filesystem access, you will also need to give it write access to your project directory.
+```bash
+--load.asRobloxScript --fs.readwrite="$(pwd)"
+```
 
 This will re-generate snapshot artifacts for all failing snapshot tests. If we had any additional failing snapshot tests due to an unintentional bug, we would need to fix the bug before re-generating snapshots to avoid recording snapshots of the buggy behavior.
 
 If you'd like to limit which snapshot test cases get re-generated, you can pass an additional `testNamePattern` flag to re-record snapshots only for those tests that match the pattern.
 
 :::tip
-For example, to only update snapshots for `mytest.test.lua`, pass the following two arguments to your runner:
+For example, to only update snapshots for `mytest.test.lua`, pass these arguments through `roblox-cli`:
 
 ```bash
---updateSnapshot --testPathPattern="mytest.test.lua"
+roblox-cli run --load.model default.project.json -- \
+  --updateSnapshot --testPathPattern="mytest.test.lua"
 ```
 
-Or pass `--testNamePattern` to limit which tests inside that file are rewritten.
+Add `--testNamePattern` to limit which tests inside that file are rewritten.
 :::
 
 ### Property Matchers

@@ -17,6 +17,13 @@ local expect = JestGlobals.expect
 local test = JestGlobals.test
 ```
 
+<details>
+<summary>Internal</summary>
+
+When `JestGlobals` is installed as a Rotriever dev dependency, require it from `Packages.Dev.JestGlobals` instead.
+
+</details>
+
 ## Methods
 
 import TOCInline from "@theme/TOCInline";

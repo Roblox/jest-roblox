@@ -17,6 +17,21 @@ Jest = "roblox/jest@^3.20.0"
 JestGlobals = "roblox/jest-globals@^3.20.0"
 ```
 
+<details>
+<summary>Internal</summary>
+
+For Rotriever, use:
+
+```toml title="rotriever.toml"
+[dev_dependencies]
+Jest = "3.20.1"
+JestGlobals = "3.20.1"
+```
+
+Rotriever dev dependencies are under `Packages.Dev`, so import the runner from `Packages.Dev.Jest`.
+
+</details>
+
 Update your `spec.lua`. Instead of using `TestEZ.TestBootStrap:run`, the main entrypoint is now `Jest.runCLI`. A basic bootstrap script can look like the following:
 ```lua title="spec.lua"
 local YourProject = script.Parent.YourProject
@@ -101,7 +116,18 @@ Any value you need must be explicitly imported from `JestGlobals`, including com
 :::
 
 ### Running Tests
-Run your updated `spec.lua` in a Roblox environment. The Jest Roblox repository uses OCALE for its public CI; see the [contribution guide](https://github.com/Roblox/jest-roblox/blob/master/CONTRIBUTING.md#code-guidelines) for that setup.
+Run your updated `spec.lua` in Studio or in [OCALE](https://create.roblox.com/docs/cloud/reference/features/luau-execution).
+
+<details>
+<summary>Internal</summary>
+
+To run the entrypoint through `roblox-cli`, enable `LoadModule`:
+
+```bash
+roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true
+```
+
+</details>
 
 ## Notable Differences
 
