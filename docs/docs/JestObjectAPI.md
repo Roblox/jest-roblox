@@ -33,7 +33,6 @@ beforeEach(function()
 	jest.resetModules()
 	jest.mock(Workspace.mockedModule, function()
 		return {
-			default = jest.fn(function() return 42 end),
 			foo = jest.fn(function() return 43 end)
 		}
 	end)
@@ -43,7 +42,6 @@ local mockedModule
 
 it("mockedModule should be mocked", function()
 	mockedModule = require(Workspace.mockedModule)
-	expect(mockedModule.default()).toBe(42)
 	expect(mockedModule.foo()).toBe(43)
 end)
 ```
@@ -176,7 +174,7 @@ test("plays video", function()
   expect(spy).toHaveBeenCalled()
   expect(isPlaying).toBe(true)
 
-  spy:mockRestore()
+  spy.mockRestore()
 end)
 ```
 
@@ -220,12 +218,10 @@ Resets the state of all mocks. Equivalent to calling [`.mockReset()`](mock-funct
 
 Returns the `jest` object for chaining.
 
-<!-- ### `jest.restoreAllMocks()`
+### `jest.restoreAllMocks()`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestrestoreallmocks)  ![Aligned](/img/aligned.svg)
 
-TODO: need spyOn
-
-Restores all mocks back to their original value. Equivalent to calling [`.mockRestore()`](mock-function-api#mockfnmockrestore) on every mocked function. Beware that `jest.restoreAllMocks()` only works when the mock was created with `jest.spyOn`; other mocks will require you to manually restore them. -->
+Restores all mocks back to their original value. Equivalent to calling [`.mockRestore()`](mock-function-api#mockfnmockrestore) on every mocked function. Beware that `jest.restoreAllMocks()` only works when the mock was created with `jest.spyOn`; other mocks will require you to manually restore them.
 
 ## Mock Timers
 
@@ -348,9 +344,10 @@ Jest does not yet support mocking the require global.
 
 Most notably, Jest Roblox does not support mocking these globals:
 
-- `game:GetService()` and other Instance methods (an API for this is being investigated)
-- the `require()` function (use [`jest.mock()`](jest-object) instead)
+- `require()` (use [`jest.mock()`](jest-object#jestmockmodule--path-factory) instead)
 - task scheduling functions (use [Timer Mocks](timer-mocks) instead)
+
+Instance methods such as `game:GetService()` can be spied when [`mockDataModel`](configuration#mockdatamodel-boolean) is enabled. See [Spying on instances](#spying-on-instances).
 
 :::
 

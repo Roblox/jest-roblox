@@ -32,7 +32,7 @@ import TOCInline from "@theme/TOCInline";
 ### `afterAll(fn, timeout)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#afterallfn-timeout)  ![Aligned](/img/aligned.svg)
 
-Runs a function after all the tests in this file have completed. If the function returns a promise or is a generator, Jest Roblox waits for that promise to resolve before continuing.
+Runs a function after all the tests in this file have completed. If the function returns a promise, Jest Roblox waits for that promise to resolve before continuing.
 
 Optionally, you can provide a `timeout` (in milliseconds) for specifying how long to wait before aborting. _Note: The default timeout is 5 seconds._
 
@@ -73,7 +73,7 @@ If you want to run some cleanup after every test instead of after all tests, use
 ### `afterEach(fn, timeout)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#aftereachfn-timeout)  ![Aligned](/img/aligned.svg)
 
-Runs a function after each one of the tests in this file completes. If the function returns a promise or is a generator, Jest Roblox waits for that promise to resolve before continuing.
+Runs a function after each one of the tests in this file completes. If the function returns a promise, Jest Roblox waits for that promise to resolve before continuing.
 
 Optionally, you can provide a `timeout` (in milliseconds) for specifying how long to wait before aborting. _Note: The default timeout is 5 seconds._
 
@@ -114,7 +114,7 @@ If you want to run some cleanup just once, after all of the tests run, use `afte
 ### `beforeAll(fn, timeout)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#beforeallfn-timeout)  ![Aligned](/img/aligned.svg)
 
-Runs a function before any of the tests in this file run. If the function returns a promise or is a generator, Jest Roblox waits for that promise to resolve before running tests.
+Runs a function before any of the tests in this file run. If the function returns a promise, Jest Roblox waits for that promise to resolve before running tests.
 
 Optionally, you can provide a `timeout` (in milliseconds) for specifying how long to wait before aborting. _Note: The default timeout is 5 seconds._
 
@@ -152,7 +152,7 @@ If you want to run something before every test instead of before any test runs, 
 ### `beforeEach(fn, timeout)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#beforeeachfn-timeout)  ![Aligned](/img/aligned.svg)
 
-Runs a function before each of the tests in this file runs. If the function returns a promise or is a generator, Jest Roblox waits for that promise to resolve before running the test.
+Runs a function before each of the tests in this file runs. If the function returns a promise, Jest Roblox waits for that promise to resolve before running the test.
 
 Optionally, you can provide a `timeout` (in milliseconds) for specifying how long to wait before aborting. _Note: The default timeout is 5 seconds._
 

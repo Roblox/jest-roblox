@@ -68,7 +68,7 @@ Jest.runCLI(root, {
 }, { root }):awaitStatus()
 ```
 
-Similarly, [`testPathIgnorePattern`](cli#testpathignorepatterns-arrayregex) takes a list of patterns to exclude from the test run. This will exclude all tests in files that contain "skippity" in their path.
+Similarly, [`testPathIgnorePatterns`](cli#testpathignorepatterns-arrayregex) takes a list of patterns to exclude from the test run. This will exclude all tests in files that contain "skippity" in their path.
 ```lua
 Jest.runCLI(root, {
     testPathIgnorePatterns = { "skippity" }

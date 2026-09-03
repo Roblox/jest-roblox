@@ -21,7 +21,7 @@ it('table', function()
 end)
 ```
 
-The first time this test is run, Jest creates a snapshot file that looks like this:
+Unlike upstream Jest, Jest Roblox does not write a snapshot file on the first run. New snapshot tests fail until you re-run with `updateSnapshot` and filesystem write access. After that update, the snapshot file looks like this:
 ```lua
 exports[ [=[describe table 1]=] ] = [=[
 
@@ -81,7 +81,7 @@ To resolve this, we will need to update our snapshot artifacts. You can call `ru
 local args = Jest.args
 
 runCLI(Project, {
-	updateSnapshot = args.updateSnapshot,
+	updateSnapshot = args.updateSnapshot or args["update-snapshots"],
 	testPathPattern = args.testPathPattern,
 }, { Project }):awaitStatus()
 ```
@@ -100,6 +100,8 @@ For example, to only update snapshots for `mytest.test.lua`, pass the following 
 ```bash
 --updateSnapshot --testPathPattern="mytest.test.lua"
 ```
+
+Or pass `--testNamePattern` to limit which tests inside that file are rewritten.
 :::
 
 ### Property Matchers
@@ -237,7 +239,7 @@ nil]=]
 
 ### Are snapshots written automatically on Continuous Integration (CI) systems?
 
-No, snapshots in Jest Roblox are not automatically written when Jest Roblox is run in a CI system without explicitly passing `UPDATESNAPSHOT`. It is expected that all snapshots are part of the code that is run on CI and since new snapshots automatically pass, they should not pass a test run on a CI system. It is recommended to always commit all snapshots and to keep them in version control.
+No. Jest Roblox does not write snapshots unless you pass `updateSnapshot` to `runCLI`. New snapshot tests fail until that update run happens, and CI typically sets `ci = true`, which blocks snapshot writes. Commit snapshot files with the tests that produce them.
 
 ### Should snapshot files be committed?
 

@@ -130,7 +130,7 @@ local instance1 = mockFn.new()
 ### `jest.useFakeTimers()`
 `jest.useFakeTimers()` injects fake versions of Lua and Roblox timers.
 
-The supported timers are `delay`, `tick`, `time`, `DateTime`, `task.delay`, `os.time`, and `os.clock`.
+The supported timers are `delay`, `tick`, `time`, `DateTime`, `task.delay`, `task.wait`, `task.cancel`, `os.time`, and `os.clock`.
 
 ## Configuration
 

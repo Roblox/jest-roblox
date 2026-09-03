@@ -43,7 +43,7 @@ For example: A mock function `f` that has been called twice, with the arguments 
 An array containing the results of all calls that have been made to this mock function. Each entry in this array is an object containing a `type` property, and a `value` property. `type` will be one of the following:
 
 - `'return'` - Indicates that the call completed by returning normally.
-<!-- - `'throw'` - Indicates that the call completed by throwing a value. -->
+- `'throw'` - Indicates that the call completed by throwing a value.
 - `'incomplete'` - Indicates that the call has not yet completed. This occurs if you test the result from within the mock function itself, or from within a function that was called by the mock.
 
 The `value` property contains the value that was thrown or returned. `value` is nil when `type == 'incomplete'`.
@@ -93,7 +93,7 @@ For example: A mock function `f` that has been called twice, with the arguments 
 
 
 ### `mockFn.mockClear()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmocklastcall)  ![Aligned](/img/aligned.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockclear)  ![Aligned](/img/aligned.svg)
 
 Clears all information stored in the [`mockFn.mock.calls`](#mockfnmockcalls), [`mockFn.mock.instances`](#mockfnmockinstances) and [`mockFn.mock.results`](#mockfnmockresults) arrays. Often this is useful when you want to clean up a mocks usage data between two assertions.
 
@@ -110,20 +110,16 @@ This is useful when you want to completely reset a _mock_ back to its initial st
 
 Beware that `mockReset` will replace `mockFn.mock`, not just [`mockFn.mock.calls`](#mockfnmockcalls) and [`mockFn.mock.instances`](#mockfnmockinstances). You should, therefore, avoid assigning `mockFn.mock` to other variables, temporary or not, to make sure you don't access stale data.
 
-The [`mockReset`](configuration#resetmocks-boolean) configuration option is available to reset mocks automatically before each test.
+The [`resetMocks`](configuration#resetmocks-boolean) configuration option is available to reset mocks automatically before each test.
 
-<!-- ### `mockFn.mockRestore()`
+### `mockFn.mockRestore()`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockrestore)  ![Aligned](/img/aligned.svg)
-
-TODO: need spyOn
 
 Does everything that [`mockFn.mockReset()`](#mockfnmockreset) does, and also restores the original (non-mocked) implementation.
 
 This is useful when you want to mock functions in certain test cases and restore the original implementation in others.
 
 Beware that `mockFn.mockRestore` only works when the mock was created with `jest.spyOn`. Thus you have to take care of restoration yourself when manually assigning `jest.fn()`.
-
-The [`restoreMocks`](configuration#restoremocks-boolean) configuration option is available to restore mocks automatically before each test. -->
 
 ### `mockFn.mockImplementation(fn)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockimplementationfn)  ![Deviation](/img/deviation.svg)

@@ -36,7 +36,7 @@ import TOCInline from "@theme/TOCInline";
 
 ## Reference
 
-### `clearmocks` \[boolean]
+### `clearMocks` \[boolean]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#clearmocks-boolean)  ![Aligned](/img/aligned.svg)
 
 Default: `false`
@@ -82,7 +82,7 @@ Regardless of the value of `oldFunctionSpying`, the `spyOn()` function will
 always return a mock object.
 
 ```lua
--- when `oldFunctionSpying = false` (old behaviour)
+-- when `oldFunctionSpying = true` (old behaviour)
 
 local guineaPig = {
 	foo = function() end
@@ -97,7 +97,7 @@ print(guineaPig.foo == mockObj) --> true
 ```
 
 ```lua
--- when `oldFunctionSpying = true` (new behaviour)
+-- when `oldFunctionSpying = false` (new behaviour)
 
 local guineaPig = {
 	foo = function() end
@@ -119,7 +119,7 @@ When the `projects` configuration is provided with an array of instances, Jest R
 
 ```lua
 return {
-	projects = { Workspace.ProjectB, Workspace.ProjectB },
+	projects = { Workspace.ProjectA, Workspace.ProjectB },
 }
 ```
 

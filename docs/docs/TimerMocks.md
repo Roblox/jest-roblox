@@ -6,11 +6,11 @@ title: Timer Mocks
 
 ![Deviation](/img/deviation.svg)
 
-The Lua and Roblox native timer functions (i.e., `delay()`, `tick()`, `os.time()`, `os.clock()`) are less than ideal for a testing environment since they depend on real time to elapse. Jest Roblox can swap out timers with functions that allow you to control the passage of time. [Great Scott!](https://www.youtube.com/watch?v=QZoJ2Pt27BY)
+The Lua and Roblox native timer functions (i.e., `delay()`, `tick()`, `task.delay()`, `task.wait()`, `os.time()`, `os.clock()`, `DateTime.now()`) are less than ideal for a testing environment since they depend on real time to elapse. Jest Roblox can swap out timers with functions that allow you to control the passage of time. [Great Scott!](https://www.youtube.com/watch?v=QZoJ2Pt27BY)
 
 :::info
 
-Also see [Fake Timers API](jest-object#fake-timers) documentation.
+Also see [Mock Timers API](jest-object#mock-timers) documentation.
 
 :::
 
@@ -23,7 +23,7 @@ return function(callback)
 	print('Ready....go!')
 	task.delay(1, function()
 		print("Time's up -- stop!")
-		if callback do
+		if callback then
 			callback()
 		end
 	end)
@@ -97,7 +97,7 @@ describe('infiniteTimerGame', function()
 
 		infiniteTimerGame(callback)
 		-- At this point in time, there should have been a single call to
-		-- setTimeout to schedule the end of the game in 1 second.
+		-- task.delay to schedule the end of the game in 1 second.
 
 		-- Fast forward and exhaust only currently pending timers
 		-- (but not any new timers that get created during that process)
@@ -115,14 +115,14 @@ end)
 ## Advance Timers by Time
 ![Deviation](/img/deviation.svg)
 
-Another possibility is use `jest.advanceTimersByTime(secsToRun)`. When this API is called, all timers are advanced by `secsToRun` seconds. All pending "macro-tasks" that have been queued, and would be executed during this time frame, will be executed. Additionally, if those macro-tasks schedule new macro-tasks that would be executed within the same time frame, those will be executed until there are no more macro-tasks remaining in the queue that should be run within `secsToRun` seconds.
+Another possibility is use `jest.advanceTimersByTime(msToRun)`. When this API is called, all timers are advanced by `msToRun` milliseconds. All pending "macro-tasks" that have been queued, and would be executed during this time frame, will be executed. Additionally, if those macro-tasks schedule new macro-tasks that would be executed within the same time frame, those will be executed until there are no more macro-tasks remaining in the queue that should be run within `msToRun` milliseconds.
 
 ```lua title="timerGame.lua"
 return function(callback)
 	print('Ready....go!')
 	task.delay(1, function()
 		print("Time's up -- stop!")
-		if callback do
+		if callback then
 			callback()
 		end
 	end)
@@ -142,7 +142,7 @@ test('calls the callback after 1 second via advanceTimersByTime', function()
 	expect(callback).never.toBeCalled()
 
 	-- Fast-forward until all timers have been executed
-	jest.advanceTimersByTime(1)
+	jest.advanceTimersByTime(1000)
 
 	-- Now our callback should have been called!
 	expect(callback).toBeCalled()
@@ -166,7 +166,7 @@ return function(callback)
 	print('Ready....go!')
 	task.delay(0.01, function()
 		print("Time's up -- stop!")
-		if callback do
+		if callback then
 			callback()
 		end
 	end)

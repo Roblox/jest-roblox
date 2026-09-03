@@ -149,7 +149,7 @@ Note that the first argument of a custom matcher always needs to be a `self` but
 
 These helper functions and properties can be found on `self` inside a custom matcher:
 
-#### `self.isNever`
+#### `self.isNot`
 
 A boolean to let you know this matcher was called with the negated `.never` modifier allowing you to display a clear and correct matcher hint.
 
@@ -1228,7 +1228,7 @@ end)
 ### `.toMatchInstance(table)`
 ![Roblox only](/img/roblox-only.svg)
 
-Use `.toMatchObject` to check that a Roblox Instance and its children matches all the properties defined in an expected table.
+Use `.toMatchInstance` to check that a Roblox Instance and its children matches all the properties defined in an expected table.
 
 If a `ClassName` property is not in the table, the expected table will match against any class. To check that the received Instance is of a specific type, pass in a `ClassName` property.
 
@@ -1329,8 +1329,8 @@ end
 
 describe('the La Croix cans on my desk', function()
 	it('the La Croix cans on my desk are not semantically the same', function()
-		jestExpect(LaCroix.new('lemon')).toEqual({flavor = 'lemon'})
-		jestExpect(LaCroix.new('lemon')).never.toStrictEqual({flavor = 'lemon'})
+		expect(LaCroix.new('lemon')).toEqual({flavor = 'lemon'})
+		expect(LaCroix.new('lemon')).never.toStrictEqual({flavor = 'lemon'})
 	end)
 end)
 ```

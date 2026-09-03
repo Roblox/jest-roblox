@@ -1,6 +1,6 @@
 # Website
 
-This website is built using [Docusaurus 3](https://docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus 3](https://docusaurus.io/), a modern static website generator. Commands below run from the `docs/` directory and need Node.js 20 (the same version CI uses).
 
 ## Installation
 
@@ -28,4 +28,4 @@ This command generates static content into the `build` directory and can be serv
 
 Pushing a `v*` tag on `Roblox/jest-roblox` publishes https://roblox.github.io/jest-roblox/ from that commit via `.github/workflows/docs.yml`. Use **Actions → Deploy Docs → Run workflow** for a one-off deploy (docs-only fixes, or the first publish before tags resume).
 
-Bump `VERSION` in `docusaurus.config.js` in the same change as the package version so the navbar matches the tag.
+Bump `VERSION` in `docusaurus.config.js` in the same change as the workspace `version` in `rotriever.toml` so the navbar matches the tag.
