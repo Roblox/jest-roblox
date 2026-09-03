@@ -26,4 +26,6 @@ This command generates static content into the `build` directory and can be serv
 
 ## Deployment
 
-Pushes to `master` that change `docs/` are published to https://roblox.github.io/jest-roblox/ by `.github/workflows/docs.yml`. Use **Actions → Deploy Docs → Run workflow** for a manual deploy.
+Pushing a `v*` tag on `Roblox/jest-roblox` publishes https://roblox.github.io/jest-roblox/ from that commit via `.github/workflows/docs.yml`. Use **Actions → Deploy Docs → Run workflow** for a one-off deploy (docs-only fixes, or the first publish before tags resume).
+
+Bump `VERSION` in `docusaurus.config.js` in the same change as the package version so the navbar matches the tag.
