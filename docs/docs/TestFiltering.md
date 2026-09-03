@@ -68,14 +68,19 @@ Jest.runCLI(root, {
 }, { root }):awaitStatus()
 ```
 
-Similarly, [`testPathIgnorePattern`](cli#testpathignorepatterns-arrayregex) takes a list of patterns to exclude from the test run. This will exclude all tests in files that contain "skippity" in their path.
+Similarly, [`testPathIgnorePatterns`](cli#testpathignorepatterns-arrayregex) takes a list of patterns to exclude from the test run. This will exclude all tests in files that contain "skippity" in their path.
 ```lua
 Jest.runCLI(root, {
     testPathIgnorePatterns = { "skippity" }
 }, { root }):awaitStatus()
 ```
 
-An easy way to filter by paths from the command line is to set `testPathPattern` to a Lua global, (e.g. `testPathPattern = _G.JEST_TESTPATHPATTERN`) and then use the `--lua.globals` flag in `roblox-cli` to set the value.
+<details>
+<summary>Internal command-line runner</summary>
+
+When running through `roblox-cli`, pass `--testPathPattern=skippity` and forward `Jest.args.testPathPattern` to `runCLI`. See the [CLI](cli) page for an example.
+
+</details>
 
 ## Running tests by test name
 

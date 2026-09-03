@@ -9,22 +9,33 @@ Upgrading Jest Roblox from v2.x or TestEZ to v3.x? This guide aims to help refac
 
 ### Setup
 
-First, update your `rotriever.toml` to use Jest Roblox v3.x. You'll also need to require the `Jest` package in addition to the `JestGlobals` package. The `Jest` package contains `runCLI`, which is the main entrypoint into Jest Roblox in v3.x.
+First, update your `wally.toml` to use Jest Roblox v3.x. You'll also need to require the `Jest` package in addition to the `JestGlobals` package. The `Jest` package contains `runCLI`, which is the main entrypoint into Jest Roblox in v3.x.
 
-```yaml title="rotriever.toml"
-[dev_dependencies]
-Jest = "github.com/Roblox/jest-roblox@3.12.0"
-JestGlobals = "github.com/Roblox/jest-roblox@3.12.0"
+```toml title="wally.toml"
+[dev-dependencies]
+Jest = "roblox/jest@^3.20.0"
+JestGlobals = "roblox/jest-globals@^3.20.0"
 ```
+
+<details>
+<summary>Internal</summary>
+
+For Rotriever, use:
+
+```toml title="rotriever.toml"
+[dev_dependencies]
+Jest = "3.20.1"
+JestGlobals = "3.20.1"
+```
+
+Rotriever dev dependencies are under `Packages.Dev`, so import the runner from `Packages.Dev.Jest`.
+
+</details>
 
 Update your `spec.lua`. Instead of using `TestEZ.TestBootStrap:run`, the main entrypoint is now `Jest.runCLI`. A basic bootstrap script can look like the following:
 ```lua title="spec.lua"
 local YourProject = script.Parent.YourProject
-local runCLI = require(YourProject.Packages.Dev.Jest).runCLI
-
-local processServiceExists, ProcessService = pcall(function()
-	return game:GetService("ProcessService")
-end)
+local runCLI = require(YourProject.Packages.Jest).runCLI
 
 local status, result = runCLI(YourProject.Source, {
 	verbose = false,
@@ -33,19 +44,12 @@ local status, result = runCLI(YourProject.Source, {
 
 if status == "Rejected" then
 	print(result)
+	error(result)
 end
 
-if status == "Resolved" and result.results.numFailedTestSuites == 0 and result.results.numFailedTests == 0 then
-	if processServiceExists then
-		ProcessService:ExitAsync(0)
-	end
+if result.results.numFailedTestSuites ~= 0 or result.results.numFailedTests ~= 0 then
+	error("Tests failed")
 end
-
-if processServiceExists then
-	ProcessService:ExitAsync(1)
-end
-
-return nil
 ```
 
 The first argument is the root directory of your project and the third argument is a list of projects (directories with a `jest.config.lua`) with tests for Jest Roblox to discover. For a simple mono-package project, these should just point to your source directory. For detailed information, see [runCLI Options](cli).
@@ -72,7 +76,7 @@ return function()
 	local Workspace = script.Parent.Parent
 	local Packages = Workspace.Parent.Packages
 
-	local JestGlobals = require(Packages.Dev.JestGlobals)
+	local JestGlobals = require(Packages.JestGlobals)
 	local expect = JestGlobals.expect
 
 	it("1 does not equal 2", function()
@@ -87,7 +91,7 @@ This test should now look like this:
 local Workspace = script.Parent.Parent
 local Packages = Workspace.Parent.Packages
 
-local JestGlobals = require(Packages.Dev.JestGlobals)
+local JestGlobals = require(Packages.JestGlobals)
 local expect = JestGlobals.expect
 local it = JestGlobals.it
 
@@ -112,11 +116,18 @@ Any value you need must be explicitly imported from `JestGlobals`, including com
 :::
 
 ### Running Tests
-Jest Roblox v3.0 also requires the fast flag `EnableLoadModule`. Add `--fastFlags.overrides EnableLoadModule=true` to your `roblox-cli run` command.
+Run your updated `spec.lua` in Studio or in [OCALE](https://create.roblox.com/docs/cloud/reference/features/luau-execution).
+
+<details>
+<summary>Internal</summary>
+
+To run the entrypoint through `roblox-cli`, enable `LoadModule`:
 
 ```bash
-roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.allOnLuau  --fastFlags.overrides EnableLoadModule=true
+roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true
 ```
+
+</details>
 
 ## Notable Differences
 

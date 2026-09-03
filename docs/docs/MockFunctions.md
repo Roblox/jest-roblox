@@ -4,7 +4,7 @@ title: Mock Functions
 ---
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-functions)
 
-Mock functions allow you to test the links between code by erasing the actual implementation of a function, capturing calls to the function (and the parameters passed in those calls), capturing instances of constructor functions when instantiated with `new`, and allowing test-time configuration of return values.
+Mock functions allow you to test the links between code by erasing the actual implementation of a function, capturing calls to the function (and the parameters passed in those calls), capturing instances when `.new()` is called on the mock, and allowing test-time configuration of return values.
 
 ## Using a mock function
 
@@ -58,7 +58,7 @@ expect(#someMockFunction.mock.calls).toBe(1)
 expect(someMockFunction.mock.calls[1][1]).toBe('first arg')
 
 -- The second arg of the first call to the function was 'second arg'
-expect(someMockFunction.mock.calls[1][3]).toBe('second arg')
+expect(someMockFunction.mock.calls[1][2]).toBe('second arg')
 
 -- The return value of the first call to the function was 'return value'
 expect(someMockFunction.mock.results[1].value).toBe('return value')

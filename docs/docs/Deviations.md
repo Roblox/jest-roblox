@@ -58,7 +58,7 @@ Lua doesn't have constructors for primitive types, so `expect.any` accepts eithe
 
 ### `expect.stringMatching(string | regexp)`
 `expect.stringMatching(string | regexp)` can either accept a [Lua string
-pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference)
+pattern](https://create.roblox.com/docs/luau/strings#patterns)
 or a [RegExp](expect#regexp).
 
 ### `expect.callable()`
@@ -86,7 +86,7 @@ When doing `nil` checking, use of `.toBeNil()` and `.never.toBeNil()` is encoura
 `.toBeInstanceOf(prototype)` uses the [`instanceof` method in LuauPolyfill](https://github.com/Roblox/luau-polyfill/blob/main/src/instanceof.lua) to check that a value is an instance (or a derived instance) of a prototype class.
 
 ### `.toMatch(string | regexp)`
-`.toMatch` matches a [Lua string pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference) or a [Regexp](expect#regexp).
+`.toMatch` matches a [Lua string pattern](https://create.roblox.com/docs/luau/strings#patterns) or a [Regexp](expect#regexp).
 
 ### `.toMatchInstance(table)`
 `.toMatchInstance` is custom matcher unique to Jest Roblox that allows for matching a Roblox Instance against a table of properties.
@@ -130,7 +130,7 @@ local instance1 = mockFn.new()
 ### `jest.useFakeTimers()`
 `jest.useFakeTimers()` injects fake versions of Lua and Roblox timers.
 
-The supported timers are `delay`, `tick`, `time`, `DateTime`, `task.delay`, `os.time`, and `os.clock`.
+The supported timers are `delay`, `tick`, `time`, `DateTime`, `task.delay`, `task.wait`, `task.cancel`, `os.time`, and `os.clock`.
 
 ## Configuration
 

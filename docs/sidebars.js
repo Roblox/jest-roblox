@@ -19,7 +19,6 @@ module.exports = {
         'snapshot-testing',
         'timer-mocks',
         'global-mocks',
-        'testez-migration',
         'upgrading-to-jest3',
       ]
     },

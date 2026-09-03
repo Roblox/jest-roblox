@@ -102,7 +102,7 @@ end)
 ## Strings
 ![API Change](/img/apichange.svg)
 
-You can check strings against [Lua string patterns](https://developer.roblox.com/en-us/articles/string-patterns-reference) with `toMatch`:
+You can check strings against [Lua string patterns](https://create.roblox.com/docs/luau/strings#patterns) with `toMatch`. Pattern characters such as `.` and `%` are special; use `toContain` below for a literal substring check.
 
 ```lua
 it('there is no I in team', function()
