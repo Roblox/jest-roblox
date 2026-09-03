@@ -10,15 +10,15 @@ When you're writing tests, you often need to check that values meet certain cond
 
 It must be imported explicitly from `JestGlobals`.
 ```lua
-local expect = require(Packages.Dev.JestGlobals).expect
+local expect = require(Packages.JestGlobals).expect
 ```
 
 ### RegExp
 ![Roblox only](/img/roblox-only.svg)
 
-To use regular expressions in matchers that support it, you need to add [LuauRegExp](https://github.com/Roblox/luau-regexp) as a dependency in your `rotriever.toml` and require it in your code.
-```yaml title="rotriever.toml"
-RegExp = "0.2.2"
+To use regular expressions in matchers that support it, you need to add [LuauRegExp](https://github.com/Roblox/luau-regexp) as a dependency in your `wally.toml` and require it in your code.
+```toml title="wally.toml"
+RegExp = "roblox/regexp@^0.3.0"
 ```
 
 ```lua
@@ -28,9 +28,9 @@ local RegExp = require(Packages.RegExp)
 ### Promise
 ![Roblox only](/img/roblox-only.svg)
 
-To use Promises in your tests, add [roblox-lua-promise](https://github.com/Roblox/roblox-lua-promise) as a dependency in your `rotriever.toml`
-```yaml
-Promise = "3.3.0"
+To use Promises in your tests, add [roblox-lua-promise](https://github.com/Roblox/roblox-lua-promise) as a dependency in your `wally.toml`.
+```toml
+Promise = "roblox/promise@^3.5.1"
 ```
 
 ### Error
@@ -102,18 +102,18 @@ expect.extend({
 			message = function()
 				return string.format(
 					'expected %s not to be within range %s - %s',
-					tostring(actual), tostring(floor), tostring(ceiling)
+					tostring(received), tostring(floor), tostring(ceiling)
 				)
 			end
 		else
 			message = function()
 				return string.format(
 					'expected %s to be within range %s - %s',
-					tostring(actual), tostring(floor), tostring(ceiling)
+					tostring(received), tostring(floor), tostring(ceiling)
 				)
 			end
 		end
-		return {message = message, pass = pass}
+		return { message = message, pass = pass }
 	end
 })
 
@@ -179,18 +179,18 @@ expect.extend({
 				return self.utils.matcherHint('toBe', nil, nil, options) ..
 					'\n\n' ..
 					string.format('Expected: never %s\n', self.utils.printExpected(expected)) ..
-					string.format('Received: %s', self.utils.printReceived(expected))
+					string.format('Received: %s', self.utils.printReceived(received))
 			end
 		else
 			message = function()
 				return self.utils.matcherHint('toBe', nil, nil, options) ..
 					'\n\n' ..
 					string.format('Expected: %s\n', self.utils.printExpected(expected)) ..
-					string.format('Received: %s', self.utils.printReceived(expected))
+					string.format('Received: %s', self.utils.printReceived(received))
 			end
 		end
 
-		return {actual = received, pass = pass message = message}
+		return { actual = received, pass = pass, message = message }
 	end
 })
 ```
@@ -215,7 +215,7 @@ Here's a snapshot matcher that trims a string to store for a given length, `.toM
 
 ```lua
 local JestSnapshot = require(Packages.JestSnapshot)
-local toMatchSnapshot = JestRoblox.JestSnapshot.toMatchSnapshot
+local toMatchSnapshot = JestSnapshot.toMatchSnapshot
 
 expect.extend({
 	toMatchTrimmedSnapshot = function(self, received, length)
@@ -250,7 +250,7 @@ end)
 ```
 
 ### `expect.any(typename | prototype)`
-[![Jest](/img/jestjs.svg)](http://localhost:3000/expect#expectanytypename--prototype)  ![Deviation](/img/deviation.svg)
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/expect#expectanyconstructor)  ![Deviation](/img/deviation.svg)
 
 `expect.any(typename)` matches anything that has the given type. `expect.any(prototype)` matches anything that is an instance (or a derived instance) of the given prototype class. You can use it inside `toEqual` or `toBeCalledWith` instead of a literal value. For example:
 
@@ -266,7 +266,7 @@ it('identity calls its callback with CustomClass', function()
 end)
 ```
 
-In addition to Lua prototype classes, it also supports Roblox types like [`DateTime`](https://developer.roblox.com/en-us/api-reference/datatype/DateTime), Luau types like `thread`, `RegExp` from the LuauRegExp library, and LuauPolyfill types like `Symbol`, `Set`, `Error` etc.
+In addition to Lua prototype classes, it also supports Roblox types like [`DateTime`](https://create.roblox.com/docs/reference/engine/datatypes/DateTime), Luau types like `thread`, `RegExp` from the LuauRegExp library, and LuauPolyfill types like `Symbol`, `Set`, `Error` etc.
 
 ### `expect.nothing()`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/expect#expectnothing)  ![Deviation](/img/deviation.svg)
@@ -433,7 +433,7 @@ Also under the alias: `.stringNotContaining(string)`
 ### `expect.never.stringMatching(string | regexp)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/expect#expectnotstringmatchingstring--regexp)  ![API Change](/img/apichange.svg)
 
-`expect.never.stringMatching(string | regexp)` matches the received value if it is not a string or if it is a string that does not match the expected [Lua string pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference) or [regular expression](#regexp).
+`expect.never.stringMatching(string | regexp)` matches the received value if it is not a string or if it is a string that does not match the expected [Lua string pattern](https://create.roblox.com/docs/luau/strings#patterns) or [regular expression](#regexp).
 
 It is the inverse of `expect.stringMatching`.
 
@@ -480,7 +480,7 @@ end)
 ### `expect.stringMatching(string | regexp)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/expect#expectstringmatchingstring--regexp)  ![API Change](/img/apichange.svg)
 
-`expect.stringMatching(string | regexp)` matches the received value if it is a string that matches the expected [Lua string pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference) or [regular expression](#regexp).
+`expect.stringMatching(string | regexp)` matches the received value if it is a string that matches the expected [Lua string pattern](https://create.roblox.com/docs/luau/strings#patterns) or [regular expression](#regexp).
 
 You can use it instead of a literal value:
 
@@ -1203,7 +1203,7 @@ If differences between properties do not help you to understand why a test fails
 ### `.toMatch(string | regexp)`
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/expect#tomatchregexp--string)  ![API Change](/img/apichange.svg)
 
-Use `.toMatch` to check that a string matches a [Lua string pattern](https://developer.roblox.com/en-us/articles/string-patterns-reference).
+Use `.toMatch` to check that a string matches a [Lua string pattern](https://create.roblox.com/docs/luau/strings#patterns).
 
 For example, you might not know what exactly `essayOnTheBestFlavor()` returns, but you know it's a really long string, and the substring `grapefruit` should be in there somewhere. You can test this with:
 

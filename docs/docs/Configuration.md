@@ -156,7 +156,7 @@ may need to modify your code to be compatible with instance mocks:
 In general, you should only enable instance mocks if you are taking advantage of
 the feature. Otherwise, you should leave them disabled for best compatibility.
 
-The Jest Lua team is aware of ways this can be mitigated, but they require much
+The Jest Roblox team is aware of ways this can be mitigated, but they require much
 more engineering effort. If you are interested in emulating more behaviours of
 the data model, please reach out so we're aware of the interest.
 
@@ -505,6 +505,13 @@ Pretty foo: Table {
 To make a dependency explicit instead of implicit, you can call [`expect.addSnapshotSerializer`](expect#expectaddsnapshotserializerserializer) to add a module for an individual test file instead of adding its path to `snapshotSerializers` in Jest configuration.
 
 More about serializers API can be found [here](https://github.com/facebook/jest/tree/main/packages/pretty-format/README.md#serialize).
+
+### `stackDepth` \[number]
+![Roblox only](/img/roblox-only.svg)
+
+Default: `0`
+
+Limits the number of call frames printed in stack traces. The default of `0` prints the full stack trace.
 
 ### `testFailureExitCode` \[number]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testfailureexitcode-number)  ![Aligned](/img/aligned.svg)

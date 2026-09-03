@@ -7,15 +7,18 @@ title: Jest Benchmark
 
 Benchmarks are useful tools for gating performance in CI, optimizing code, and capturing performance gains. `JestBenchmark` aims to make it easier to write benchmarks in the Luau language.
 
-`JestBenchmark` must be added as a dev dependency to your `rotriever.toml` and imported.
-```yaml title="rotriever.toml"
-JestBenchmark = "3.12.0"
+`JestBenchmark` must be added as a dev dependency to your `wally.toml` and imported.
+```toml title="wally.toml"
+JestBenchmark = "roblox/jest-benchmark@^3.20.0"
 ```
 
 ```lua
-local JestBenchmark = require(Packages.Dev.JestBenchmark)
+local JestBenchmark = require(Packages.JestBenchmark)
 local benchmark = JestBenchmark.benchmark
 local CustomReporters = JestBenchmark.CustomReporters
+local MetricLogger = JestBenchmark.MetricLogger
+local initializeReporter = JestBenchmark.Reporter.initializeReporter
+local initializeProfiler = JestBenchmark.Profiler.initializeProfiler
 ```
 
 ## Methods
@@ -107,7 +110,7 @@ The `Profiler` object controls a set of reporters and reports data generated dur
 
 ### `initializeProfiler(reporters, fn, prefix?)`
 
-`intializeProfiler` accepts a list of reporters and an outputFn as arguments and returns a `Profiler` object. An optional `prefix` string can be appended to all the section names.
+`initializeProfiler` accepts a list of reporters and an output function as arguments and returns a `Profiler` object. An optional `prefix` string can be appended to all the section names.
 
 ```lua
 local reporters = {
@@ -145,8 +148,6 @@ When `Profiler.finish` is called, reporter.finish is called for each reporter in
 By default, the `benchmark` function has two reporters attached: `FPSReporter` and `SectionTimeReporter`. However, you may want to add custom reporters, perhaps to track Rodux action dispatches, time to interactive, or React re-renders. To enable this, the CustomReporters object exports `useCustomReporters`, which allows the user to add additional reporters to the Profiler. These reporters are passed in a key-value table as the second argument in the provided benchmark function. This should be used in combination with `useDefaultReporters`, which removes all custom reporters from the Profiler.
 
 ```lua
-local MetricLogger = JestBenchmarks.CustomReporters
-
 beforeEach(function()
 	CustomReporters.useCustomReporters({
 		sum = initializeReporter("sum", function(nums)
@@ -171,11 +172,11 @@ end)
 
 ## MetricLogger
 
-By default, benchmarks output directly to stdout. This may not be desirable in all cases. For example, you may want to output results to a BindableEvent or a file stream. The MetricLogger object exposes a `useCustomMetricLogger` function, which allows the user to override the default output function. This should be used in combination with `useDefaultMetricLogger`, which resets the output function to the default value
+By default, benchmarks output directly to stdout. This may not be desirable in all cases. For example, you may want to collect results and print them, or fire them on a BindableEvent. The MetricLogger object exposes a `useCustomMetricLogger` function, which allows the user to override the default output function. This should be used in combination with `useDefaultMetricLogger`, which resets the output function to the default value.
 
-For example, to encode the benchmark metrics as a JSON and write the output to a `json` file for each test file, you may configure the following custom metric logger in a [`setupFilesAfterEnv`](configuration#setupfilesafterenv-arraymodulescript):
+For example, to encode the benchmark metrics as JSON and print them at the end of each test file, you may configure the following custom metric logger in a [`setupFilesAfterEnv`](configuration#setupfilesafterenv-arraymodulescript):
 ```lua
-local MetricLogger = JestBenchmarks.MetricLogger
+local HttpService = game:GetService("HttpService")
 
 local benchmarks
 
@@ -193,8 +194,7 @@ beforeEach(function()
 end)
 
 afterAll(function()
-	local benchmarkFile = tostring(expect.getState().testPath) .. ".json"
-	FileSystemService:WriteFile(benchmarkFile, benchmarks)
+	print(table.concat(benchmarks, "\n"))
 	MetricLogger.useDefaultMetricLogger()
 end)
 ```

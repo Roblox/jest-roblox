@@ -6,12 +6,12 @@ title: Globals
 
 ![Deviation](/img/deviation.svg)
 
-At the top of your test files, require `JestGlobals` from the `Packages` directory created by `rotriever`.
+At the top of your test files, require `JestGlobals` from the `Packages` directory created by Wally.
 
 Then, explicitly import any of the following members:
 
 ```lua
-local JestGlobals = require(Packages.Dev.JestGlobals)
+local JestGlobals = require(Packages.JestGlobals)
 local describe = JestGlobals.describe
 local expect = JestGlobals.expect
 local test = JestGlobals.test

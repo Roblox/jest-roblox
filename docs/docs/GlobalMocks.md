@@ -27,7 +27,7 @@ Jest does not yet support mocking the require global.
 Most notably, Jest Roblox does not support mocking these globals:
 
 - `game` and other Instance globals (use [`jest.spyOn(game, ...)`](jest-object#spying-on-instances) instead)
-- the `require()` function (use [`jest.mock()`](jest-object#jestmockmodule-factory) instead)
+- the `require()` function (use [`jest.mock()`](jest-object#jestmockmodule--path-factory) instead)
 - task scheduling functions (use [Timer Mocks](timer-mocks) instead)
 
 :::

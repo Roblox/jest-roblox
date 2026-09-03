@@ -6,20 +6,16 @@ title: runCLI Options
 
 ![Deviation](/img/deviation.svg)
 
-The `Jest` packages exports `runCLI`, which is the main entrypoint to run Jest Roblox tests. In your entrypoint script, import `runCLI` from the `Jest` package.
+The `Jest` package exports `runCLI`, which is the main entrypoint to run Jest Roblox tests. In your entrypoint script, import `runCLI` from the `Jest` package.
 
-You can also import the `args` package, which exposes command line arguments passed in through `roblox-cli`. You can passthrough arguments from `roblox-cli`by including them after a -- (double dash) or by using the `--args` flag. For example
+You can also import `args` from the `Jest` package, which exposes command-line arguments passed to your test runner. Most command-line runners let you pass script arguments after a `--` (double dash).
 
 A basic entrypoint script can look like the following:
 ```lua title="spec.lua"
 local Packages = script.Parent.YourProject.Packages
-local Jest = require(Workspace.Jest.Jest)
+local Jest = require(Packages.Jest)
 local runCLI = Jest.runCLI
 local args = Jest.args
-
-local processServiceExists, ProcessService = pcall(function()
-	return game:GetService("ProcessService")
-end)
 
 local status, result = runCLI(Packages.Project, {
 	verbose = args.verbose,
@@ -28,19 +24,12 @@ local status, result = runCLI(Packages.Project, {
 
 if status == "Rejected" then
 	print(result)
+	error(result)
 end
 
-if status == "Resolved" and result.results.success then
-	if processServiceExists then
-		ProcessService:ExitAsync(0)
-	end
+if not result.results.success then
+	error("Tests failed")
 end
-
-if processServiceExists then
-	ProcessService:ExitAsync(1)
-end
-
-return nil
 ```
 
 The first argument to `runCLI` is the root directory of your project, the second argument is a list of [options](#options), and the third argument is a list of projects (directories with a `jest.config.lua`) for Jest Roblox to discover.
@@ -114,6 +103,11 @@ Automatically restore mock state and implementation before every test. Equivalen
 
 Print your Jest config and then exits.
 
+### `stackDepth` \[number]
+![Roblox only](/img/roblox-only.svg)
+
+Limits the number of call frames printed in stack traces. The default of `0` prints the full stack trace.
+
 ### `testMatch` \[array&lt;string&gt;]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testmatch-glob1--globn)  ![Aligned](/img/aligned.svg)
 
@@ -140,7 +134,7 @@ An array of regexp pattern strings that are tested against all tests paths befor
 
 A regexp pattern string that is matched against all tests paths before executing the test.
 
-### `testTimeout` \[number>]
+### `testTimeout` \[number]
 [![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/cli#--testtimeoutnumber)  ![Aligned](/img/aligned.svg)
 
 Default timeout of a test in milliseconds. Default value: 5000.

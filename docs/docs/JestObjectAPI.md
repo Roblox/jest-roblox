@@ -10,7 +10,7 @@ The methods in the `jest` object help create mocks and let you control Jest Robl
 
 It must be imported explicitly from `JestGlobals`.
 ```lua
-local jest = require(Packages.Dev.JestGlobals).jest
+local jest = require(Packages.JestGlobals).jest
 ```
 
 ## Methods
@@ -21,10 +21,10 @@ import TOCInline from "@theme/TOCInline";
 
 ## Mock Modules
 
-### `jest.mock(module, factory)`
+### `jest.mock(module | path, factory)`
 [![Jest](/img/jestjs.svg)](https://jestjs.io/docs/jest-object#jestmockmodulename-factory-options)  ![API Change](/img/apichange.svg)
 
-Mocks a module with an mocked version when it is being required.　The second argument must be used to specify the value of the mocked module.
+Mocks a module with a mocked version when it is required. The module can be passed as a `ModuleScript` or as a slash-separated string path relative to the calling test file. The second argument specifies the value of the mocked module.
 ```lua title="mockedModule.lua"
 return {}
 ```
@@ -52,10 +52,10 @@ Modules that are mocked with `jest.mock` are mocked only for the file that calls
 
 Returns the `jest` object for chaining.
 
-### `jest.unmock(module)`
+### `jest.unmock(module | path)`
 [![Jest](/img/jestjs.svg)](https://jestjs.io/docs/jest-object#jestunmockmodulename)  ![API Change](/img/apichange.svg)
 
-Indicates that the module system should never return a mocked version of the specified module from `require()` (e.g. that it should always return the real module).
+Indicates that the module system should never return a mocked version of the specified module from `require()` (e.g. that it should always return the real module). The module can be passed as a `ModuleScript` or as a slash-separated string path relative to the calling test file.
 
 Returns the `jest` object for chaining.
 ```lua title="__tests__/testMockedModule.spec.lua"
@@ -66,10 +66,10 @@ it("mockedModule should not be mocked", function()
 end)
 ```
 
-### `jest.requireActual(module)`
+### `jest.requireActual(module | path)`
 [![Jest](/img/jestjs.svg)](https://jestjs.io/docs/jest-object#jestrequireactualmodulename)  ![API Change](/img/apichange.svg)
 
-Returns the actual module instead of a mock, bypassing all checks on whether the module should receive a mock implementation or not.
+Returns the actual module instead of a mock, bypassing all checks on whether the module should receive a mock implementation or not. The module can be passed as a `ModuleScript` or as a slash-separated string path relative to the calling test file.
 
 ```lua title="__tests__/testMockedModule.spec.lua"
 it("mockedModule also should not be mocked", function()
@@ -209,7 +209,7 @@ expect(game:GetService("LogService")).toEqual(mockServices["LogService"])
 
 Clears the `mock.calls`, `mock.instances` and `mock.results` properties of all mocks. Equivalent to calling [`.mockClear()`](mock-function-api#mockfnmockclear) on every mocked function.
 
-This can be included in a `beforeEach()` block in your text fixture to clear out the state of all mocks before each test.
+This can be included in a `beforeEach()` block in your test fixture to clear out the state of all mocks before each test.
 
 Returns the `jest` object for chaining.
 

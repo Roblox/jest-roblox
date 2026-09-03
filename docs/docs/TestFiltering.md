@@ -75,7 +75,7 @@ Jest.runCLI(root, {
 }, { root }):awaitStatus()
 ```
 
-An easy way to filter by paths from the command line is to set `testPathPattern` to a Lua global, (e.g. `testPathPattern = _G.JEST_TESTPATHPATTERN`) and then use the `--lua.globals` flag in `roblox-cli` to set the value.
+To filter by path from the command line, pass `--testPathPattern=skippity` to your runner and forward `Jest.args.testPathPattern` to `runCLI`. See the [CLI](cli) page for an example of passing arguments through.
 
 ## Running tests by test name
 

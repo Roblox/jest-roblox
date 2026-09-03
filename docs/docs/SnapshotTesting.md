@@ -81,29 +81,24 @@ To resolve this, we will need to update our snapshot artifacts. You can call `ru
 local args = Jest.args
 
 runCLI(Project, {
-	updateSnapshot = args.updateSnapshot
-	testPathPattern = args.testPathPattern
+	updateSnapshot = args.updateSnapshot,
+	testPathPattern = args.testPathPattern,
 }, { Project }):awaitStatus()
 ```
 
 See the [CLI](cli) page for documentation on passing `args`.
 
-You'll also need to pass the following flags to give `roblox-cli` the proper permissions to update snapshots:
-
-```
---load.asRobloxScript --fs.readwrite="$(pwd)" 
-```
+If your runner restricts filesystem access, you will also need to give it write access to your project directory.
 
 This will re-generate snapshot artifacts for all failing snapshot tests. If we had any additional failing snapshot tests due to an unintentional bug, we would need to fix the bug before re-generating snapshots to avoid recording snapshots of the buggy behavior.
 
 If you'd like to limit which snapshot test cases get re-generated, you can pass an additional `testNamePattern` flag to re-record snapshots only for those tests that match the pattern.
 
 :::tip
-For example, to only update snapshots for `mytest.test.lua`, you can pass in the following two args:
+For example, to only update snapshots for `mytest.test.lua`, pass the following two arguments to your runner:
 
 ```bash
-roblox-cli run --load.model default.project.json -- \
-  --updateSnapshot --testPathPattern="mytest.test.lua"
+--updateSnapshot --testPathPattern="mytest.test.lua"
 ```
 :::
 
