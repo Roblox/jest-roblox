@@ -26,8 +26,6 @@ This command generates static content into the `build` directory and can be serv
 
 ## Deployment
 
-```console
-GIT_USER=<GH_USERNAME> GIT_PASS=<GH_PERSONAL_ACCESS_TOKEN> yarn deploy
-```
+Pushing a `v*` tag on `Roblox/jest-roblox` publishes https://roblox.github.io/jest-roblox/ from that commit via `.github/workflows/docs.yml`. Use **Actions → Deploy Docs → Run workflow** for a one-off deploy (docs-only fixes, or the first publish before tags resume).
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Bump `VERSION` in `docusaurus.config.js` in the same change as the package version so the navbar matches the tag.
