@@ -61,8 +61,8 @@ local process = {
 
 beforeEach(function()
 	jest.useFakeTimers()
-	stdoutWrite:mockClear()
-	stderrWrite:mockClear()
+	stdoutWrite.mockClear()
+	stderrWrite.mockClear()
 end)
 
 -- ROBLOX deviation START: removed afterEach since we aren't overriding node globals

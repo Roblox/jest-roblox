@@ -235,3 +235,68 @@ print(myMockFn()) -- > 'second call'
 print(myMockFn()) -- > 'default'
 print(myMockFn()) -- > 'default
 ```
+
+### `mockFn.mockResolvedValue(value)`
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockresolvedvaluevalue)  ![Aligned](/img/aligned.svg)
+
+Shorthand for `mockFn.mockImplementation(function() return Promise.resolve(value) end)`.
+
+```lua
+it("async test", function()
+	local asyncMock = jest.fn().mockResolvedValue(43)
+
+	expect(asyncMock():expect()).toBe(43)
+end)
+```
+
+:::caution
+A mock is a callable table, not a function, so you cannot hand the mock itself to [`.resolves`](expect#resolves) or [`.rejects`](expect#rejects). Call the mock and pass the promise it returns: `expect(asyncMock()).resolves.toBe(43)`.
+:::
+
+### `mockFn.mockResolvedValueOnce(value)`
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockresolvedvalueoncevalue)  ![Aligned](/img/aligned.svg)
+
+Shorthand for `mockFn.mockImplementationOnce(function() return Promise.resolve(value) end)`.
+
+```lua
+it("async test", function()
+	local asyncMock = jest.fn()
+		.mockResolvedValue("default")
+		.mockResolvedValueOnce("first call")
+		.mockResolvedValueOnce("second call")
+
+	print(asyncMock():expect()) -- > 'first call'
+	print(asyncMock():expect()) -- > 'second call'
+	print(asyncMock():expect()) -- > 'default'
+	print(asyncMock():expect()) -- > 'default'
+end)
+```
+
+### `mockFn.mockRejectedValue(value)`
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockrejectedvaluevalue)  ![Aligned](/img/aligned.svg)
+
+Shorthand for `mockFn.mockImplementation(function() return Promise.reject(value) end)`.
+
+```lua
+it("async test", function()
+	local asyncMock = jest.fn().mockRejectedValue(Error.new("Async error"))
+
+	expect(asyncMock()).rejects.toThrow("Async error"):expect()
+end)
+```
+
+### `mockFn.mockRejectedValueOnce(value)`
+[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockrejectedvalueoncevalue)  ![Aligned](/img/aligned.svg)
+
+Shorthand for `mockFn.mockImplementationOnce(function() return Promise.reject(value) end)`.
+
+```lua
+it("async test", function()
+	local asyncMock = jest.fn()
+		.mockResolvedValueOnce("first call")
+		.mockRejectedValueOnce(Error.new("Async error"))
+
+	print(asyncMock():expect()) -- > 'first call'
+	expect(asyncMock()).rejects.toThrow("Async error"):expect()
+end)
+```

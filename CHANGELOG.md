@@ -1,8 +1,12 @@
 # Jest Roblox Changelog
 
+## Unreleased Changes
+
+* :sparkles: Add `mockResolvedValue`, `mockResolvedValueOnce`, `mockRejectedValue` and `mockRejectedValueOnce` to mock functions
+* :hammer_and_wrench: `jest.fn()` and `jest.spyOn()` return a typed `MockFn` instead of `any`. This types the mock method surface only; the call itself stays `(...any) -> ...any`, so arguments and return values are still unchecked.
+
 ## 3.20.1 (2026-08-30)
 * :broom: Bumps the version of luau-regexp used by Jest from 0.2.2 -> 0.3.0
-
 
 ## 3.20.0 (2026-07-30)
 
