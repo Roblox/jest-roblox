@@ -30,6 +30,8 @@ JestGlobals = "3.20.1"
 
 Then run `rotrieve install`.
 
+The examples below use Wally package paths. Rotriever places dev dependencies under `Packages.Dev`, so require `Packages.Dev.Jest` and `Packages.Dev.JestGlobals` instead.
+
 </details>
 
 Create a `default.project.json` to set up your project structure and include the `Packages` directory created by Wally.
@@ -93,6 +95,12 @@ else
 end
 ```
 
+Run the entrypoint with:
+
+```bash
+roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.overrides EnableLoadModule=true
+```
+
 </details>
 
 Inside `src`, create a basic [configuration](configuration) file.
@@ -125,29 +133,11 @@ it('adds 1 + 2 to equal 3', function()
 end)
 ```
 
-<details>
-<summary>Internal</summary>
-
-Rotriever places dev dependencies under `Packages.Dev`, so require `Packages.Dev.JestGlobals` instead.
-
-</details>
-
 :::caution
 Any functionality needed _must_ be explicitly required from `JestGlobals`, see [Globals](api).
 :::
 
 Finally, run `spec.lua` in your Roblox environment and your tests should pass!
-
-<details>
-<summary>Internal</summary>
-
-To run the entrypoint through `roblox-cli`:
-
-```bash
-roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.overrides EnableLoadModule=true
-```
-
-</details>
 
 **You just successfully wrote your first test using Jest Roblox!**
 
