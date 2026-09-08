@@ -28,6 +28,57 @@ end)
 cleanup = {}
 
 describe("resolveInstancePath", function()
+	describe("ScriptService", function()
+		it("uses ResolveModulePath before the fallback resolver", function()
+			local module = Instance.new("ModuleScript")
+			track(module)
+
+			local receivedRelativeTo
+			local receivedPath
+			local scriptService = {
+				ResolveModulePath = function(_, relativeTo, instancePath)
+					receivedRelativeTo = relativeTo
+					receivedPath = instancePath
+					return module
+				end,
+			}
+
+			local result = resolveInstancePath(script, "./not-resolvable-by-fallback", scriptService)
+
+			expect(result).toBe(module)
+			expect(receivedRelativeTo).toBe(script)
+			expect(receivedPath).toBe("./not-resolvable-by-fallback")
+		end)
+
+		it("uses the existing resolver when ResolveModulePath fails", function()
+			local module = Instance.new("ModuleScript")
+			module.Name = "FallbackModule"
+			module.Parent = script.Parent
+			track(module)
+
+			local scriptService = {
+				ResolveModulePath = function()
+					error("ResolveModulePath unavailable")
+				end,
+			}
+
+			local result = resolveInstancePath(script, "./FallbackModule", scriptService)
+
+			expect(result).toBe(module)
+		end)
+
+		it("uses the existing resolver when ResolveModulePath is unavailable", function()
+			local module = Instance.new("ModuleScript")
+			module.Name = "UnavailableFallbackModule"
+			module.Parent = script.Parent
+			track(module)
+
+			local result = resolveInstancePath(script, "./UnavailableFallbackModule", {})
+
+			expect(result).toBe(module)
+		end)
+	end)
+
 	describe("@game", function()
 		it("resolves a module under a game service", function()
 			local module = Instance.new("ModuleScript")

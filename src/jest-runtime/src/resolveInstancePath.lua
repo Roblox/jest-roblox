@@ -2,7 +2,15 @@ local PATH_SEPARATOR = "/"
 
 local PASSTHROUGH_PREFIXES = { "@std", "@rbx" }
 
-local function resolveInstancePath(relativeTo: Instance, instancePath: string): Instance?
+local scriptService: any?
+do
+	local ok, service = pcall(game.GetService, game, "ScriptService")
+	if ok then
+		scriptService = service
+	end
+end
+
+local function resolveInstancePathFallback(relativeTo: Instance, instancePath: string): Instance?
 	local parts = instancePath:split(PATH_SEPARATOR)
 	local firstPart = parts[1]
 	for _, prefix in PASSTHROUGH_PREFIXES do
@@ -74,6 +82,22 @@ local function resolveInstancePath(relativeTo: Instance, instancePath: string): 
 	end
 
 	return current
+end
+
+local function resolveInstancePath(relativeTo: Instance, instancePath: string, scriptServiceOverride: any?): Instance?
+	local resolver = if scriptServiceOverride ~= nil then scriptServiceOverride else scriptService
+	if resolver ~= nil then
+		-- Keep the method lookup inside pcall so engines that do not expose
+		-- ResolveModulePath yet also fall back to the existing resolver.
+		local ok, resolved = pcall(function()
+			return resolver:ResolveModulePath(relativeTo, instancePath)
+		end)
+		if ok and resolved ~= nil then
+			return resolved
+		end
+	end
+
+	return resolveInstancePathFallback(relativeTo, instancePath)
 end
 
 return resolveInstancePath
