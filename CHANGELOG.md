@@ -1,5 +1,9 @@
 # Jest Roblox Changelog
 
+## Unreleased
+
+* :sparkles: Require-by-string now tries `ScriptService:ResolveModulePath` first, and falls back to Jest's existing path resolver if that API is missing or fails.
+
 ## 3.20.1 (2026-08-30)
 * :broom: Bumps the version of luau-regexp used by Jest from 0.2.2 -> 0.3.0
 
