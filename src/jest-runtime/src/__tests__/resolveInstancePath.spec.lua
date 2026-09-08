@@ -3,6 +3,7 @@ local Packages = CurrentModule.Parent
 
 local JestGlobals = require(Packages.Dev.JestGlobals)
 local afterEach = JestGlobals.afterEach
+local beforeEach = JestGlobals.beforeEach
 local describe = JestGlobals.describe
 local expect = JestGlobals.expect
 local it = JestGlobals.it
@@ -26,6 +27,35 @@ afterEach(function()
 end)
 
 cleanup = {}
+
+-- ScriptService is not reachable from every test environment, and where it is,
+-- ResolveModulePath may be absent or disabled. Probe it with a known-good path
+-- so the suite below only runs against a working engine resolver.
+local isResolveModulePathEnabled = (function(): boolean
+	local ok, service = pcall(game.GetService, game, "ScriptService")
+	if not ok then
+		return false
+	end
+
+	local probeRoot = Instance.new("Folder")
+	probeRoot.Name = "RipResolveModulePathProbe"
+	probeRoot.Parent = ReplicatedStorage
+
+	local probeScript = Instance.new("ModuleScript")
+	probeScript.Name = "Probe"
+	probeScript.Parent = probeRoot
+
+	local probeTarget = Instance.new("ModuleScript")
+	probeTarget.Name = "ProbeTarget"
+	probeTarget.Parent = probeRoot
+
+	local resolvedOk, resolved = pcall(function()
+		return (service :: any):ResolveModulePath(probeScript, "./ProbeTarget")
+	end)
+	probeRoot:Destroy()
+
+	return resolvedOk and resolved == probeTarget
+end)()
 
 describe("resolveInstancePath", function()
 	describe("ScriptService", function()
@@ -78,6 +108,108 @@ describe("resolveInstancePath", function()
 			expect(result).toBe(module)
 		end)
 	end)
+
+	if isResolveModulePathEnabled then
+		describe("ScriptService end-to-end", function()
+			--[[
+				Tree structure (parented to ReplicatedStorage):
+
+				RipSsE2eTree (Folder)
+				├── Consumer (ModuleScript)
+				├── Sibling (ModuleScript)
+				├── Folder
+				│   ├── NestedSibling (ModuleScript)
+				│   └── Folder
+				│       └── Nested (ModuleScript)
+				└── SelfRoot (ModuleScript)
+				    ├── SelfChild (ModuleScript)
+				    └── Sub
+				        └── Deep (ModuleScript)
+			]]
+			local consumer: ModuleScript
+			local sibling: ModuleScript
+			local nestedSibling: ModuleScript
+			local nested: ModuleScript
+			local selfRoot: ModuleScript
+			local selfChild: ModuleScript
+			local selfDeep: ModuleScript
+
+			beforeEach(function()
+				local tree = Instance.new("Folder")
+				tree.Name = "RipSsE2eTree"
+				tree.Parent = ReplicatedStorage
+				track(tree)
+
+				consumer = Instance.new("ModuleScript")
+				consumer.Name = "Consumer"
+				consumer.Parent = tree
+
+				sibling = Instance.new("ModuleScript")
+				sibling.Name = "Sibling"
+				sibling.Parent = tree
+
+				local outerFolder = Instance.new("Folder")
+				outerFolder.Name = "Folder"
+				outerFolder.Parent = tree
+
+				nestedSibling = Instance.new("ModuleScript")
+				nestedSibling.Name = "NestedSibling"
+				nestedSibling.Parent = outerFolder
+
+				local innerFolder = Instance.new("Folder")
+				innerFolder.Name = "Folder"
+				innerFolder.Parent = outerFolder
+
+				nested = Instance.new("ModuleScript")
+				nested.Name = "Nested"
+				nested.Parent = innerFolder
+
+				selfRoot = Instance.new("ModuleScript")
+				selfRoot.Name = "SelfRoot"
+				selfRoot.Parent = tree
+
+				selfChild = Instance.new("ModuleScript")
+				selfChild.Name = "SelfChild"
+				selfChild.Parent = selfRoot
+
+				local selfFolder = Instance.new("Folder")
+				selfFolder.Name = "Sub"
+				selfFolder.Parent = selfRoot
+
+				selfDeep = Instance.new("ModuleScript")
+				selfDeep.Name = "Deep"
+				selfDeep.Parent = selfFolder
+			end)
+
+			it("resolves a sibling via ./", function()
+				expect(resolveInstancePath(consumer, "./Sibling")).toBe(sibling)
+			end)
+
+			it("resolves a nested child via multi-part path", function()
+				expect(resolveInstancePath(consumer, "./Folder/Folder/Nested")).toBe(nested)
+			end)
+
+			it("resolves ascending via ../", function()
+				expect(resolveInstancePath(nested, "../NestedSibling")).toBe(nestedSibling)
+			end)
+
+			it("resolves a child of the calling script via @self", function()
+				expect(resolveInstancePath(selfRoot, "@self/SelfChild")).toBe(selfChild)
+			end)
+
+			it("resolves a nested child under @self", function()
+				expect(resolveInstancePath(selfRoot, "@self/Sub/Deep")).toBe(selfDeep)
+			end)
+
+			it("resolves a module under a game service via @game", function()
+				expect(resolveInstancePath(script, "@game/ReplicatedStorage/RipSsE2eTree/Sibling")).toBe(sibling)
+			end)
+
+			it("returns nil for passthrough paths", function()
+				expect(resolveInstancePath(consumer, "@std/task")).toBeNil()
+			end)
+		end)
+	end
 
 	describe("@game", function()
 		it("resolves a module under a game service", function()
