@@ -1,0 +1,19 @@
+.internal {
+  margin: 0 0 var(--ifm-spacing-vertical);
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 3px solid var(--ifm-color-emphasis-300);
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.internal > :last-child {
+  margin-bottom: 0;
+}

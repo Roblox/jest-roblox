@@ -17,8 +17,7 @@ JestGlobals = "roblox/jest-globals@^3.20.0"
 
 Run `wally install` to install Jest Roblox.
 
-<details>
-<summary>Internal</summary>
+<Internal>
 
 Add the packages to your `rotriever.toml` instead:
 
@@ -32,7 +31,7 @@ Then run `rotrieve install`.
 
 The examples below use Wally package paths. Rotriever places dev dependencies under `Packages.Dev`, so require `Packages.Dev.Jest` and `Packages.Dev.JestGlobals` instead.
 
-</details>
+</Internal>
 
 Create a `default.project.json` to set up your project structure and include the `Packages` directory created by Wally.
 ```json title="default.project.json"
@@ -71,8 +70,7 @@ if not result.results.success then
 end
 ```
 
-<details>
-<summary>Internal command-line runner</summary>
+<Internal label="Internal command-line runner">
 
 When running tests through `roblox-cli`, `Jest.args` exposes arguments passed to the test entrypoint. `ProcessService` can also return the test result as the process exit code:
 
@@ -101,7 +99,7 @@ Run the entrypoint with:
 roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.overrides EnableLoadModule=true
 ```
 
-</details>
+</Internal>
 
 Inside `src`, create a basic [configuration](configuration) file.
 ```lua title="jest.config.lua"

@@ -28,8 +28,7 @@ To use Promises in your tests, add [roblox-lua-promise](https://github.com/Roblo
 Promise = "roblox/promise@^3.5.1"
 ```
 
-<details>
-<summary>Internal</summary>
+<Internal>
 
 Add these packages to your `rotriever.toml` instead:
 
@@ -41,7 +40,7 @@ Promise = "3.5.2"
 
 When `JestGlobals` is a Rotriever dev dependency, import `expect` from `Packages.Dev.JestGlobals`.
 
-</details>
+</Internal>
 
 ### Error
 

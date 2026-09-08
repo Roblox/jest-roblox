@@ -10,12 +10,11 @@ It must be imported explicitly from `JestGlobals`.
 local jest = require(Packages.JestGlobals).jest
 ```
 
-<details>
-<summary>Internal</summary>
+<Internal>
 
 When `JestGlobals` is installed as a Rotriever dev dependency, import it from `Packages.Dev.JestGlobals`.
 
-</details>
+</Internal>
 
 ## Methods
 

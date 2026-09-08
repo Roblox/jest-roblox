@@ -29,8 +29,7 @@ end
 
 The first argument to `runCLI` is the root directory of your project, the second argument is a list of [options](#options), and the third argument is a list of projects (directories with a `jest.config.lua`) for Jest Roblox to discover.
 
-<details>
-<summary>Internal command-line runner</summary>
+<Internal label="Internal command-line runner">
 
 `Jest.args` exposes command-line arguments passed through `roblox-cli`. Include them after a `--` (double dash) or use the `--args` flag, then forward the values you need to `runCLI`:
 
@@ -45,7 +44,7 @@ local status, result = runCLI(Packages.Project, {
 }, { Packages.Project }):awaitStatus()
 ```
 
-</details>
+</Internal>
 
 ## Options
 

@@ -19,6 +19,10 @@ module.exports = {
       title: `Jest Roblox v${VERSION}`,
       items: [
         {
+          type: 'custom-internalToggle',
+          position: 'right',
+        },
+        {
           label: 'Docs',
           type: 'doc',
           docId: 'getting-started',

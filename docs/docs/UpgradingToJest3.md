@@ -17,8 +17,7 @@ Jest = "roblox/jest@^3.20.0"
 JestGlobals = "roblox/jest-globals@^3.20.0"
 ```
 
-<details>
-<summary>Internal</summary>
+<Internal>
 
 For Rotriever, use:
 
@@ -30,7 +29,7 @@ JestGlobals = "3.20.1"
 
 Rotriever dev dependencies are under `Packages.Dev`, so import the runner from `Packages.Dev.Jest`.
 
-</details>
+</Internal>
 
 Update your `spec.lua`. Instead of using `TestEZ.TestBootStrap:run`, the main entrypoint is now `Jest.runCLI`. A basic bootstrap script can look like the following:
 ```lua title="spec.lua"
@@ -118,8 +117,7 @@ Any value you need must be explicitly imported from `JestGlobals`, including com
 ### Running Tests
 Run your updated `spec.lua` in Studio or in [OCALE](https://create.roblox.com/docs/cloud/reference/features/luau-execution).
 
-<details>
-<summary>Internal</summary>
+<Internal>
 
 To run the entrypoint through `roblox-cli`, enable `LoadModule`:
 
@@ -127,7 +125,7 @@ To run the entrypoint through `roblox-cli`, enable `LoadModule`:
 roblox-cli run --load.model default.project.json --run spec.lua --fastFlags.allOnLuau --fastFlags.overrides EnableLoadModule=true
 ```
 
-</details>
+</Internal>
 
 ## Notable Differences
 

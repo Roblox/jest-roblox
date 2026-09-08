@@ -75,12 +75,11 @@ Jest.runCLI(root, {
 }, { root }):awaitStatus()
 ```
 
-<details>
-<summary>Internal command-line runner</summary>
+<Internal label="Internal command-line runner">
 
 When running through `roblox-cli`, pass `--testPathPattern=skippity` and forward `Jest.args.testPathPattern` to `runCLI`. See the [CLI](cli) page for an example.
 
-</details>
+</Internal>
 
 ## Running tests by test name
 

@@ -19,12 +19,11 @@ local initializeReporter = JestBenchmark.Reporter.initializeReporter
 local initializeProfiler = JestBenchmark.Profiler.initializeProfiler
 ```
 
-<details>
-<summary>Internal</summary>
+<Internal>
 
 Add `JestBenchmark = "3.20.1"` to the dev dependencies in `rotriever.toml`, then import it from `Packages.Dev.JestBenchmark`.
 
-</details>
+</Internal>
 
 ## Methods
 
