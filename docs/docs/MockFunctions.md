@@ -2,7 +2,6 @@
 id: mock-functions
 title: Mock Functions
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-functions)
 
 Mock functions allow you to test the links between code by erasing the actual implementation of a function, capturing calls to the function (and the parameters passed in those calls), capturing instances when `.new()` is called on the mock, and allowing test-time configuration of return values.
 

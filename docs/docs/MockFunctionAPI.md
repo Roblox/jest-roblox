@@ -2,7 +2,6 @@
 id: mock-function-api
 title: Mock Functions
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api)
 
 Mock functions are also known as "spies", because they let you spy on the behavior of a function that is a direct (or indirect) collaborator of the module you're trying to test, rather than only testing the output. You can create a mock function with `jest.fn()`. If no implementation is given, the mock function will return `nil` when invoked.
 
@@ -19,12 +18,10 @@ import TOCInline from "@theme/TOCInline";
 ## Reference
 
 ### `mockFn.getMockName()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfngetmockname)  ![Aligned](/img/aligned.svg)
 
 Returns the mock name string set by calling `mockFn.mockName(value)`.
 
 ### `mockFn.mock.calls`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockcalls)  ![Aligned](/img/aligned.svg)
 
 An array containing the call arguments of all calls that have been made to this mock function. Each item in the array is an array of arguments that were passed during the call.
 
@@ -38,7 +35,6 @@ For example: A mock function `f` that has been called twice, with the arguments 
 ```
 
 ### `mockFn.mock.results`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockresults)  ![Deviation](/img/deviation.svg)
 
 An array containing the results of all calls that have been made to this mock function. Each entry in this array is an object containing a `type` property, and a `value` property. `type` will be one of the following:
 
@@ -64,7 +60,6 @@ For example: A mock function `f` that has been called two times, returning `'res
 ```
 
 ### `mockFn.mock.instances`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockinstances)  ![Aligned](/img/aligned.svg)
 
 An array that contains all the object instances that have been instantiated from this mock function.
 
@@ -81,7 +76,6 @@ mockFn.mock.instances[2] == b
 ```
 
 ### `mockFn.mock.lastCall`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmocklastcall)  ![Aligned](/img/aligned.svg)
 
 An array containing the call arguments of the last call that was made to this mock function. If the function was not called, it will return `nil`.
 
@@ -91,9 +85,7 @@ For example: A mock function `f` that has been called twice, with the arguments 
 {'arg3', 'arg4'}
 ```
 
-
 ### `mockFn.mockClear()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockclear)  ![Aligned](/img/aligned.svg)
 
 Clears all information stored in the [`mockFn.mock.calls`](#mockfnmockcalls), [`mockFn.mock.instances`](#mockfnmockinstances) and [`mockFn.mock.results`](#mockfnmockresults) arrays. Often this is useful when you want to clean up a mocks usage data between two assertions.
 
@@ -102,7 +94,6 @@ Beware that `mockClear` will replace `mockFn.mock`, not just these three propert
 The [`clearMocks`](configuration#clearmocks-boolean) configuration option is available to clear mocks automatically before each tests.
 
 ### `mockFn.mockReset()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockreset)  ![Aligned](/img/aligned.svg)
 
 Does everything that [`mockFn.mockClear()`](#mockfnmockclear) does, and also removes any mocked return values or implementations.
 
@@ -113,7 +104,6 @@ Beware that `mockReset` will replace `mockFn.mock`, not just [`mockFn.mock.calls
 The [`resetMocks`](configuration#resetmocks-boolean) configuration option is available to reset mocks automatically before each test.
 
 ### `mockFn.mockRestore()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockrestore)  ![Aligned](/img/aligned.svg)
 
 Does everything that [`mockFn.mockReset()`](#mockfnmockreset) does, and also restores the original (non-mocked) implementation.
 
@@ -122,7 +112,6 @@ This is useful when you want to mock functions in certain test cases and restore
 Beware that `mockFn.mockRestore` only works when the mock was created with `jest.spyOn`. Thus you have to take care of restoration yourself when manually assigning `jest.fn()`.
 
 ### `mockFn.mockImplementation(fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockimplementationfn)  ![Deviation](/img/deviation.svg)
 
 Accepts a function that should be used as the implementation of the mock. The mock itself will still record all calls that go into and instances that come from itself – the only difference is that the implementation will also be executed when the mock is called.
 
@@ -149,7 +138,6 @@ Mocks should be lightweight and easy to maintain and/or refactor, so users shoul
 :::
 
 ### `mockFn.mockImplementationOnce(fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockimplementationoncefn)  ![Aligned](/img/aligned.svg)
 
 Accepts a function that will be used as an implementation of the mock for one call to the mocked function. Can be chained so that multiple function calls produce different results.
 
@@ -176,7 +164,6 @@ print(myMockFn()) -- 'default
 ```
 
 ### `mockFn.mockName(value)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmocknamevalue)  ![Aligned](/img/aligned.svg)
 
 Accepts a string to use in test result output in place of "jest.fn()" to indicate which mock function is being referenced.
 
@@ -198,12 +185,10 @@ Received number of calls:    0
 ```
 
 ### `mockFn.mockReturnThis()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockreturnthis)  ![Aligned](/img/aligned.svg)
 
 Sets the implementation of `mockFn` to return itself whenenever the mock function is called.
 
 ### `mockFn.mockReturnValue(value)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockreturnvaluevalue)  ![Aligned](/img/aligned.svg)
 
 Accepts a value that will be returned whenever the mock function is called.
 
@@ -216,7 +201,6 @@ mock() -- 43
 ```
 
 ### `mockFn.mockReturnValueOnce(value)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/mock-function-api#mockfnmockreturnvalueoncevalue)  ![Aligned](/img/aligned.svg)
 
 Accepts a value that will be returned for one call to the mock function. Can be chained so that successive calls to the mock function return different values. When there are no more `mockReturnValueOnce` values to use, calls will return a value specified by `mockReturnValue`.
 

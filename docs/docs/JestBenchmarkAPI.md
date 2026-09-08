@@ -3,8 +3,6 @@ id: jest-benchmark
 title: Jest Benchmark
 ---
 
-![Roblox only](/img/roblox-only.svg)
-
 Benchmarks are useful tools for gating performance in CI, optimizing code, and capturing performance gains. `JestBenchmark` aims to make it easier to write benchmarks in the Luau language.
 
 `JestBenchmark` must be added as a dev dependency to your `wally.toml` and imported.

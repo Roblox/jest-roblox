@@ -2,7 +2,6 @@
 id: using-matchers
 title: Using Matchers
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/using-matchers)
 
 Jest Roblox uses "matchers" to let you test values in different ways. This document will introduce some commonly used matchers. For the full list, see the [`expect` API doc](expect).
 
@@ -39,7 +38,6 @@ end)
 ```
 
 ## Truthiness
-![Deviation](/img/deviation.svg)
 
 In tests, you sometimes need to distinguish between `nil`, and `false`, but you sometimes do not want to treat these differently. Jest Roblox contains helpers that let you be explicit about what you want.
 
@@ -100,7 +98,6 @@ end)
 ```
 
 ## Strings
-![API Change](/img/apichange.svg)
 
 You can check strings against [Lua string patterns](https://create.roblox.com/docs/luau/strings#patterns) with `toMatch`. Pattern characters such as `.` and `%` are special; use `toContain` below for a literal substring check.
 
@@ -198,7 +195,6 @@ end)
 ```
 
 ## Exceptions
-![API Change](/img/apichange.svg)
 
 If you want to test whether a particular function throws an error when it's called, use `toThrow`.
 

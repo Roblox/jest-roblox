@@ -2,9 +2,6 @@
 id: api
 title: Globals
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api)
-
-![Deviation](/img/deviation.svg)
 
 At the top of your test files, require `JestGlobals` from the `Packages` directory created by Wally.
 
@@ -37,7 +34,6 @@ import TOCInline from "@theme/TOCInline";
 ## Reference
 
 ### `afterAll(fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#afterallfn-timeout)  ![Aligned](/img/aligned.svg)
 
 Runs a function after all the tests in this file have completed. If the function returns a promise, Jest Roblox waits for that promise to resolve before continuing.
 
@@ -78,7 +74,6 @@ If `afterAll` is inside a `describe` block, it runs at the end of the describe b
 If you want to run some cleanup after every test instead of after all tests, use `afterEach` instead.
 
 ### `afterEach(fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#aftereachfn-timeout)  ![Aligned](/img/aligned.svg)
 
 Runs a function after each one of the tests in this file completes. If the function returns a promise, Jest Roblox waits for that promise to resolve before continuing.
 
@@ -119,7 +114,6 @@ If `afterEach` is inside a `describe` block, it only runs after the tests that a
 If you want to run some cleanup just once, after all of the tests run, use `afterAll` instead.
 
 ### `beforeAll(fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#beforeallfn-timeout)  ![Aligned](/img/aligned.svg)
 
 Runs a function before any of the tests in this file run. If the function returns a promise, Jest Roblox waits for that promise to resolve before running tests.
 
@@ -157,7 +151,6 @@ If `beforeAll` is inside a `describe` block, it runs at the beginning of the des
 If you want to run something before every test instead of before any test runs, use `beforeEach` instead.
 
 ### `beforeEach(fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#beforeeachfn-timeout)  ![Aligned](/img/aligned.svg)
 
 Runs a function before each of the tests in this file runs. If the function returns a promise, Jest Roblox waits for that promise to resolve before running the test.
 
@@ -199,7 +192,6 @@ If `beforeEach` is inside a `describe` block, it runs for each test in the descr
 If you only need to run some setup code once, before any tests run, use `beforeAll` instead.
 
 ### `describe(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#describename-fn)  ![Aligned](/img/aligned.svg)
 
 `describe(name, fn)` creates a block that groups together several related tests. For example, if you have a `myBeverage` object that is supposed to be delicious but not sour, you could test it with:
 
@@ -248,7 +240,6 @@ end)
 ```
 
 ### `describe.each(table)(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#describeeachtablename-fn-timeout)  ![API Change](/img/apichange.svg)
 
 Use `describe.each` if you keep duplicating the same test suites with different data. `describe.each` allows you to write the test suite once and pass data in.
 
@@ -307,7 +298,6 @@ end)
 ```
 
 #### 2. `describe.each(...args)(name, fn, timeout)`
-![API Change](/img/apichange.svg)
 
 - `...args`
   - First argument is a string with headings separated by `|`, or a table with a single element containing that.
@@ -341,7 +331,6 @@ end)
 ```
 
 ### `describe.only(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#describeonlyname-fn)  ![Aligned](/img/aligned.svg)
 
 Also under the alias: `fdescribe(name, fn)`
 
@@ -364,7 +353,6 @@ end)
 ```
 
 ### `describe.only.each(table)(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#describeonlyeachtablename-fn)  ![API Change](/img/apichange.svg)
 
 Also under the aliases: `fdescribe.each(table)(name, fn)` and `` fdescribe.each`table`(name, fn) ``
 
@@ -391,7 +379,6 @@ end)
 ```
 
 #### `describe.only.each(...args)(name, fn)`
-![API Change](/img/apichange.svg)
 
 ```lua
 describe.only.each({'a | b | expected'},
@@ -412,7 +399,6 @@ end)
 ```
 
 ### `describe.skip(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#describeskipname-fn)  ![Aligned](/img/aligned.svg)
 
 Also under the alias: `xdescribe(name, fn)`
 
@@ -437,7 +423,6 @@ end)
 Using `describe.skip` is often a cleaner alternative to temporarily commenting out a chunk of tests. Beware that the `describe` block will still run. If you have some setup that also should be skipped, do it in a `beforeAll` or `beforeEach` block.
 
 ### `describe.skip.each(table)(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#describeskipeachtablename-fn)  ![API Change](/img/apichange.svg)
 
 Also under the aliases: `xdescribe.each(table)(name, fn)` and `xdescribe.each(...args)(name, fn)`
 
@@ -464,7 +449,6 @@ end)
 ```
 
 #### `describe.skip.each(...args)(name, fn)`
-![API Change](/img/apichange.svg)
 
 ```lua
 describe.skip.each({'a | b | expected'},
@@ -485,7 +469,6 @@ end)
 ```
 
 ### `test(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testname-fn-timeout)  ![API Change](/img/apichange.svg)
 
 Also under the alias: `it(name, fn, timeout)`
 
@@ -501,7 +484,6 @@ The first argument is the test name; the second argument is a function that cont
 
 :::note
 If a **promise is returned** from `test`, Jest Roblox will wait for the promise to resolve before letting the test complete.
-![API Change](/img/apichange.svg)
 
 Jest Roblox will also wait if you **provide a second argument to the test function**, usually called `done`. This could be handy when you want to test callbacks. See how to test async code [here](asynchronous#callbacks).
 :::
@@ -519,7 +501,6 @@ end)
 Even though the call to `test` will return right away, the test doesn't complete until the promise resolves as well.
 
 ### `test.each(table)(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testeachtablename-fn-timeout)  ![API Change](/img/apichange.svg)
 
 Also under the alias: `it.each(table)(name, fn)` and `it.each(...args)(name, fn)`
 
@@ -558,7 +539,6 @@ end)
 ```
 
 #### 2. `test.each(...args)(name, fn, timeout)`
-![API Change](/img/apichange.svg)
 
 - `...args`
   - First argument is a string with headings separated by `|`, or a table with a single element containing that.
@@ -581,7 +561,6 @@ end)
 ```
 
 ### `test.failing(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/next/api#testfailingname-fn-timeout)  ![Aligned](/img/aligned.svg)
 
 Also under the alias: `it.failing(name, fn, timeout)`
 
@@ -610,7 +589,6 @@ end)
 ```
 
 ### `test.only.failing(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/next/api#testonlyfailingname-fn-timeout)  ![Aligned](/img/aligned.svg)
 
 Also under the aliases: `it.only.failing(name, fn, timeout)`
 
@@ -619,7 +597,6 @@ Also under the aliases: `it.only.failing(name, fn, timeout)`
 Use `test.only.failing` if you want to only run a specific failing test.
 
 ### `test.skip.failing(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/next/api#testskipfailingname-fn-timeout)  ![Aligned](/img/aligned.svg)
 
 Also under the aliases: `it.skip.failing(name, fn, timeout)`
 
@@ -628,7 +605,6 @@ Also under the aliases: `it.skip.failing(name, fn, timeout)`
 Use `test.skip.failing` if you want to skip running a specific failing test.
 
 ### `test.only(name, fn, timeout)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testonlyname-fn-timeout)  ![Aligned](/img/aligned.svg)
 
 Also under the aliases: `it.only(name, fn, timeout)`, and `fit(name, fn, timeout)`
 
@@ -653,7 +629,6 @@ Only the "it is raining" test will run in that test file, since it is run with `
 Usually you wouldn't check code using `test.only` into source control - you would use it for debugging, and remove it once you have fixed the broken tests.
 
 ### `test.only.each(table)(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testonlyeachtablename-fn-1)  ![API Change](/img/apichange.svg)
 
 Also under the aliases: `it.only.each(table)(name, fn)`, `fit.each(table)(name, fn)`, `` it.only.each`table`(name, fn) `` and `` fit.each`table`(name, fn) ``
 
@@ -678,7 +653,6 @@ end)
 ```
 
 #### `test.only.each(...args)(name, fn)`
-![API Change](/img/apichange.svg)
 
 ```lua
 test.only.each({'a | b | expected'},
@@ -696,7 +670,6 @@ end)
 ```
 
 ### `test.skip(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testskipname-fn)  ![Aligned](/img/aligned.svg)
 
 Also under the aliases: `it.skip(name, fn)`, `xit(name, fn)`, and `xtest(name, fn)`
 
@@ -719,7 +692,6 @@ Only the "it is raining" test will run, since the other test is run with `test.s
 You could comment the test out, but it's often a bit nicer to use `test.skip` because it will maintain indentation and syntax highlighting.
 
 ### `test.skip.each(table)(name, fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testskipeachtablename-fn)  ![API Change](/img/apichange.svg)
 
 Also under the aliases: `it.skip.each(table)(name, fn)`, `xit.each(table)(name, fn)`, `xtest.each(table)(name, fn)`, `` it.skip.each`table`(name, fn) ``, `xit.each(..args)(name, fn) `` and `xtest.each(...args)(name, fn)`
 
@@ -744,7 +716,6 @@ end)
 ```
 
 #### `test.skip.each(...args)(name, fn)`
-![API Change](/img/apichange.svg)
 
 ```lua
 test.skip.each({'a | b | expected'},
@@ -762,7 +733,6 @@ end)
 ```
 
 ### `test.todo(name)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/api#testtodoname)  ![Aligned](/img/aligned.svg)
 
 Also under the alias: `it.todo(name)`
 

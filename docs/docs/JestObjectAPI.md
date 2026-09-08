@@ -2,11 +2,8 @@
 id: jest-object
 title: The Jest Object
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object)
 
 The methods in the `jest` object help create mocks and let you control Jest Roblox's overall behavior.
-
-![Deviation](/img/deviation.svg)
 
 It must be imported explicitly from `JestGlobals`.
 ```lua
@@ -28,10 +25,9 @@ import TOCInline from "@theme/TOCInline";
 
 ## Mock Modules
 
-### `jest.mock(module | path, factory)`
-[![Jest](/img/jestjs.svg)](https://jestjs.io/docs/jest-object#jestmockmodulename-factory-options)  ![API Change](/img/apichange.svg)
+### `jest.mock(module | require-by-string path, factory)`
 
-Mocks a module with a mocked version when it is required. The module can be passed as a `ModuleScript` or as a slash-separated string path relative to the calling test file. The second argument specifies the value of the mocked module.
+Mocks a module with a mocked version when it is required. The module can be passed as a `ModuleScript` or as a [require-by-string path](https://create.roblox.com/docs/reference/engine/globals/LuaGlobals/require). The second argument specifies the value of the mocked module.
 ```lua title="mockedModule.lua"
 return {}
 ```
@@ -57,10 +53,9 @@ Modules that are mocked with `jest.mock` are mocked only for the file that calls
 
 Returns the `jest` object for chaining.
 
-### `jest.unmock(module | path)`
-[![Jest](/img/jestjs.svg)](https://jestjs.io/docs/jest-object#jestunmockmodulename)  ![API Change](/img/apichange.svg)
+### `jest.unmock(module | require-by-string path)`
 
-Indicates that the module system should never return a mocked version of the specified module from `require()` (e.g. that it should always return the real module). The module can be passed as a `ModuleScript` or as a slash-separated string path relative to the calling test file.
+Indicates that the module system should never return a mocked version of the specified module from `require()` (e.g. that it should always return the real module). The module can be passed as a `ModuleScript` or as a [require-by-string path](https://create.roblox.com/docs/reference/engine/globals/LuaGlobals/require).
 
 Returns the `jest` object for chaining.
 ```lua title="__tests__/testMockedModule.spec.lua"
@@ -71,10 +66,9 @@ it("mockedModule should not be mocked", function()
 end)
 ```
 
-### `jest.requireActual(module | path)`
-[![Jest](/img/jestjs.svg)](https://jestjs.io/docs/jest-object#jestrequireactualmodulename)  ![API Change](/img/apichange.svg)
+### `jest.requireActual(module | require-by-string path)`
 
-Returns the actual module instead of a mock, bypassing all checks on whether the module should receive a mock implementation or not. The module can be passed as a `ModuleScript` or as a slash-separated string path relative to the calling test file.
+Returns the actual module instead of a mock, bypassing all checks on whether the module should receive a mock implementation or not. The module can be passed as a `ModuleScript` or as a [require-by-string path](https://create.roblox.com/docs/reference/engine/globals/LuaGlobals/require).
 
 ```lua title="__tests__/testMockedModule.spec.lua"
 it("mockedModule also should not be mocked", function()
@@ -84,7 +78,6 @@ end)
 ```
 
 ### `jest.isolateModules(fn)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestisolatemodulesfn)  ![Aligned](/img/aligned.svg)
 
 `jest.isolateModules(fn)` creates a sandbox registry for the modules that are loaded inside the callback function. This is useful to isolate specific modules for every test so that local module state doesn't conflict between tests.
 
@@ -98,7 +91,6 @@ local otherCopyOfMyModule = require(Workspace.MyModule)
 ```
 
 ### `jest.resetModules()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestresetmodules)  ![Aligned](/img/aligned.svg)
 
 Resets the module registry - the cache of all required modules. This is useful to isolate modules where local state might conflict between tests.
 
@@ -134,7 +126,6 @@ Returns the `jest` object for chaining.
 ## Mock Functions
 
 ### `jest.fn(implementation)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestfnimplementation)  ![Deviation](/img/deviation.svg)
 
 Returns a new, unused [mock function](mock-function-api). Optionally takes a mock implementation.
 
@@ -151,7 +142,6 @@ print(returnsTrue()) -- true
 ```
 
 ### `jest.spyOn(object, methodName)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/28.x/jest-object#jestspyonobject-methodname)  ![Aligned](/img/aligned.svg)
 
 Creates a mock function similar to `jest.fn` but also tracks calls to `object[methodName]`. Returns a Jest [mock function](MockFunctionAPI.md).
 
@@ -190,7 +180,6 @@ The `jest.spyOn(object, methodName, accessType?)` variant is not currently suppo
 :::
 
 #### Spying on instances 
-![Roblox only](/img/roblox-only.svg)
 
 The `spyOn` function can also spy on instance methods when the
 [`mockDataModel`](configuration#mockdatamodel-boolean) setting is enabled. The instance
@@ -210,7 +199,6 @@ expect(game:GetService("LogService")).toEqual(mockServices["LogService"])
 ```
 
 ### `jest.clearAllMocks()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestclearallmocks)  ![Aligned](/img/aligned.svg)
 
 Clears the `mock.calls`, `mock.instances` and `mock.results` properties of all mocks. Equivalent to calling [`.mockClear()`](mock-function-api#mockfnmockclear) on every mocked function.
 
@@ -219,21 +207,18 @@ This can be included in a `beforeEach()` block in your test fixture to clear out
 Returns the `jest` object for chaining.
 
 ### `jest.resetAllMocks()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestresetallmocks)  ![Aligned](/img/aligned.svg)
 
 Resets the state of all mocks. Equivalent to calling [`.mockReset()`](mock-function-api#mockfnmockreset) on every mocked function.
 
 Returns the `jest` object for chaining.
 
 ### `jest.restoreAllMocks()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestrestoreallmocks)  ![Aligned](/img/aligned.svg)
 
 Restores all mocks back to their original value. Equivalent to calling [`.mockRestore()`](mock-function-api#mockfnmockrestore) on every mocked function. Beware that `jest.restoreAllMocks()` only works when the mock was created with `jest.spyOn`; other mocks will require you to manually restore them.
 
 ## Mock Timers
 
 ### `jest.useFakeTimers()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestusefaketimersimplementation-modern--legacy)  ![Deviation](/img/deviation.svg)
 
 Instructs Jest Roblox to use fake versions of the standard Lua and Roblox timer functions.
 The following timers are mocked:
@@ -252,14 +237,12 @@ The following timers are mocked:
 Returns the `jest` object for chaining.
 
 ### `jest.useRealTimers()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestuserealtimers)  ![Aligned](/img/aligned.svg)
 
 Instructs Jest Roblox to use the real versions of the standard timer functions.
 
 Returns the `jest` object for chaining.
 
 ### `jest.runAllTimers()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestrunalltimers)  ![Deviation](/img/deviation.svg)
 
 Exhausts the **macro**-task queue (i.e., all tasks queued by `delay`).
 
@@ -268,62 +251,52 @@ When this API is called, all pending macro-tasks will be executed. If those task
 This is often useful for synchronously executing `delay`s during a test in order to synchronously assert about some behavior that would only happen after the `delay` callbacks executed. See the [Timer mocks](timer-mocks) doc for more information.
 
 ### `jest.advanceTimersByTime(msToRun)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestadvancetimersbytimemstorun)  ![Aligned](/img/aligned.svg)
 
 Executes only the macro task queue (i.e., all tasks queued by `delay`).
 
 When this API is called, all timers are advanced by `msToRun` milliseconds. All pending "macro-tasks" that have been queued, and would be executed within this time frame will be executed. Additionally, if those macro-tasks schedule new macro-tasks that would be executed within the same time frame, those will be executed until there are no more macro-tasks remaining in the queue, that should be run within `msToRun` milliseconds.
 
 ### `jest.runOnlyPendingTimers()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestrunonlypendingtimers)  ![Aligned](/img/aligned.svg)
 
 Executes only the macro-tasks that are currently pending (i.e., all tasks queued by `delay`). If any of the currently pending macro-tasks schedule new macro-tasks, those new tasks will not be executed by this call.
 
 This is useful for scenarios such as one where the module being tested schedules a `delay()` whose callback schedules another `delay()` recursively (meaning the scheduling never stops). In these scenarios, it's useful to be able to run forward in time by a single step at a time.
 
 ### `jest.advanceTimersToNextTimer(steps)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestadvancetimerstonexttimersteps)  ![Aligned](/img/aligned.svg)
 
 Advances all timers by the needed seconds so that only the next timeouts/intervals will run.
 
 Optionally, you can provide `steps`, so it will run `steps` amount of next timeouts/intervals.
 
 ### `jest.clearAllTimers()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestclearalltimers)  ![Aligned](/img/aligned.svg)
 
 Removes any pending timers from the timer system.
 
 This means, if any timers have been scheduled (but have not yet executed), they will be cleared and will never have the opportunity to execute in the future.
 
 ### `jest.getTimerCount()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestgettimercount)  ![Aligned](/img/aligned.svg)
 
 Returns the number of fake timers still left to run.
 
 ### `jest.setSystemTime(now?: number | DateTime)`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestsetsystemtimenow-number--date)  ![Aligned](/img/aligned.svg)
 
 Set the current system time used by fake timers. Simulates a user changing the system clock while your program is running. It affects the current time but it does not in itself cause e.g. timers to fire; they will fire exactly as they would have done without the call to `jest.setSystemTime()`.
 
 ### `jest.getRealSystemTime()`
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/jest-object#jestgetrealsystemtime)  ![Aligned](/img/aligned.svg)
 
 When mocking time, `DateTime.now()` will also be mocked. If you for some reason need access to the real current time, you can invoke this function.
 
 ### `jest.setEngineFrameTime(frameTimeMs)`
-![Roblox only](/img/roblox-only.svg)
 
 `jest.setEngineFrameTime` sets the frame time, in milliseconds, by which all advance timer methods process timers. `frameTimeMs` must be a value greater than or equal to 0; by default, `frameTimeMs` is set to `0` (i.e. continuous time).
 
 ### `jest.getEngineFrameTime()`
-![Roblox only](/img/roblox-only.svg)
 
 `jest.getEngineFrameTime` gets the frame time by which timers are processed.
 
 ## Misc
 
 ### `jest.globalEnv`
-![Roblox only](/img/roblox-only.svg)
 
 `jest.globalEnv` represents the function environment table of the current test.
 
@@ -351,7 +324,7 @@ Jest does not yet support mocking the require global.
 
 Most notably, Jest Roblox does not support mocking these globals:
 
-- `require()` (use [`jest.mock()`](jest-object#jestmockmodule--path-factory) instead)
+- `require()` (use [`jest.mock()`](jest-object#jestmockmodule--require-by-string-path-factory) instead)
 - task scheduling functions (use [Timer Mocks](timer-mocks) instead)
 
 Instance methods such as `game:GetService()` can be spied when [`mockDataModel`](configuration#mockdatamodel-boolean) is enabled. See [Spying on instances](#spying-on-instances).
