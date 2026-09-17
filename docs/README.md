@@ -1,17 +1,17 @@
 # Website
 
-This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus 3](https://docusaurus.io/), a modern static website generator. Commands below run from the `docs/` directory and need Node.js 20 (the same version CI uses).
 
 ## Installation
 
 ```console
-yarn install
+npm install
 ```
 
 ## Local Development
 
 ```console
-yarn start
+npm start
 ```
 
 This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
@@ -19,7 +19,7 @@ This command starts a local development server and open up a browser window. Mos
 ## Build
 
 ```console
-yarn build
+npm run build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
@@ -28,4 +28,4 @@ This command generates static content into the `build` directory and can be serv
 
 Pushing a `v*` tag on `Roblox/jest-roblox` publishes https://roblox.github.io/jest-roblox/ from that commit via `.github/workflows/docs.yml`. Use **Actions → Deploy Docs → Run workflow** for a one-off deploy (docs-only fixes, or the first publish before tags resume).
 
-Bump `VERSION` in `docusaurus.config.js` in the same change as the package version so the navbar matches the tag.
+Bump `VERSION` in `docusaurus.config.js` in the same change as the workspace `version` in `rotriever.toml` so the navbar matches the tag.

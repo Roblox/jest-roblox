@@ -2,11 +2,8 @@
 id: configuration
 title: Configuring Jest
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration)
 
 The Jest Roblox philosophy is to work great by default, but sometimes you just need more configuration power.
-
-![Deviation](/img/deviation.svg)
 
 The configuration should be defined in a `jest.config.lua` file.
 
@@ -36,15 +33,13 @@ import TOCInline from "@theme/TOCInline";
 
 ## Reference
 
-### `clearmocks` \[boolean]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#clearmocks-boolean)  ![Aligned](/img/aligned.svg)
+### `clearMocks` \[boolean]
 
 Default: `false`
 
 Automatically clear mock calls, instances, contexts and results before every test. Equivalent to calling [`jest.clearAllMocks()`](jest-object#jestclearallmocks) before each test. This does not remove any mock implementation that may have been provided.
 
 ### `displayName` \[string, table]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#displayname-string-object)  ![API Change](/img/apichange.svg)
 
 Default: `nil`
 
@@ -68,7 +63,6 @@ return {
 ```
 
 ### `oldFunctionSpying` \[boolean]
-![Roblox only](/img/roblox-only.svg)
 
 Changes how [`jest.spyOn()`](jest-object#jestspyonobject-methodname) overwrites
 methods in the spied object, making it behave like older versions of Jest.
@@ -82,7 +76,7 @@ Regardless of the value of `oldFunctionSpying`, the `spyOn()` function will
 always return a mock object.
 
 ```lua
--- when `oldFunctionSpying = false` (old behaviour)
+-- when `oldFunctionSpying = true` (old behaviour)
 
 local guineaPig = {
 	foo = function() end
@@ -97,7 +91,7 @@ print(guineaPig.foo == mockObj) --> true
 ```
 
 ```lua
--- when `oldFunctionSpying = true` (new behaviour)
+-- when `oldFunctionSpying = false` (new behaviour)
 
 local guineaPig = {
 	foo = function() end
@@ -111,7 +105,6 @@ print(guineaPig.foo == mockObj) --> false
 ```
 
 ### `projects` \[array&lt;Instance&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#projects-arraystring--projectconfig)  ![API Change](/img/apichange.svg)
 
 Default: `nil`
 
@@ -119,7 +112,7 @@ When the `projects` configuration is provided with an array of instances, Jest R
 
 ```lua
 return {
-	projects = { Workspace.ProjectB, Workspace.ProjectB },
+	projects = { Workspace.ProjectA, Workspace.ProjectB },
 }
 ```
 
@@ -132,7 +125,6 @@ When using multi-project runner, it's recommended to add a `displayName` for eac
 :::
 
 ### `mockDataModel` \[boolean]
-![Roblox only](/img/roblox-only.svg)
 
 Turns on instance mocking features in Jest.  This allows *whitelisted* instances to be used
 with Jest functions such as [`jest.spyOn()`](jest-object#spying-on-instances).
@@ -156,21 +148,19 @@ may need to modify your code to be compatible with instance mocks:
 In general, you should only enable instance mocks if you are taking advantage of
 the feature. Otherwise, you should leave them disabled for best compatibility.
 
-The Jest Lua team is aware of ways this can be mitigated, but they require much
+The Jest Roblox team is aware of ways this can be mitigated, but they require much
 more engineering effort. If you are interested in emulating more behaviours of
 the data model, please reach out so we're aware of the interest.
 
 :::
 
 <!-- ### `restoreMocks` \[boolean]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#restoremocks-boolean)  ![Aligned](/img/aligned.svg)
 
 Default: `false`
 
 Automatically restore mock state and implementation before every test. Equivalent to calling [`jest.restoreAllMocks()`](jest-object#jestrestoreallmocks) before each test. This will lead to any mocks having their fake implementations removed and restores their initial implementation. -->
 
 ### `rootDir` \[Instance]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#rootdir-string)  ![API Change](/img/apichange.svg)
 
 Default: The root of the directory containing your Jest Roblox [config file](#).
 
@@ -189,7 +179,6 @@ Using `'<rootDir>'` as a string token in any other path-based configuration sett
 ::: -->
 
 ### `reporters` \[array&ltInstance|string|table&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#reporters-arraymodulename--modulename-options)  ![API Change](/img/apichange.svg)
 
 Default: `nil`
 
@@ -263,7 +252,6 @@ return CustomReporter
 ```
 
 ### `roots` \[array&lt;Instance&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#roots-arraystring)  ![API Change](/img/apichange.svg)
 
 Default: `{<rootDir>}`
 
@@ -272,14 +260,12 @@ A list of paths to directories that Jest Roblox should use to search for files i
 There are times where you only want Jest Roblox to search in a single sub-directory (such as cases where you have a `src/` directory in your repo), but prevent it from accessing the rest of the repo.
 
 ### `setupFiles` \[array&lt;ModuleScript&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#setupfiles-array)  ![API Change](/img/apichange.svg)
 
 Default: `{}`
 
 A list of ModuleScripts that run some code to configure or set up the testing environment. Each setupFile will be run once per test file. Since every test runs in its own environment, these scripts will be executed in the testing environment before executing [`setupFilesAfterEnv`](#setupfilesafterenv-array) and before the test code itself.
 
 ### `setupFilesAfterEnv` \[array&lt;ModuleScript&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#setupfilesafterenv-array)  ![API Change](/img/apichange.svg)
 
 Default: `{}`
 
@@ -310,20 +296,16 @@ return {
 ```
 
 ### `slowTestThreshold` \[number]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#slowtestthreshold-number)  ![Aligned](/img/aligned.svg)
 
 Default: `5`
 
 The number of seconds after which a test is considered as slow and reported as such in the results.
 
 ### `snapshotFormat` \[table]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#snapshotformat-object)  ![Aligned](/img/aligned.svg)
 
 Default: `nil`
 
 Allows overriding specific snapshot formatting options documented in the [pretty-format readme](https://github.com/facebook/jest/blob/main/packages/pretty-format/README.md#usage-with-options), with the exceptions of `compareKeys` and `plugins`.
-
-![Deviation](/img/deviation.svg)
 
 `pretty-format` also supports the following Roblox-specific formatting options for `Instance` serialization:
 
@@ -446,9 +428,7 @@ Redacted.Stack.Trace:1337 function epicDuck
 ]=]
 ```
 
-
 ### `snapshotSerializers` \[array&lt;serializer&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#snapshotserializers-arraystring)  ![API Change](/img/apichange.svg)
 
 Default: `{}`
 
@@ -506,8 +486,13 @@ To make a dependency explicit instead of implicit, you can call [`expect.addSnap
 
 More about serializers API can be found [here](https://github.com/facebook/jest/tree/main/packages/pretty-format/README.md#serialize).
 
+### `stackDepth` \[number]
+
+Default: `0`
+
+Limits the number of call frames printed in stack traces. The default of `0` prints the full stack trace.
+
 ### `testFailureExitCode` \[number]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testfailureexitcode-number)  ![Aligned](/img/aligned.svg)
 
 Default: `1`
 
@@ -520,7 +505,6 @@ This does not change the exit code in the case of Jest Roblox errors (e.g. inval
 :::
 
 ### `testMatch` \[array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testmatch-arraystring)  ![Aligned](/img/aligned.svg)
 
 Default: `{ "**/__tests__/**/*", "**/?(*.)+(spec|test)?(.lua|.luau)" }`
 
@@ -538,7 +522,6 @@ Each glob pattern is applied in the order they are specified in the config. For 
 :::
 
 ### `testPathIgnorePatterns` \[array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testpathignorepatterns-arraystring)  ![Aligned](/img/aligned.svg)
 
 Default: `{}`
 
@@ -547,7 +530,6 @@ An array of regexp pattern strings that are matched against all test paths befor
 <!-- These pattern strings match against the full path. Use the `<rootDir>` string token to include the path to your project's root directory to prevent it from accidentally ignoring all of your files in different environments that may have different root directories. Example: `["<rootDir>/build/", "<rootDir>/node_modules/"]`. -->
 
 ### `testRegex` \[string | array&lt;string&gt;]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testregex-string--arraystring)  ![Aligned](/img/aligned.svg)
 
 Default: `{}`
 
@@ -560,14 +542,12 @@ The pattern or patterns Jest Roblox uses to detect test files. See also [`testMa
 :::
 
 ### `testTimeout` \[number]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#testtimeout-number)  ![Aligned](/img/aligned.svg)
 
 Default: `5000`
 
 Default timeout of a test in milliseconds.
 
 ### `verbose` \[boolean]
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/configuration#verbose-boolean)  ![Aligned](/img/aligned.svg)
 
 Default: `false`
 

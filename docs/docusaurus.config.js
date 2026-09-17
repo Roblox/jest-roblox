@@ -1,6 +1,6 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 
-const VERSION = '3.19.0';
+const VERSION = '3.20.1';
 
 module.exports = {
   title: 'Jest Roblox',
@@ -18,6 +18,10 @@ module.exports = {
     navbar: {
       title: `Jest Roblox v${VERSION}`,
       items: [
+        {
+          type: 'custom-internalToggle',
+          position: 'right',
+        },
         {
           label: 'Docs',
           type: 'doc',

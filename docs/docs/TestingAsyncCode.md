@@ -2,13 +2,12 @@
 id: asynchronous
 title: Testing Asynchronous Code
 ---
-[![Jest](/img/jestjs.svg)](https://jest-archive-august-2023.netlify.app/docs/27.x/asynchronous)
 
 It's common in Lua for code to run asynchronously. When you have code that runs asynchronously, Jest Roblox needs to know when the code it is testing has completed, before it can move on to another test. Jest Roblox has several ways to handle this.
 
 ## Promises
 
-Return a [promise](https://github.com/evaera/roblox-lua-promise) from your test, and Jest Roblox will wait for that promise to resolve. If the promise is rejected, the test will fail.
+Return a [promise](https://github.com/Roblox/roblox-lua-promise) from your test, and Jest Roblox will wait for that promise to resolve. If the promise is rejected, the test will fail.
 
 For example, let's say that `fetchData` returns a promise that is supposed to resolve to the string `'peanut butter'`. We could test it with:
 
@@ -48,7 +47,7 @@ end)
 
 The problem is that the test will complete as soon as `fetchData` completes, before ever calling the callback.
 
-There is an alternate form of `test` that fixes this. Instead of putting the test in a function with an empty argument, use a single argument called `done`, which is passed as a second parameter to the `test` function. Jest Roblox will wait until the `done` callback is called before finishing the test.
+There is an alternate form of `test` that fixes this. Instead of putting the test in a function with no extra arguments, give it two parameters: the test context (often `_`) and `done`. Jest Roblox will wait until the `done` callback is called before finishing the test.
 
 ```lua
 test('the data is peanut butter', function(_, done)

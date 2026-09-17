@@ -3,8 +3,6 @@ id: global-mocks
 title: Global Mocks
 ---
 
-<img alt='Roblox only' src='img/roblox-only.svg'/>
-
 It can be desirable to track how an implementation interacts with Luau globals.
 For example, you might want to test that a certain message is printed to the
 console, or you might want to take control of the random number generator to get
@@ -27,7 +25,7 @@ Jest does not yet support mocking the require global.
 Most notably, Jest Roblox does not support mocking these globals:
 
 - `game` and other Instance globals (use [`jest.spyOn(game, ...)`](jest-object#spying-on-instances) instead)
-- the `require()` function (use [`jest.mock()`](jest-object#jestmockmodule-factory) instead)
+- the `require()` function (use [`jest.mock()`](jest-object#jestmockmodule--require-by-string-path-factory) instead)
 - task scheduling functions (use [Timer Mocks](timer-mocks) instead)
 
 :::
