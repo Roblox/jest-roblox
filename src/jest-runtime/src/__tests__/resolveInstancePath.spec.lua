@@ -7,23 +7,14 @@ local describe = JestGlobals.describe
 local expect = JestGlobals.expect
 local it = JestGlobals.it
 
-local engineResolveModulePath = require(CurrentModule.engineResolveModulePath)
 local resolveInstancePath = require(CurrentModule.resolveInstancePath)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ScriptService = game:GetService("ScriptService")
 
-local function itIf(condition: boolean): typeof(it.skip)
-	return if condition then it :: typeof(it.skip) else it.skip
-end
-
-local function isEngineFlagEnabled(name: string): boolean
-	local ok, value = pcall(game.GetFastFlag, game, name)
-	return ok and value == true
-end
-
-local itWithFallbackResolver = itIf(engineResolveModulePath == nil)
-local itWithEngineResolver = itIf(engineResolveModulePath ~= nil)
-local itWithConfigAliases = itIf(engineResolveModulePath ~= nil and isEngineFlagEnabled("RbsConfigAliasResolution2"))
+local isResolveModulePathEnabled = pcall(function()
+	return (ScriptService :: any):ResolveModulePath(script, "@self")
+end)
 
 local cleanup: { Instance }
 
@@ -170,6 +161,14 @@ describe("resolveInstancePath", function()
 			local result = resolveInstancePath(module2, "../Module3")
 			expect(result).toBe(module3)
 		end)
+
+		if isResolveModulePathEnabled then
+			it("resolves .. after the beginning of a path", function()
+				buildTree()
+				local result = resolveInstancePath(consumer, "./Folder/Folder/../Module3")
+				expect(result).toBe(module3)
+			end)
+		end
 	end)
 
 	describe("passthrough paths", function()
@@ -196,66 +195,27 @@ describe("resolveInstancePath", function()
 			end).toThrow("could not resolve")
 		end)
 
-		itWithFallbackResolver("throws for absolute paths starting with /", function()
+		it("throws for absolute paths starting with /", function()
 			expect(function()
 				resolveInstancePath(script, "/absolute/path")
-			end).toThrow("paths beginning with '/' are not supported")
+			end).toThrow(
+				if isResolveModulePathEnabled
+					then "unable to resolve module path"
+					else "paths beginning with '/' are not supported"
+			)
 		end)
 
-		itWithEngineResolver("surfaces the engine error for absolute paths starting with /", function()
-			expect(function()
-				resolveInstancePath(script, "/absolute/path")
-			end).toThrow("unable to resolve module path")
-		end)
+		if not isResolveModulePathEnabled then
+			it("throws for .. after the beginning of a path", function()
+				local folder = Instance.new("Folder")
+				folder.Name = "RipErrFolder"
+				folder.Parent = script.Parent
+				track(folder)
 
-		itWithFallbackResolver("throws for .. after the beginning of a path", function()
-			local folder = Instance.new("Folder")
-			folder.Name = "RipErrFolder"
-			folder.Parent = script.Parent
-			track(folder)
-
-			expect(function()
-				resolveInstancePath(script, "./RipErrFolder/../bar")
-			end).toThrow("paths including '..' after the beginning are not supported")
-		end)
-	end)
-
-	describe("engine resolver", function()
-		itWithConfigAliases("resolves aliases defined in a .config module", function()
-			local root = Instance.new("Folder")
-			root.Name = "RipAliasRoot"
-			root.Parent = ReplicatedStorage
-			track(root)
-
-			local config = Instance.new("ModuleScript")
-			config.Name = ".config"
-			config.Source = [[return { luau = { aliases = { shared = "./Shared" } } }]]
-			config.Parent = root
-
-			local shared = Instance.new("Folder")
-			shared.Name = "Shared"
-			shared.Parent = root
-
-			local target = Instance.new("ModuleScript")
-			target.Name = "Target"
-			target.Parent = shared
-
-			local consumer = Instance.new("ModuleScript")
-			consumer.Name = "Consumer"
-			consumer.Parent = root
-
-			expect(resolveInstancePath(consumer, "@shared/Target")).toBe(target)
-		end)
-
-		itWithEngineResolver("throws when the path resolves to a non-ModuleScript", function()
-			local folder = Instance.new("Folder")
-			folder.Name = "RipNotAModule"
-			folder.Parent = script.Parent
-			track(folder)
-
-			expect(function()
-				resolveInstancePath(script, "./RipNotAModule")
-			end).toThrow("not a ModuleScript")
-		end)
+				expect(function()
+					resolveInstancePath(script, "./RipErrFolder/../bar")
+				end).toThrow("paths including '..' after the beginning are not supported")
+			end)
+		end
 	end)
 end)

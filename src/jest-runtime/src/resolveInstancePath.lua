@@ -1,4 +1,10 @@
-local engineResolveModulePath = require(script.Parent.engineResolveModulePath)
+local ScriptService = game:GetService("ScriptService")
+
+-- ResolveModulePath is gated by DFFlagScriptServiceResolveModulePath, which
+-- user code can't read, so probe the method instead.
+local isResolveModulePathEnabled = pcall(function()
+	return (ScriptService :: any):ResolveModulePath(script, "@self")
+end)
 
 local PATH_SEPARATOR = "/"
 
@@ -13,8 +19,8 @@ local function resolveInstancePath(relativeTo: Instance, instancePath: string): 
 		end
 	end
 
-	if engineResolveModulePath then
-		return engineResolveModulePath(relativeTo, instancePath)
+	if isResolveModulePathEnabled then
+		return (ScriptService :: any):ResolveModulePath(relativeTo, instancePath)
 	end
 
 	local prevPathPart: string?
