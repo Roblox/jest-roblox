@@ -1,3 +1,5 @@
+local engineResolveModulePath = require(script.Parent.engineResolveModulePath)
+
 local PATH_SEPARATOR = "/"
 
 local PASSTHROUGH_PREFIXES = { "@std", "@rbx" }
@@ -9,6 +11,10 @@ local function resolveInstancePath(relativeTo: Instance, instancePath: string): 
 		if firstPart == prefix then
 			return nil
 		end
+	end
+
+	if engineResolveModulePath then
+		return engineResolveModulePath(relativeTo, instancePath)
 	end
 
 	local prevPathPart: string?
