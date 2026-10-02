@@ -10,6 +10,11 @@ local it = JestGlobals.it
 local resolveInstancePath = require(CurrentModule.resolveInstancePath)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ScriptService = game:GetService("ScriptService")
+
+local isResolveModulePathEnabled = pcall(function()
+	return (ScriptService :: any):ResolveModulePath(script, "@self")
+end)
 
 local cleanup: { Instance }
 
@@ -156,6 +161,14 @@ describe("resolveInstancePath", function()
 			local result = resolveInstancePath(module2, "../Module3")
 			expect(result).toBe(module3)
 		end)
+
+		if isResolveModulePathEnabled then
+			it("resolves .. after the beginning of a path", function()
+				buildTree()
+				local result = resolveInstancePath(consumer, "./Folder/Folder/../Module3")
+				expect(result).toBe(module3)
+			end)
+		end
 	end)
 
 	describe("passthrough paths", function()
@@ -185,18 +198,24 @@ describe("resolveInstancePath", function()
 		it("throws for absolute paths starting with /", function()
 			expect(function()
 				resolveInstancePath(script, "/absolute/path")
-			end).toThrow("paths beginning with '/' are not supported")
+			end).toThrow(
+				if isResolveModulePathEnabled
+					then "unable to resolve module path"
+					else "paths beginning with '/' are not supported"
+			)
 		end)
 
-		it("throws for .. after the beginning of a path", function()
-			local folder = Instance.new("Folder")
-			folder.Name = "RipErrFolder"
-			folder.Parent = script.Parent
-			track(folder)
+		if not isResolveModulePathEnabled then
+			it("throws for .. after the beginning of a path", function()
+				local folder = Instance.new("Folder")
+				folder.Name = "RipErrFolder"
+				folder.Parent = script.Parent
+				track(folder)
 
-			expect(function()
-				resolveInstancePath(script, "./RipErrFolder/../bar")
-			end).toThrow("paths including '..' after the beginning are not supported")
-		end)
+				expect(function()
+					resolveInstancePath(script, "./RipErrFolder/../bar")
+				end).toThrow("paths including '..' after the beginning are not supported")
+			end)
+		end
 	end)
 end)
