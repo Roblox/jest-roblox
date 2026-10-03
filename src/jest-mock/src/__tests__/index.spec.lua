@@ -11,6 +11,8 @@ local jest = JestGlobals.jest
 
 local JestConfig = require(Packages.Dev.JestConfig)
 
+local Promise = require(Packages.Promise)
+
 local Error = require(Packages.JestTypes).Error
 
 local parentModule = require(CurrentModule)
@@ -282,6 +284,55 @@ describe("moduleMocker", function()
 			fake.mockReturnValueOnce(42)
 			expect(fake(2)).toEqual(42)
 			expect(fake(2)).toEqual(4)
+		end)
+
+		it("supports mocking resolvable async functions", function()
+			local fn = moduleMocker:fn()
+			fn.mockResolvedValue("abcd")
+
+			local promise = fn()
+
+			-- ROBLOX deviation: Promise.is instead of toBeInstanceOf(Promise)
+			expect(Promise.is(promise)).toBe(true)
+
+			expect(promise).resolves.toBe("abcd"):expect()
+		end)
+
+		it("supports mocking resolvable async functions only once", function()
+			local fn = moduleMocker:fn()
+			fn.mockResolvedValue("abcd")
+			fn.mockResolvedValueOnce("abcde")
+
+			Promise.all({
+				expect(fn()).resolves.toBe("abcde"),
+				expect(fn()).resolves.toBe("abcd"),
+			}):expect()
+		end)
+
+		it("supports mocking rejectable async functions", function()
+			local err = Error.new("rejected")
+			local fn = moduleMocker:fn()
+			fn.mockRejectedValue(err)
+
+			local promise = fn()
+
+			-- ROBLOX deviation: Promise.is instead of toBeInstanceOf(Promise)
+			expect(Promise.is(promise)).toBe(true)
+
+			expect(promise).rejects.toBe(err):expect()
+		end)
+
+		it("supports mocking rejectable async functions only once", function()
+			local defaultErr = Error.new("default rejected")
+			local err = Error.new("rejected")
+			local fn = moduleMocker:fn()
+			fn.mockRejectedValue(defaultErr)
+			fn.mockRejectedValueOnce(err)
+
+			Promise.all({
+				expect(fn()).rejects.toBe(err),
+				expect(fn()).rejects.toBe(defaultErr),
+			}):expect()
 		end)
 
 		describe("return values", function()
