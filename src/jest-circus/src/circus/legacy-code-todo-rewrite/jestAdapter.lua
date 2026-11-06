@@ -41,7 +41,9 @@ local function jestAdapter(
 	-- ROBLOX deviation: accept ModuleScript instead of string
 	testPath: ModuleScript
 ): Promise<TestResult>
-	return Promise.resolve():andThen(function()
+	-- every test file creates its own STATE_SYM symbol and puts it in _G, which doesn't get discarded when the test completes
+	local STATE_SYM = runtime:requireInternalModule(script.Parent.Parent.types).STATE_SYM
+	local run = Promise.resolve():andThen(function()
 		local ref = runtime:requireInternalModule(FRAMEWORK_INITIALIZER)
 		local initialize, runAndTransformResultsToJestFormat = ref.initialize, ref.runAndTransformResultsToJestFormat
 
@@ -128,6 +130,13 @@ local function jestAdapter(
 		-- from the VM. Jasmine creates the result objects in the parent process, we
 		-- should consider doing that for circus as well.
 		return deepCyclicCopy(results, { keepPrototype = false })
+	end)
+	return run:andThen(function(results)
+		_G[STATE_SYM] = nil
+		return results
+	end, function(err)
+		_G[STATE_SYM] = nil
+		return Promise.reject(err)
 	end)
 end
 
