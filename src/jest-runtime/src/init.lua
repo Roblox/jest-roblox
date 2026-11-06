@@ -1685,6 +1685,13 @@ function Runtime_private:teardown(): ()
 	for _, cleanup in ipairs(self._cleanupFns) do
 		cleanup()
 	end
+	-- The test runner shares one module function cache across test files, and
+	-- each cached function keeps the sandbox of the last file that required it.
+	if self._loadedModuleFns then
+		for _, loadedModule in self._loadedModuleFns do
+			setfenv(loadedModule[1], loadedModule[2])
+		end
+	end
 	-- ROBLOX deviation END
 	self.isTornDown = true
 end
