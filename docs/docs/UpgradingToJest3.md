@@ -13,8 +13,8 @@ First, update your `wally.toml` to use Jest Roblox v3.x. You'll also need to req
 
 ```toml title="wally.toml"
 [dev-dependencies]
-Jest = "roblox/jest@^3.20.0"
-JestGlobals = "roblox/jest-globals@^3.20.0"
+Jest = "roblox/jest@^3.21.0"
+JestGlobals = "roblox/jest-globals@^3.21.0"
 ```
 
 <Internal>
@@ -23,8 +23,8 @@ For Rotriever, use:
 
 ```toml title="rotriever.toml"
 [dev_dependencies]
-Jest = "3.20.1"
-JestGlobals = "3.20.1"
+Jest = "3.21.0"
+JestGlobals = "3.21.0"
 ```
 
 Rotriever dev dependencies are under `Packages.Dev`, so import the runner from `Packages.Dev.Jest`.
