@@ -40,11 +40,17 @@ if not fs.exists("Packages") then
 end
 
 -- LuauPolyfill's Error.global.lua sits at different paths under Rotriever
--- (internal, PascalCase, no version) vs. Wally (public, kebab-case, versioned).
--- Try both — patchErrorPolyfill no-ops on the one that doesn't exist.
+-- (internal, PascalCase, `LuauPolyfill` or `LuauPolyfill-<hash>-<version>`) vs.
+-- Wally (public, kebab-case, `roblox_luau-polyfill@<version>`). Patch whichever
+-- installs are present rather than hardcoding a version.
 local patchErrorPolyfill = require("./utils/patchErrorPolyfill")
-patchErrorPolyfill("Packages/_Index/LuauPolyfill/LuauPolyfill/Error/Error.global.lua")
-patchErrorPolyfill("Packages/_Index/roblox_luau-polyfill@1.2.5/luau-polyfill/src/Error/Error.global.lua")
+for _, entry in fs.listDirectory("Packages/_Index") do
+	if entry.name == "LuauPolyfill" or string.match(entry.name, "^LuauPolyfill%-") then
+		patchErrorPolyfill(`Packages/_Index/{entry.name}/LuauPolyfill/Error/Error.global.lua`)
+	elseif string.match(entry.name, "^roblox_luau%-polyfill@") then
+		patchErrorPolyfill(`Packages/_Index/{entry.name}/luau-polyfill/src/Error/Error.global.lua`)
+	end
+end
 
 if configuration == "ocale" then
 	if not process.env.ROBLOX_API_KEY then
