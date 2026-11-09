@@ -1,6 +1,8 @@
 # Jest Roblox Changelog
 
 ## Unreleased
+
+## 3.21.0 (2026-11-09)
 * :sparkles: String requires inside tests resolve through `ScriptService:ResolveModulePath` when the engine supports it, so every path native `require` understands (including `.config` aliases) also works under Jest. Engines without the method keep the existing resolver.
 * :bug: Free a test suite's test state after it completes to free up memory
 
