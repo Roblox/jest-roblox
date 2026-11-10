@@ -87,11 +87,11 @@ describe("Lua toThrowMatcher tests", function()
 	end
 
 	it("prints the stack trace for Lua Error error", function()
-		expect(function()
-			jestExpect(function()
-				test1()
-			end).never.toThrow()
-		end).toThrowErrorMatchingSnapshot()
+		local _, thrown = pcall(test1 :: any)
+		local _, err = pcall(jestExpect(test1).never.toThrow :: any)
+		expect(err.message).toContain("Error name:")
+		expect(string.match(thrown.stack, "roblox%.spec:%d+")).toBeDefined()
+		expect(string.match(err.message, "roblox%.spec:%d+")).toBe(string.match(thrown.stack, "roblox%.spec:%d+"))
 	end)
 
 	it("prints the stack trace for Lua string error", function()

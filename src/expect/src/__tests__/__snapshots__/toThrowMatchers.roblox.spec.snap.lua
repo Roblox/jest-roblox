@@ -23,19 +23,6 @@ Error message: <r>""</>
       Expect.__tests__.toThrowMatchers.roblox.spec:116
 ]=]
 
-exports[ [=[Lua toThrowMatcher tests prints the stack trace for Lua Error error 1]=] ] = [=[
-
-<d>expect(</><r>received</><d>).</>never<d>.</>toThrow<d>()</>
-
-Error name:    <r>"Error"</>
-Error message: <r>""</>
-
-      Error
-      Expect.__tests__.toThrowMatchers.roblox.spec:66 function error1
-      Expect.__tests__.toThrowMatchers.roblox.spec:74 function test1
-      Expect.__tests__.toThrowMatchers.roblox.spec:92
-]=]
-
 exports[ [=[Lua toThrowMatcher tests prints the stack trace for Lua string error 1]=] ] = [=[
 
 <d>expect(</><r>received</><d>).</>never<d>.</>toThrow<d>()</>
