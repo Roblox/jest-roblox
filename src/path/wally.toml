@@ -1,7 +1,7 @@
 [package]
 name = "roblox/path"
 description = "A set of path utilities."
-version = "3.20.1"
+version = "3.21.0"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"
@@ -18,4 +18,4 @@ exclude = [
 [dependencies]
 
 [dev-dependencies]
-JestGlobals = "roblox/jest-globals@^3.20.0"
+JestGlobals = "roblox/jest-globals@^3.21.0"

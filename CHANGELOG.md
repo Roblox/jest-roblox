@@ -1,9 +1,11 @@
 # Jest Roblox Changelog
 
 ## Unreleased
-* :sparkles: String requires inside tests resolve through `ScriptService:ResolveModulePath` when the engine supports it, so every path native `require` understands (including `.config` aliases) also works under Jest. Engines without the method keep the existing resolver.
-* :bug: Free a test suite's test state after it completes to free up memory
-* :bug: Release each test file's module sandboxes after it completes, so cached module functions no longer keep finished test files in memory
+* :bug: Release each test file's module sandboxes after it completes, so cached module functions no longer keep finished test files in memory ([#21](https://github.com/Roblox/jest-roblox/pull/21))
+
+## 3.21.0 (2026-11-09)
+* :sparkles: String requires inside tests resolve through `ScriptService:ResolveModulePath` when the engine supports it, so every path native `require` understands (including `.config` aliases) also works under Jest. Engines without the method keep the existing resolver. ([#17](https://github.com/Roblox/jest-roblox/pull/17))
+* :bug: Free a test suite's test state after it completes to free up memory ([#20](https://github.com/Roblox/jest-roblox/pull/20))
 
 ## 3.20.1 (2026-08-30)
 * :broom: Bumps the version of luau-regexp used by Jest from 0.2.2 -> 0.3.0

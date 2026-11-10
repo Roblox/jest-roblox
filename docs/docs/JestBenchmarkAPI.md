@@ -7,7 +7,7 @@ Benchmarks are useful tools for gating performance in CI, optimizing code, and c
 
 `JestBenchmark` must be added as a dev dependency to your `wally.toml` and imported.
 ```toml title="wally.toml"
-JestBenchmark = "roblox/jest-benchmark@^3.20.0"
+JestBenchmark = "roblox/jest-benchmark@^3.21.0"
 ```
 
 ```lua
@@ -21,7 +21,7 @@ local initializeProfiler = JestBenchmark.Profiler.initializeProfiler
 
 <Internal>
 
-Add `JestBenchmark = "3.20.1"` to the dev dependencies in `rotriever.toml`, then import it from `Packages.Dev.JestBenchmark`.
+Add `JestBenchmark = "3.21.0"` to the dev dependencies in `rotriever.toml`, then import it from `Packages.Dev.JestBenchmark`.
 
 </Internal>
 
