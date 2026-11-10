@@ -772,18 +772,4 @@ Error message: <r>"<d>expect(</><r>received</><r><d>).</>toBe<d>(</><g>expected<
       Expect.__tests__.matchers.roblox.spec:188
 ]=]
 
-exports[ [=[tests stack traces for calls within pcalls with Error polyfill 1]=] ] = [=[
-
-<d>expect(</><r>received</><d>).</>never<d>.</>toThrow<d>()</>
-
-Thrown value: <r>"attempt to concatenate string with table"</>
-
-      LuauPolyfill.Error.Error.global function __recalculateStacktrace
-      LuauPolyfill.Error.Error.global function __captureStackTrace
-      LuauPolyfill.Error.Error.global function __createError
-      LuauPolyfill.Error.Error.global function __call
-      Expect.__tests__.matchers.roblox.spec:200
-      Expect.__tests__.matchers.roblox.spec:207
-]=]
-
 return exports
