@@ -1,9 +1,12 @@
 # Jest Roblox Changelog
 
 ## Unreleased
-* :sparkles: String requires inside tests resolve through `ScriptService:ResolveModulePath` when the engine supports it, so every path native `require` understands (including `.config` aliases) also works under Jest. Engines without the method keep the existing resolver.
 * :sparkles: Add `mockResolvedValue`, `mockResolvedValueOnce`, `mockRejectedValue` and `mockRejectedValueOnce` to mock functions
 * :hammer_and_wrench: `jest.fn()` and `jest.spyOn()` return a typed `MockFn` instead of `any`. This types the mock method surface only; the call itself stays `(...any) -> ...any`, so arguments and return values are still unchecked.
+
+## 3.21.0 (2026-11-09)
+* :sparkles: String requires inside tests resolve through `ScriptService:ResolveModulePath` when the engine supports it, so every path native `require` understands (including `.config` aliases) also works under Jest. Engines without the method keep the existing resolver. ([#17](https://github.com/Roblox/jest-roblox/pull/17))
+* :bug: Free a test suite's test state after it completes to free up memory ([#20](https://github.com/Roblox/jest-roblox/pull/20))
 
 ## 3.20.1 (2026-08-30)
 * :broom: Bumps the version of luau-regexp used by Jest from 0.2.2 -> 0.3.0

@@ -1,7 +1,7 @@
 [package]
 name = "roblox/pretty-format"
 description = "Stringify any Luau value."
-version = "3.20.1"
+version = "3.21.0"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"
@@ -16,16 +16,16 @@ exclude = [
 ]
 
 [dependencies]
-JestGetType = "roblox/jest-get-type@^3.20.0"
+JestGetType = "roblox/jest-get-type@^3.21.0"
 ChalkLua = "roblox/chalk-lua@^0.3.0"
 LuauPolyfill = "roblox/luau-polyfill@^1.2.5"
 RegExp = "roblox/regexp@^0.3.0"
 ReactIs = "roblox/react-is@^17"
 Symbol = "roblox/symbol@^1.0.0"
-RobloxShared = "roblox/roblox-shared@^3.20.0"
+RobloxShared = "roblox/roblox-shared@^3.21.0"
 
 [dev-dependencies]
 React = "roblox/react@^17"
 ReactRoblox = "roblox/react-roblox@^17"
 ReactTestRenderer = "roblox/react-test-renderer@^17"
-JestGlobals = "roblox/jest-globals@^3.20.0"
+JestGlobals = "roblox/jest-globals@^3.21.0"

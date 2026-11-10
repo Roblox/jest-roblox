@@ -1,7 +1,7 @@
 [package]
 name = "roblox/throat"
 description = "Throttle a collection of promise returning functions."
-version = "3.20.1"
+version = "3.21.0"
 license = "MIT"
 authors = ["Roblox <no-reply@roblox.com>"]
 realm = "shared"
@@ -16,8 +16,8 @@ exclude = [
 ]
 
 [dependencies]
-JestTypes = "roblox/jest-types@^3.20.0"
+JestTypes = "roblox/jest-types@^3.21.0"
 Promise = "roblox/promise@^3.5.1"
 
 [dev-dependencies]
-JestGlobals = "roblox/jest-globals@^3.20.0"
+JestGlobals = "roblox/jest-globals@^3.21.0"

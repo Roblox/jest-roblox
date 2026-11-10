@@ -11,8 +11,8 @@ Jest Roblox tests run in a Roblox environment. You can run them in Studio or in 
 Add the `JestGlobals` and `Jest` packages to your dev dependencies in `wally.toml`.
 ```toml title="wally.toml"
 [dev-dependencies]
-Jest = "roblox/jest@^3.20.0"
-JestGlobals = "roblox/jest-globals@^3.20.0"
+Jest = "roblox/jest@^3.21.0"
+JestGlobals = "roblox/jest-globals@^3.21.0"
 ```
 
 Run `wally install` to install Jest Roblox.
@@ -23,8 +23,8 @@ Add the packages to your `rotriever.toml` instead:
 
 ```toml title="rotriever.toml"
 [dev_dependencies]
-Jest = "3.20.1"
-JestGlobals = "3.20.1"
+Jest = "3.21.0"
+JestGlobals = "3.21.0"
 ```
 
 Then run `rotrieve install`.
