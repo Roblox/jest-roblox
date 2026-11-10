@@ -55,6 +55,19 @@ it("should not override module function environment for another runtime", functi
 	expect(requireRefBefore).toBe(requireRefAfter)
 end)
 
+it("should give cached module functions their default environment on teardown", function()
+	local loadedModuleFns = {}
+	local modulePath = script.Parent["requireOne.roblox"]
+
+	local runtime = Runtime.new(JestConfig.projectDefaults, loadedModuleFns)
+	runtime:requireModule(modulePath)
+	local moduleFunction, defaultEnvironment = loadedModuleFns[modulePath][1], loadedModuleFns[modulePath][2]
+	expect(getfenv(moduleFunction)).never.toBe(defaultEnvironment)
+
+	runtime:teardown()
+	expect(getfenv(moduleFunction)).toBe(defaultEnvironment)
+end)
+
 describe("require by string", function()
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	local clone: Instance?
