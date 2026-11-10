@@ -198,7 +198,7 @@ local nestedFnWithError = function(fn)
 		fn()
 	end)
 	if not success then
-		rethrowLine = debug.info(1, "l") + 1
+		rethrowLine = (debug.info(1, "l") :: number) + 1
 		error(Error(result))
 	end
 end
