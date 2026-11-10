@@ -5,6 +5,7 @@ local Packages = CurrentModule.Parent
 local LuauPolyfill = require(Packages.LuauPolyfill)
 local Error = LuauPolyfill.Error
 local Set = LuauPolyfill.Set
+local Promise = require(Packages.Promise)
 local Symbol = require(Packages.Symbol)
 
 local JestMockGenv = require(Packages.JestMockGenv)
@@ -34,7 +35,31 @@ export type MaybeMockedDeep<T> = T
 export type MaybeMocked<T> = T
 
 export type UnknownFunction = (...unknown) -> ...unknown
-export type Mock<T = UnknownFunction> = any
+
+type MockFnMethods = {
+	_isMockFunction: boolean,
+	mock: MockFunctionState<any, MockDefaultY>,
+	getMockImplementation: () -> any,
+	getMockName: () -> string,
+	mockClear: () -> MockFn,
+	mockReset: () -> MockFn,
+	mockRestore: () -> any,
+	mockImplementation: (fn: any) -> MockFn,
+	mockImplementationOnce: (fn: any) -> MockFn,
+	mockName: (name: string?) -> MockFn,
+	mockReturnThis: () -> MockFn,
+	mockReturnValue: (value: any) -> MockFn,
+	mockReturnValueOnce: (value: any) -> MockFn,
+	mockResolvedValue: (value: any) -> MockFn,
+	mockResolvedValueOnce: (value: any) -> MockFn,
+	mockRejectedValue: (value: any) -> MockFn,
+	mockRejectedValueOnce: (value: any) -> MockFn,
+	new: (...any) -> MockFn,
+}
+
+export type MockFn = ((...any) -> ...any) & MockFnMethods
+
+export type Mock<T = UnknownFunction> = MockFn
 
 type MockFunctionResultType = string
 type MockFunctionResult = {
@@ -255,10 +280,34 @@ function ModuleMockerClass:_makeComponent(metadata: any, restore)
 			end)
 		end
 
+		f.mockResolvedValueOnce = function(value)
+			return f.mockImplementationOnce(function()
+				return Promise.resolve(value)
+			end)
+		end
+
+		f.mockRejectedValueOnce = function(value)
+			return f.mockImplementationOnce(function()
+				return Promise.reject(value)
+			end)
+		end
+
 		f.mockReturnValue = function(value)
 			-- next function call will return specified return value or this one
 			return f.mockImplementation(function()
 				return value
+			end)
+		end
+
+		f.mockResolvedValue = function(value)
+			return f.mockImplementation(function()
+				return Promise.resolve(value)
+			end)
+		end
+
+		f.mockRejectedValue = function(value)
+			return f.mockImplementation(function()
+				return Promise.reject(value)
 			end)
 		end
 
@@ -312,7 +361,6 @@ function ModuleMockerClass:isMockFunction(fn: any)
 	return typeof(fn) == "table" and fn._isMockFunction == true
 end
 
-type MockFn = any
 function ModuleMockerClass:fn<T..., Y...>(implementation: ((T...) -> Y...)?): (MockFn, (T...) -> Y...)
 	local length = 0
 	-- fn is a callable table; also return a forwarding function
