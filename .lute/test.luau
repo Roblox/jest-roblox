@@ -31,20 +31,13 @@ if not table.find(availableConfigurations, configuration) then
 	)
 end
 
--- Installing dependencies is the caller's job. Checked here because both the
--- polyfill patch below and Rojo's `$path: Packages` need them, and Rojo reports
--- their absence as an unresolvable path rather than a missing install.
+-- Installing dependencies is the caller's job. Checked here because Rojo's
+-- `$path: Packages` needs them, and Rojo reports their absence as an
+-- unresolvable path rather than a missing install.
 if not fs.exists("Packages") then
 	local install = if rotriever then "rotrieve install" else "wally install"
 	error(`Packages/ is missing. Run \`{install}\`, then re-run.`)
 end
-
--- LuauPolyfill's Error.global.lua sits at different paths under Rotriever
--- (internal, PascalCase, no version) vs. Wally (public, kebab-case, versioned).
--- Try both — patchErrorPolyfill no-ops on the one that doesn't exist.
-local patchErrorPolyfill = require("./utils/patchErrorPolyfill")
-patchErrorPolyfill("Packages/_Index/LuauPolyfill/LuauPolyfill/Error/Error.global.lua")
-patchErrorPolyfill("Packages/_Index/roblox_luau-polyfill@1.2.5/luau-polyfill/src/Error/Error.global.lua")
 
 if configuration == "ocale" then
 	if not process.env.ROBLOX_API_KEY then
